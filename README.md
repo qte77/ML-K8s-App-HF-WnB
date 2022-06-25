@@ -14,19 +14,19 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 * [Install](#install-)
 * [TODO](#todo-)
 
-## Purpose [↑](#ml-k8s-app-hf-wnb-)
+## Purpose [↑](#ml-k8s-app-hf-wnb)
 
 * Showcase an end-to-end app with train and inference mode
 * Implement self-contained modular pipeline
 * Models can be loaded from registries 
 
-## Repo structure [↑](#ml-k8s-app-hf-wnb-)
+## Repo structure [↑](#ml-k8s-app-hf-wnb)
 
 * `k8s-app` Components of a K8s pipeline, intended as a PoC for production
 
-## App structure [↑](#ml-k8s-app-hf-wnb-)
+## App structure [↑](#ml-k8s-app-hf-wnb)
 
-## Install [↑](#ml-k8s-app-hf-wnb-)
+## Install [↑](#ml-k8s-app-hf-wnb)
 
 ### Kubernets
 
@@ -40,7 +40,7 @@ e.g.
 
 `source ./setup-local.sh`
 
-## TODO [↑](#ml-k8s-app-hf-wnb-)
+## TODO [↑](#ml-k8s-app-hf-wnb)
 
 * Exception handling
 * Type handling in function calls
