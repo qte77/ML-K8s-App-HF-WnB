@@ -26,9 +26,13 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 
 ## App structure [↑](#ml-k8s-app-hf-wnb)
 
+**TODO**
+
 ## Install [↑](#ml-k8s-app-hf-wnb)
 
 ### Kubernets
+
+**TODO**
 
 ### Docker image
 
