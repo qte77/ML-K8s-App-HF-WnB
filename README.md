@@ -8,25 +8,25 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 
 ## TOC
 
-* [Purpose](./README.md#purpose-)
-* [App](./README.md#app-)
-* [Pipeline](./README.md#pipeline-)
-* [Install](./README.md#install-)
-* [TODO](./README.md#todo-)
+* [Purpose](#purpose-)
+* [Repo structure ](#repo-structure-)
+* [App structure](#app-structure-)
+* [Install](#install-)
+* [TODO](#todo-)
 
-## Purpose [↑](./README.md#ml-k8s-app-hf-wnb-)
+## Purpose [↑](#ml-k8s-app-hf-wnb-)
 
 * Showcase an end-to-end app with train and inference mode
 * Implement self-contained modular pipeline
 * Models can be loaded from registries 
 
-## Repo structure [↑](./README.md#ml-pipeline-)
+## Repo structure [↑](#ml-k8s-app-hf-wnb-)
 
 * `k8s-app` Components of a K8s pipeline, intended as a PoC for production
 
-## App structure [↑](./README.md#ml-pipeline-)
+## App structure [↑](#ml-k8s-app-hf-wnb-)
 
-## Install [↑](./README.md#ml-pipeline-)
+## Install [↑](#ml-k8s-app-hf-wnb-)
 
 ### Kubernets
 
@@ -40,7 +40,7 @@ e.g.
 
 `source ./setup-local.sh`
 
-## TODO [↑](./README.md#ml-pipeline-)
+## TODO [↑](#ml-k8s-app-hf-wnb-)
 
 * Exception handling
 * Type handling in function calls
