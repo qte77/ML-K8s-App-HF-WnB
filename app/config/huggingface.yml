@@ -1,0 +1,55 @@
+---
+datasets:
+  yahoo:
+    dataset: yahoo_answers_topics
+    configuration: ''
+    average: micro
+    col_to_rename: topic
+    cols_to_tok:
+    - question_title
+    cols_to_remove:
+    - id
+    - question_content
+    - best_answer
+  mrpc:
+    dataset: glue
+    configuration: mrpc
+    average: binary
+    col_to_rename: label
+    cols_to_tok:
+    - sentence1
+    - sentence2
+    cols_to_remove:
+    - idx
+  mnli:
+    dataset: glue
+    configuration: mnli
+    average: binary
+    col_to_rename: label
+    cols_to_tok:
+    - premise
+    - hypothesis
+    cols_to_remove:
+    - idx
+models:
+  dbbu: distilbert-base-uncased
+  bbu: bert-base-uncased
+  lbu: allenai/longformer-base-4096
+metrics_to_optimize:
+  accuracy:
+    goal: maximize
+    greater_is_better: 'True'
+  loss:
+    goal: minimize
+    greater_is_better: 'False'
+  eval_loss:
+    goal: minimize
+    greater_is_better: 'False'
+metrics_secondary_possible:
+  - 'accuracy'
+  - 'precision'
+  - 'recall'
+  - 'f1'
+  - 'mae'
+  - 'mse'
+...
