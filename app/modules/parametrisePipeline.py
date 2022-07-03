@@ -1,55 +1,66 @@
 #!/usr/bin/env python
 '''
-Returns parameter object
+Parametrise and return a parameter object
 '''
 #TODO rename 'defaults' more specific and descriptive
 #TODO generalize provider parametrisation
-import loadcfg
-import os
+#TODO refactor Pipeline-object out into function only?
+
+from loadConfigs import get_config
+from os import environ
 from torch import device
 from torch.cuda import is_available
 
-def get_param_object():
 
-  defaults = loadcfg.get_config('defaults')
-  hf_params = loadcfg.get_config('huggingface')
-  sweep = loadcfg.get_config('sweep')
-  task = loadcfg.get_config('task')
+def get_param_object() -> dict:
+'''
+Returns parameter dict with values filled with `loadConfigs.get_config(<config>)`
+'''
+  defaults: dict = loadConfigs.get_config('defaults')
+  hf_params: dict = loadConfigs.get_config('huggingface')
+  sweep: dict = loadConfigs.get_config('sweep')
+  task: dict = loadConfigs.get_config('task')
 
   paramobj = {}
   paramobj['sweep'] = get_sweep_cfg(sweep)
-  paramobj['device'] = get_device()
-  paramobj['dataset'] = get_dataset_cfg(hf_params['datasets'], task['dataset'])
-  paramobj['project_name'] = get_project_name(
+  paramobj['device'] = _get_device()
+  paramobj['dataset'] = _get_dataset_cfg(hf_params['datasets'], task['dataset'])
+  paramobj['project_name'] = _get_project_name(
     task['model'], paramobj['dataset']['name'],
     paramobj['device'], paramobj['sweep']['is_sweep']
   )
   if paramobj['sweep']['is_sweep']:  
     #TODO case
     if paramobj['sweep']['provider'] == 'wandb':
-      wandb_params = loadcfg.get_config('wandb')
-      paramobj['wandb'] = get_wandb_env(
+      wandb_params = loadConfigs.get_config('wandb')
+      paramobj['wandb'] = _get_wandb_env(
         wandb_params, paramobj['project_name']
       )
-  paramobj['defaults'] = get_defaults(defaults)
-  paramobj['model_full_name'] = get_model_full_name(hf_params['models'], task['model'])
-  paramobj['metrics']['metric_to_optimize'] = get_metric_to_optimize_cfg(
+  paramobj['defaults'] = _get_defaults(defaults)
+  paramobj['model_full_name'] = _get_model_full_name(hf_params['models'], task['model'])
+  paramobj['metrics']['metric_to_optimize'] = _get_metric_to_optimize_cfg(
     hf_params['metrics_to_optimize'], task['metric_to_optimize']
   )
-  paramobj['metrics']['metrics_to_load'] = get_metrics_to_load(
+  paramobj['metrics']['metrics_to_load'] = _get_metrics_to_load(
     hf_params['metrics_secondary_possible'] ,task['metrics_to_load']
   )
 
   return paramobj
 
-def get_defaults(defaults):
+
+def _get_defaults(defaults: dict) -> dict:
 
   if not defaults.save_dir == '':
     return { 'save_dir' : defaults.save_dir }
   else:
+    #TODO check whether dir exists
     return { 'save_dir' : './data' }
 
-def get_dataset_cfg(datasets, dataset):
+
+def _get_dataset_cfg(
+  datasets: dict,
+  dataset: str
+) -> dict:
 
   datasetobj = {}
   try:
@@ -62,31 +73,41 @@ def get_dataset_cfg(datasets, dataset):
     return datasetobj
   except Exception as e:
     return e
-  
-def get_model_full_name(models, model):
+
+
+def _get_model_full_name(
+  models: dict,
+  model: str
+) -> str:
 
   try:
     model = model.lower()
-    return models.get(
-      model, ['Invalid model', '']
-    )
+    return models.get(model, ['Invalid model', ''])
   except Exception as e:
     return e
 
-def get_metric_to_optimize_cfg(metrics_to_optimize, metric_to_optimize):
 
-  metricobj = {}
+def _get_metric_to_optimize_cfg(
+  metrics_to_optimize: dict,
+  metric_to_optimize: str
+) -> dict:
+
+  metricsobj = {}
   try:
     metric_to_optimize = metric_to_optimize.lower()
-    metricobj['goal'], metricobj['greater_is_better'] = \
+    metricsobj['goal'], metricsobj['greater_is_better'] = \
       metrics_to_optimize.get(
         metric_to_optimize, ['Invalid metric', '']
       )
-    return metricobj
+    return metricsobj
   except Exception as e:
     return e
 
-def get_metrics_to_load(metrics_secondary_possible, metrics_to_load):
+
+def _get_metrics_to_load(
+  metrics_to_load: list,
+  metrics_secondary_possible: bool
+) -> list:
   
   metrics = []
   try:
@@ -96,18 +117,25 @@ def get_metrics_to_load(metrics_secondary_possible, metrics_to_load):
   except Exception as e:
     return e
 
-def get_device():
-  
+
+def _get_device() -> str:
+
   try:
     os.environ['TPU_NAME']
     return 'tpu'
   except:
     try:
-      return device('cuda' if is_available() else 'cpu')
+      return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     except Exception as e:
       return e
 
-def get_project_name(model, dataset_name, device, is_sweep):
+
+def _get_project_name(
+  model: str,
+  dataset_name: str,
+  device: str,
+  is_sweep: bool
+) -> str:
 
   suffix = '-sweep' if is_sweep else ''
   try:
@@ -115,7 +143,11 @@ def get_project_name(model, dataset_name, device, is_sweep):
   except Exception as e:
     return e
 
-def get_wandb_env(wandb_params, project_name):
+
+def _get_wandb_env(
+  wandb_params: object,
+  project_name: str
+) -> dict:
   '''
   Checks for API-key first. Returns exception if not found
   Expects keyfile as yaml:
@@ -123,7 +155,7 @@ def get_wandb_env(wandb_params, project_name):
     key: ''
   '''
   try:
-    wandb_user_key = loadcfg.get_config(wandb_params['wandb_keyfile'])
+    wandb_user_key = loadConfigs.get_config(wandb_params['wandb_keyfile'])
   except Exception as e:
     return e('API-key not found')
 
@@ -138,13 +170,14 @@ def get_wandb_env(wandb_params, project_name):
   
   return wandbobj
 
-def get_sweep_cfg(sweep):
+
+def get_sweep_cfg(sweep: object) -> dict:
 
   sweepobj = {}
   sweepobj['is_sweep'] = True if sweep.train_count > 1 else False
   if sweepobj['is_sweep']:
     sweepobj['train_count'] = sweep.train_count
     sweepobj['provider'] = sweep.provider
-    sweepobj['config'] = loadcfg(f'sweep-{sweep.provider}')
+    sweepobj['config'] = loadConfigs(f'sweep-{sweep.provider}')
 
   return sweepobj

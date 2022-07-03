@@ -1,29 +1,74 @@
 #!/usr/bin/env python
 '''
-Download and save components from Hugging Face
+Download and save components from providers, e.g. Hugging Face.
+Components could be models, datasets, tokenizers, metrics etc.
 '''
-import os
+#TODO function def with actual objects, not placeholder 'object'
+from os import environ
 from datasets import load_dataset, list_datasets, list_metrics, load_metric
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-def prepare(dataset, model_full_name, metrics_to_load, sweep, wandb):
 
-    get_tokenizer(model_full_name)
-    get_tokenized_dataset(dataset)
-    get_model(model_full_name, dataset['num_labels'])
-    if sweep['provider'] == 'wandb':
-        set_wandb_env(wandb)
+def prepare_ml_components(
+    dataset: dict,
+    model_full_name: str,
+    metrics_to_load: list,
+    provider: str,
+    providerobj: dict
+) -> list:
+    '''
+    
+    '''
+    get_tokenized_dataset(
+        get_dataset(dataset),
+        get_tokenizer(model_full_name)
+    )
+    get_model(
+        model_full_name,
+        dataset['num_labels']
+    )
+    if provider == 'wandb':
+        set_wandb_env(providerobj)
 
     return get_metrics(metrics_to_load)
 
-def get_tokenized_dataset(dataset, tokenizer):
+
+def get_tokenizer(model_full_name: str) -> AutoTokenizer: #TODO check return type
+    '''
+    Downloads tokenizer specified by model
+    '''
+    AutoTokenizer.from_pretrained(
+        model_full_name,
+        use_fast = True,
+        truncation = True,
+        padding = True
+    )
+
+
+def get_model(
+    model_full_name: str,
+    num_labels: int
+) -> AutoModelForSequenceClassification: #TODO check return type
+    '''
+    Downloads specified model
+    '''
+    AutoModelForSequenceClassification.from_pretrained(
+        model_full_name,
+        num_labels = num_labels
+    )
+
+
+def _get_tokenized_dataset(
+    dataset: object,
+    tokenizer: object
+) -> object:
     '''
     Loads dataset, splits into train/eval/test and tokenizes
     '''
     #tokenize
     dataset_tokenized = dataset.map(
         tokenize_dataset(
-            get_dataset(dataset),
+            dataset,
             dataset['colstokens'],
             tokenizer
         ),
@@ -42,7 +87,8 @@ def get_tokenized_dataset(dataset, tokenizer):
 
     return dataset_tokenized
 
-def get_dataset(dataset):
+
+def _get_dataset(dataset: dict) -> object:
 
     try:
         if dataset['configuration'] == '':
@@ -72,8 +118,16 @@ def get_dataset(dataset):
 
     return dataset_plain
 
-def tokenize_dataset(dataset, ds_colstokens):
-    #TODO use lambda or function with tupels instead of explicit elif
+
+def _tokenize_dataset(
+    dataset: object,
+    ds_colstokens: list,
+    tokenizer: object
+) -> object:
+    '''
+    Returns tokenized dataset
+    '''
+    #TODO use lambda or list comprehension with tupels instead of explicit elif
     colen = len(ds_colstokens)
     #TODO use cached tokenizer
     tokenizer = -1
@@ -99,23 +153,8 @@ def tokenize_dataset(dataset, ds_colstokens):
     except Exception as e:
         return e
 
-def get_tokenizer(model_full_name: str):
 
-    AutoTokenizer.from_pretrained(
-        model_full_name,
-        use_fast = True,
-        truncation = True,
-        padding = True
-    )
-
-def get_model(model_full_name: str, num_labels: int):
-    
-    AutoModelForSequenceClassification.from_pretrained(
-        model_full_name,
-        num_labels = num_labels
-    )
-
-def get_metrics(metrics_to_load):
+def _get_metrics(metrics_to_load: list) -> list:
     
     metrics_loaded = []
 
@@ -125,13 +164,13 @@ def get_metrics(metrics_to_load):
             print(f'Downloading builder script for "{met}"')
             metrics_loaded.append(load_metric(met))
     except Exception as e:
-        print(e)
-        #return e
+        return e
 
     return metrics_loaded
 
-def set_wandb_env(wandb_param):
 
+def _set_wandb_env(wandb_param: dict) -> int:
+    #TODO set without return, test if dict is valid
     try:
         os.environ["WANDB_ENTITY"] = wandb_param.entity
         os.environ["WANDB_PROJECT"] = wandb_param.project
@@ -143,7 +182,8 @@ def set_wandb_env(wandb_param):
     except Exception as e:
         return e
 
-def set_storage():
-    #TODO
-    #from google.colab import drive
-    return -1
+
+# def _set_storage():
+#TODO implement if needed, maybe use PVC ?
+#     #from google.colab import drive
+#     return -1

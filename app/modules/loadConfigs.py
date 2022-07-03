@@ -2,8 +2,8 @@
 '''
 Load configuration files
 '''
-import os
-import yaml
+from os import path
+from yaml import safe_load
 
 #TODO export config in files.yml to separate from program flow?
 cfg_path = "./config"
@@ -13,11 +13,10 @@ cfg_defaults = [
     'sweep', 'sweep-wandb'
 ]
 
-def get_config(cfg_name):
+def get_config(cfg_name: str):
     '''
     Parses config yaml and returns config objects
     '''
-
     if cfg_defaults.__contains__(cfg_name):
         cfg = cfg_defaults[cfg_name]
     else:

@@ -26,11 +26,25 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 
 ## App structure [↑](#ml-k8s-app-hf-wnb)
 
-**TODO**
+* Dockerfile
+* makefile
+* /app
+ * app.py
+ * requirements.txt
+ * /config
+ * /modules
+
+### Modules
+
+* train.py
+* infer.py
+* prepare.py
+ * parametrise.py
+  * loadcfg.py
 
 ## Install [↑](#ml-k8s-app-hf-wnb)
 
-### Kubernets
+### Kubernetes
 
 **TODO**
 
@@ -40,14 +54,15 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 e.g.  
 `podman image build --tag ML-pipeline:latest`
 
-#### Local python
+#### Local python venv
 
-`source ./setup-local.sh`
+`make makefile local`
 
 ## TODO [↑](#ml-k8s-app-hf-wnb)
 
-* Exception handling
-* Type handling in function calls
-* Read multiple yml inside one file inside cfgloader
+* Test-if instead of exception handling
 * Get sweep config
 * Arg parsing
+* pydoc
+* Python hitchhiker BP
+* Makefile

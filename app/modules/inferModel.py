@@ -1,18 +1,21 @@
 #!/usr/bin/env python
 '''
-Infer with model
+Model inference
 '''
 from transformers import AutoTokenizer
-from torch import cuda
-from torch import no_grad
+# from torch import cuda, no_grad
 
-def test_model(inputs, device: str):
+def test_model(
+    inputs: str,
+    device: str
+) -> str:
+
     #TODO source for test function, WandB colab?
     #TODO multi inputs
     device = device.tolower()
     if device == "cuda":
         for i in inputs:
-            print(i)
+            # print(i)
             # inputs = tokenizer(sentence, return_tensors='pt')
             # ensure model and inputs are on the same device (GPU)
             # inputs = {name: tensor.cuda() for name, tensor in inputs.items()}
@@ -23,14 +26,19 @@ def test_model(inputs, device: str):
             # get the top prediction class and convert it to its associated label
             # top_prediction = predictions.argmax().item()
             # return ds['train'].features['labels'].int2str(top_prediction)
-        return 1
+        return "not implemented"
     else:
         return "NO CUDA"
 
-def infer(input, device: str):
+
+def infer_model(
+    input: str,
+    device: str
+) -> str: #TODO
     '''
     Infers result from model given input 
     '''
+
     #TODO adopt to model and task
     #if dataset == 'YAHOO':
     input = 'Why is cheese so much better with wine?'

@@ -4,8 +4,8 @@ ARG BASEIMAGE_USECASE="baseimage"
 
 FROM --platform=x86_64 ${BASEIMAGE} as baseimage
 
-LABEL io.while-true-do.site="https://qte77.github.io"
-LABEL io.while-true-do.image.authors="qte77"
+LABEL site="https://qte77.github.io"
+LABEL author="qte77"
 
 # don't generate .pyc
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -32,7 +32,7 @@ ARG APP="${FILES_OUT}/app.py"
 ARG WANDB_KEYFILE="wandb/wandb.key"
 #ARG WANDB_KEY="<token>"
 
-RUN adduser -u 5678 --disabled-password --gecos "" ${USER} \
+RUN adduser -u 5678 --disabled-password ${USER} \
   && chown -R ${USER} /app
 
 USER ${USER}

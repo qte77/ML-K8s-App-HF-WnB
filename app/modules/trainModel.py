@@ -1,43 +1,59 @@
 #!/usr/bin/env python
 '''
 Train model
-TODO implement
 '''
-from transformers import Trainer, TrainingArguments
+from prepareLoggingSweep import login_to_provider, create_sweep
+from transformers import Trainer, TrainingArguments #,Metric
 #import bert_score
+from wandb import log, agent
 from numpy import argmax
-import wandb
 
-# COLOR = {
-#   'red' : '\033[31m',
-#   'green' : '\033[32m',
-#   'orange' : '\033[33m',
-#   'endclr' : '\033[0m'
-# }
 
-def train(project_name, metric_to_optimize, metrics_loaded, sweep_config):
+def train_Model(
+  project_name: str,
+  metric_to_optimize: str,
+  metrics_loaded: list,
+  sweep_config: dict,
+  provider: str
+) -> None:
+
   #TODO incorp --cloud and $WANDB_KEY into login-fun
-  wandb.login() 
+  login_to_provider(provider)
+
   #if env WANDB_ENTITY not used: entity=<entity>
-  sweep_id = wandb.sweep(sweep_config.config, project=project_name)
-  trainer = get_trainer(metric_to_optimize, metrics_loaded)
-  wandb.agent(sweep_id, trainer, count=sweep_config['train_count'])
+  sweep_id = create_sweep(sweep_config.config, project_name)
+  trainerobj = _create_trainer(metric_to_optimize, metrics_loaded)
+
+  wandb.agent(sweep_id, trainerobj, count = sweep_config['train_count'])
 
   return -1
 
-def compute_metrics(eval_pred, metrics_loaded, metrics_avg):
-  #TODO
+
+def _compute_metrics(
+  eval_pred: list, #TOCO check type
+  metrics_loaded: list,
+  metrics_avg: str
+) -> object: #TODO change type to HF metric object
+
+  #TODO refactor 
   predictions, labels = eval_pred
-  predictions = argmax(predictions, axis = 1) #predictions.argmax(-1)
+  predictions = numpy.argmax(predictions, axis = 1) #predictions.argmax(-1)
   
   print("*************")
   
   for i, m in enumerate(metrics_loaded):
 
     if metrics_loaded[i] in ['precision','recall','f1']:
-      met = m.compute(predictions = predictions, references = labels, average = metrics_avg)
+      met = m.compute(
+        predictions = predictions,
+        references = labels,
+        average = metrics_avg
+      )
     else:
-      met = m.compute(predictions = predictions, references = labels)
+      met = m.compute(
+        predictions = predictions,
+        references = labels
+      )
 
     if metrics_loaded[i] == 'accuracy':
       ret = met
@@ -49,7 +65,9 @@ def compute_metrics(eval_pred, metrics_loaded, metrics_avg):
 
   return ret
 
-def get_trainer(config = None):
+
+def _create_trainer(config = None) -> transformers.Trainer:
+  #TODO implement
   #TODO save locally
 
   # config = config.config
@@ -65,7 +83,7 @@ def get_trainer(config = None):
 
   #   # args need to be assigned here to avoid wandb runtime TypeError()
   #   # "'TrainingArguments' object does not support item assignment"
-  #   args = TrainingArguments(
+  #   args = transformers.TrainingArguments(
   #     report_to = 'wandb',
   #     output_dir = os.environ['WANDB_PROJECT'],
   #     overwrite_output_dir = True,
@@ -87,7 +105,7 @@ def get_trainer(config = None):
   #     optim = config.optim
   #   )
 
-    # trainer = Trainer(
+    # trainer = transformers.Trainer(
     #   model = modelobj,
     #   args = args, 
     #   train_dataset = dataset_tokenized['train'],
