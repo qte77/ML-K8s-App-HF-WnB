@@ -66,3 +66,5 @@ e.g.
 * pydoc
 * Python hitchhiker BP
 * Makefile
+* Decouple concerns into separate containers
+* Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
