@@ -48,15 +48,19 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 
 ## TODO [↑](#ml-k8s-app-hf-wnb)
 
-* Test-if instead of exception handling
-* Get sweep config
-* Arg parsing
-* pydoc
-* Python hitchhiker BP
-* Makefile
-* Decouple concerns into separate containers
-* Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-* CI/CD-Skeletton
-* Have a look at [PyTest](http://pytest.org/)
-* Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
-* Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+* [x] Basic exception handling
+* [x] Type handling in function calls
+* [x] Read multiple yml inside one file inside config loader
+ * abondoned, use separate yml
+* [x] Get sweep config
+* [x] Makefile
+* [x] Have a look at [PyTest](http://pytest.org/)
+* [ ] Use if for feature instead of exception handling
+* [ ] Arg parsing
+* [ ] pydoc-action to generate into gh-pages /docs 
+* [ ] Python hitchhiker BP
+* [ ] Decouple concerns into separate containers
+* [ ] Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+* [ ] CI/CD-Skeletton
+* [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
+* [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
