@@ -6,7 +6,7 @@ from os import path
 from yaml import safe_load
 
 #TODO export config in files.yml to separate from program flow?
-cfg_path = "./config"
+cfg_path = "../config"
 cfg_defaults = [ 
     'defaults' 'task',
     'huggingface', 'wandb',

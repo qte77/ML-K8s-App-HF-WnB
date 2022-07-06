@@ -1,15 +1,14 @@
 # ML-K8s-App-HF-WnB
 
-End-to-end K8s app with Hugging Face and Weights&amp;Biases.
+[DRAFT]
 
-[DRAFT] of a pipeline using Hugging Face and Weights&Biases.
+End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Biases to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a local venv, a docker image and K8s to showcase the separation of concerns of the different layers. 
 
 ----> **Not fully implemented yet** <----
 
 ## TOC
 
 * [Purpose](#purpose-)
-* [Repo structure ](#repo-structure-)
 * [App structure](#app-structure-)
 * [Install](#install-)
 * [TODO](#todo-)
@@ -20,10 +19,6 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
 * Implement self-contained modular pipeline
 * Models can be loaded from registries 
 
-## Repo structure [↑](#ml-k8s-app-hf-wnb)
-
-* `k8s-app` Components of a K8s pipeline, intended as a PoC for production
-
 ## App structure [↑](#ml-k8s-app-hf-wnb)
 
 * Dockerfile
@@ -33,30 +28,23 @@ End-to-end K8s app with Hugging Face and Weights&amp;Biases.
  * requirements.txt
  * /config
  * /modules
-
-### Modules
-
-* train.py
-* infer.py
-* prepare.py
- * parametrise.py
-  * loadcfg.py
+* /kubernetes
+ * /base
+ * /overlay
 
 ## Install [↑](#ml-k8s-app-hf-wnb)
+
+### Local python venv
+
+`make local`
+
+### Docker
+
+`make build`
 
 ### Kubernetes
 
 **TODO**
-
-### Docker image
-
-`podman image build --tag <tag>`  
-e.g.  
-`podman image build --tag ML-pipeline:latest`
-
-#### Local python venv
-
-`make makefile local`
 
 ## TODO [↑](#ml-k8s-app-hf-wnb)
 
@@ -68,3 +56,7 @@ e.g.
 * Makefile
 * Decouple concerns into separate containers
 * Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+* CI/CD-Skeletton
+* Have a look at [PyTest](http://pytest.org/)
+* Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
+* Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
