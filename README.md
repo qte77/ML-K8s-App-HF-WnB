@@ -24,13 +24,13 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 * Dockerfile
 * makefile
 * /app
- * app.py
- * requirements.txt
- * /config
- * /modules
+  * app.py
+  * requirements.txt
+  * /config
+  * /modules
 * /kubernetes
- * /base
- * /overlay
+  * /base
+  * /overlay
 
 ## Install [↑](#ml-k8s-app-hf-wnb)
 
@@ -49,18 +49,26 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 ## TODO [↑](#ml-k8s-app-hf-wnb)
 
 * [x] Basic exception handling
+  * May be problematic with function returns
 * [x] Type handling in function calls
+  * Implemented to improve readability
+  * May be extended with pydantic or python typing
 * [x] Read multiple yml inside one file inside config loader
- * abondoned, use separate yml
+  * Abondoned, adds unnecessary complexity, use separate yml
 * [x] Get sweep config
-* [x] Makefile
-* [x] Have a look at [PyTest](http://pytest.org/)
-* [ ] Use if for feature instead of exception handling
-* [ ] Arg parsing
-* [ ] pydoc-action to generate into gh-pages /docs 
-* [ ] Python hitchhiker BP
+  * Implemented and functional
+  * May be extended to other providers, but for MVP sufficient
+* [x] Use `makefile` instead of `setup.sh`
+  * Implemented and functional
+  * Need improvement for local venv install, because `source` can not run inside `make`
+* [ ] Use `if` for feature ensurance instead of `Ecxeption`
+* [ ] Implement pydoc-action to auto-generate into gh-pages /docs
 * [ ] Decouple concerns into separate containers
 * [ ] Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-* [ ] CI/CD-Skeletton
+* [ ] Adhere to BP from [The Hitchhiker’s Guide to Python!](https://docs.python-guide.org/)
+* [ ] Implement basic CI/CD-Skeletton
+* [ ] Have a look at [PyTest](http://pytest.org/)
 * [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
 * [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+* [ ] Try arg parsing
+* [ ] Implement basic API, e.g. with guvicorn or FastAPI
