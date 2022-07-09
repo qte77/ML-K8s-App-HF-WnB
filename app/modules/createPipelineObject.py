@@ -7,15 +7,9 @@ from trainModel import train_Model
 from inferModel import infer_model
 
 class Pipeline:
-
+    
     def __init__(self, paramobj):
         self.paramobj = paramobj
-
-    def get_env_info():
-        #TODO unload module watermark
-        #TODO use build-in functionality to provide info?
-        # import watermark
-        # watermark -u -i -v -iv
 
     def set_train_mode(self, train_mode: bool) -> None:
         '''
@@ -52,6 +46,12 @@ class Pipeline:
         )
 
     #TODO following functionality may be too much for basic MVP, exclude?
+
+    # def get_env_info():
+        #TODO unload module watermark
+        #TODO use build-in functionality to provide info?
+        # import watermark
+        # watermark -u -i -v -iv
 
     # def get_task(self):
     #     return self.task

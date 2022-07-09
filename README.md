@@ -61,6 +61,13 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 * [x] Use `makefile` instead of `setup.sh`
   * Implemented and functional
   * Need improvement for local venv install, because `source` can not run inside `make`
+* [x] Try `dataclass` and `field` from [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
+  * Used to auto add special classes like `__init__`, `__str__`, `__repr__`
+  * Uses type hinting and decorators
+  * Abandoned, classes in this app not complex enough
+* [x] Use [SemVer](https://semver.org/) for semantic versioning
+  * Seems to be reasonable
+* [ ] [Single source app version](https://packaging.python.org/guides/single-sourcing-package-version/)
 * [ ] Use `if` for feature ensurance instead of `Ecxeption`
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs
 * [ ] Decouple concerns into separate containers
@@ -70,5 +77,6 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 * [ ] Have a look at [PyTest](http://pytest.org/)
 * [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
 * [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
-* [ ] Try arg parsing
-* [ ] Implement basic API, e.g. with guvicorn or FastAPI
+* [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
+* [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
+* [ ] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
