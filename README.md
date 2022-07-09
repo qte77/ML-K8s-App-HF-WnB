@@ -2,7 +2,8 @@
 
 [DRAFT]
 
-End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Biases to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a local venv, a docker image and K8s to showcase the separation of concerns of the different layers. 
+This project aims to create an end-to-end ML app as a functional MVP.  
+The app itself uses Hugging Face and Weights&amp;Biases to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components. 
 
 ----> **Not fully implemented yet** <----
 
@@ -17,7 +18,6 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 
 * Showcase an end-to-end app with train and inference mode
 * Implement self-contained modular pipeline
-* Models can be loaded from registries 
 
 ## App structure [↑](#ml-k8s-app-hf-wnb)
 
@@ -34,7 +34,7 @@ End-to-end  ML app as a MVP. The app itself uses Hugging Face and Weights&amp;Bi
 
 ## Install [↑](#ml-k8s-app-hf-wnb)
 
-### Local python venv
+### Python venv
 
 `make local`
 
