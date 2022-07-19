@@ -1,6 +1,6 @@
-# ML-K8s-App-HF-WnB
+# App-K8s-HF-WnB
 
-[DRAFT] [WIP] **----> Not fully implemented yet**
+**[DRAFT]** **[WIP]** **----> Not fully implemented yet**
 
 This project aims to create an end-to-end ML app as a functional MVP.  
 The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components. 
@@ -8,31 +8,18 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 ## TOC
 
 * [Purpose](#purpose-)
-* [App structure](#app-structure-)
 * [Install](#install-)
+* [App structure](#app-structure-)
 * [TODO](#todo-)
 
-## Purpose [↑](#ml-k8s-app-hf-wnb)
+## Purpose [↑](#app-k8s-hf-wnb)
 
 * Showcase an end-to-end app with train and inference mode
 * Implement self-contained modular pipeline
 
-## App structure [↑](#ml-k8s-app-hf-wnb)
+## Install [↑](#app-k8s-hf-wnb)
 
-* Dockerfile
-* makefile
-* /app
-  * app.py
-  * requirements.txt
-  * /config
-  * /modules
-* /kubernetes
-  * /base
-  * /overlay
-
-## Install [↑](#ml-k8s-app-hf-wnb)
-
-### Python venv
+### Local
 
 `make local`
 
@@ -42,9 +29,57 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 
 ### Kubernetes
 
-**TODO**
+`make k8s-prod` or `make k8s-test`
 
-## TODO [↑](#ml-k8s-app-hf-wnb)
+## App structure [↑](#app-k8s-hf-wnb)
+
+```
+/
+├─ app/
+│  ├─ config/
+│  │  ├─ defaults.yml
+│  │  ├─ huggingface.yml
+│  │  ├─ sweep.yml
+│  │  ├─ sweep-wandb.yml
+│  │  ├─ task.yml
+│  │  ├─ wandb.key.dummy.yml
+│  │  └─ wandb.yml
+│  ├─ modules/
+│  │  ├─ createPipelineObject.py
+│  │  ├─ inferModel.py
+│  │  ├─ loadConfigs.py
+│  │  ├─ parametrisePipeline.py
+│  │  ├─ prepareLoggingSweep.py
+│  │  ├─ prepareMLInput.py
+│  │  └─ trainModel.py
+│  ├─ _version.py
+│  ├─ app.py
+│  └─ Pipfile
+├─ kubernetes/
+│  ├─ base/
+│  │  ├─ deployment.yml
+│  │  ├─ kustomization.yml
+│  │  ├─ pvc.yml
+│  │  └─ service.yml
+│  └─ overlay/
+│     ├─ prod/
+│     │  ├─ ingress.yml
+│     │  ├─ kustomization.yml
+│     │  └─ namespace.yml
+│     └─ test/
+│        ├─ ingress.yml
+│        ├─ kustomization.yml
+│        └─ namespace.yml
+├─ .gitignore
+├─ .python-version
+├─ CHANGELOG.md
+├─ Dockerfile
+├─ LICENSE
+├─ Makefile
+└─ README.md
+```
+
+## TODO [↑](#app-k8s-hf-wnb)
 
 ### Coding
 
@@ -71,16 +106,19 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 
 ### Dependency tracking and app sourcing
 
-* [ ] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to [requirements.txt]()
+* [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to [requirements.txt]()
   * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed' 
 * [ ] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
 * [ ] Provide package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py`
 
 ### Project management
 
-* [x] Use `makefile` instead of self-implemented imparative `setup.sh`
+* [x] Use `Makefile` instead of self-implemented imparative `setup.sh`
   * Implemented and functional
   * Need improvement for local venv install, because `source` can not run inside `make`
+* [x] Adopt [CHANGELOG.md](https://keepachangelog.com/en/1.0.0/)
+  * 'A changelog is a file which contains a curated, chronologically ordered list of notable changes for each version of a project.'
+  * Seems to be reasonable
 * [x] Adopt [SemVer](https://semver.org/) for semantic versioning
   * Seems to be reasonable
 * [ ] Implement basic CI/CD-Skeleton
