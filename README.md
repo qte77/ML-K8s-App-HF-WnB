@@ -3,8 +3,7 @@
 [DRAFT] [WIP] **----> Not fully implemented yet**
 
 This project aims to create an end-to-end ML app as a functional MVP.  
-The app itself uses Hugging Face and Weights&amp;Biases to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components. 
-
+The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components. 
 
 ## TOC
 
@@ -86,8 +85,7 @@ The app itself uses Hugging Face and Weights&amp;Biases to reduce initial comple
   * Seems to be reasonable
 * [ ] Implement basic CI/CD-Skeleton
 * [ ] Have a look at [PyTest](http://pytest.org/)
-* [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action
-](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
+* [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
 
 ### Best practices
 

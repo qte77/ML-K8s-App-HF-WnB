@@ -1,25 +1,23 @@
-#
-
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
-pyyaml = "==6.0"
 numpy = "==1.21.6"
 protobuf = "==3.20.1"
+pyyaml = "==6.0"
+watermark==2.3.1
+#https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp38-cp38-linux_x86_64.whl
+#git+https://github.com/huggingface/transformers
 transformers = "==4.19.4"
 datasets = "==2.3.0"
 wandb = "==0.12.18"
-black = "==22.6.0"
-flake8 = "==4.0.*"
-isort = "==5.10.*"
-pipenv = "*"
-lock = "*"
+#pipenv = "*"
+#lock = "*"
 
 [dev-packages]
-black = "==22.6.*"
+black = "==22.6.0"
 flake8 = "==4.0.*"
 isort = "==5.10.*"
 
