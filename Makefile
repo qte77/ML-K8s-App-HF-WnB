@@ -28,3 +28,11 @@ k8s-prod: ${KUBE_PROD}
 k8s-test: ${KUBE_TEST}
 	build
 	kubectl apply -k ${KUBE_TEST}
+
+.PHONY: help
+
+help: README.md
+	@$(cat $^)
+
+%: README.md
+	help
