@@ -1,16 +1,32 @@
 # App-K8s-HF-WnB
 
+This project aims to create an end-to-end ML app as a functional MVP.  
+The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components.
+
+## Status
+
 **[DRAFT]** **[WIP]** **----> Not fully implemented yet**
 
-This project aims to create an end-to-end ML app as a functional MVP.  
-The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components. 
+## Quickstart
+
+* Quickstart
 
 ## TOC
 
-* [Purpose](#purpose-)
+<!--
+* [Usage](#usage-)
 * [Install](#install-)
-* [App structure](#app-structure-)
+-->
+* [Purpose](#purpose-)
+<!--
+* [Reason](#reason-)
+* [Paradigms](#paradigms-)
+-->
+* [App Structure](#app-structure-)
+* [App Details](#app-details-)
 * [TODO](#todo-)
+* [Inspirations](#inspirations-)
+* [Rescources](#resources-)
 
 ## Purpose [↑](#app-k8s-hf-wnb)
 
@@ -31,7 +47,7 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 
 `make k8s-prod` or `make k8s-test`
 
-## App structure [↑](#app-k8s-hf-wnb)
+## App Structure [↑](#app-k8s-hf-wnb)
 
 ```
 /
@@ -124,8 +140,3 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 * [ ] Implement basic CI/CD-Skeleton
 * [ ] Have a look at [PyTest](http://pytest.org/)
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
-
-### Best practices
-
-* [ ] Adhere to [Docker BP](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
-* [ ] Adhere to BP from [The Hitchhiker’s Guide to Python!](https://docs.python-guide.org/)
