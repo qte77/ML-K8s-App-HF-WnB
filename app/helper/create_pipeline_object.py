@@ -1,23 +1,20 @@
 #!/usr/bin/env python
-'''
-Create a pipeline object
-'''
-from prepareMLInput import prepare_ml_components, get_tokenizer, get_model
-from trainModel import train_Model
-from inferModel import infer_model
+from prepare_ml_input import prepare_ml_components, get_tokenizer, get_model
+from train_model import train_model
+from infer_model import infer_model
 
 class Pipeline:
+    """Create a pipeline object with a parameter object"""
     
     def __init__(self, paramobj):
         self.paramobj = paramobj
 
     def set_train_mode(self, train_mode: bool) -> None:
-        '''
-        Switch mode between train and infer
-        '''
+        """Switch mode between train and infer"""
         self.paramobj.train_mode = train_mode
 
     def do_prepare(self) -> None:
+        """Prepare the """
         #TODO object manipulation inside prepare class?
         self['metrics']['metrics_loaded'] = prepare_ml_components(
             self.paramobj.dataset,
@@ -27,7 +24,8 @@ class Pipeline:
         )
 
     def do_train(self) -> None:
-        train_Model(
+        """Train the model"""
+        train_model(
             self.paramobj.project_name,
             self.paramobj.metrics.metrics_to_optimize,
             self.paramobj.sweep.provider,
@@ -35,9 +33,7 @@ class Pipeline:
         )
 
     def do_infer(self, input):
-        '''
-        
-        '''
+        """Infer with model"""
         infer_model(
             input,
             get_tokenizer(self.paramobj.model_full_name),
@@ -58,18 +54,3 @@ class Pipeline:
 
     # def get_pipeobj(self) -> pipeobj:
     #     return self
-
-    # def get_dataset_eda():
-    #     #TODO implement with different dataset types, maybe separate module
-    #     return -1
-
-    # def get_pre_trained_hyperparam(self):
-    #     return self.modelobj.config
-    
-    # def get_attention(self):
-    #     return self.modelobj.base_model.encoder.layer[0]
-    #     # print(modelobj.bert.encoder.layer[0])
-    
-    # def get_embeddings(self):
-    #     return self.modelobj.base_model.embeddings
-    #     # print(modelobj.bert.embeddings)

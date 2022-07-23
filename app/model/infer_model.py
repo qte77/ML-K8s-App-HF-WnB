@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-'''
-Model inference
-'''
+"""Model inference"""
 from transformers import AutoTokenizer
 # from torch import cuda, no_grad
 
@@ -9,7 +7,8 @@ def test_model(
     inputs: str,
     device: str
 ) -> str:
-
+    """"""
+    
     #TODO source for test function, WandB colab?
     #TODO multi inputs
     device = device.tolower()
@@ -26,18 +25,16 @@ def test_model(
             # get the top prediction class and convert it to its associated label
             # top_prediction = predictions.argmax().item()
             # return ds['train'].features['labels'].int2str(top_prediction)
+            pass
         return "not implemented"
     else:
         return "NO CUDA"
-
 
 def infer_model(
     input: str,
     device: str
 ) -> str: #TODO
-    '''
-    Infers result from model given input 
-    '''
+    """Infers result from model given input"""
 
     #TODO adopt to model and task
     #if dataset == 'YAHOO':

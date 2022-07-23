@@ -2,42 +2,35 @@
 '''
 Train model
 '''
-from prepareLoggingSweep import login_to_provider, create_sweep
-from transformers import Trainer, TrainingArguments #,Metric
+from ..helper.prepare_sweep import start_sweep
+from transformers import Trainer, TrainingArguments, Metric
 #import bert_score
-from wandb import log, agent
+from wandb import log
 from numpy import argmax
 
 
-def train_Model(
+def train_model(
   project_name: str,
   metric_to_optimize: str,
   metrics_loaded: list,
   sweep_config: dict,
   provider: str
-) -> None:
+) -> object:
 
-  #TODO incorp --cloud and $WANDB_KEY into login-fun
-  login_to_provider(provider)
+  start_sweep(provider)
 
-  #if env WANDB_ENTITY not used: entity=<entity>
-  sweep_id = create_sweep(sweep_config.config, project_name)
-  trainerobj = _create_trainer(metric_to_optimize, metrics_loaded)
-
-  wandb.agent(sweep_id, trainerobj, count = sweep_config['train_count'])
-
-  return -1
+  return NotImplementedError
 
 
 def _compute_metrics(
   eval_pred: list, #TOCO check type
   metrics_loaded: list,
   metrics_avg: str
-) -> object: #TODO change type to HF metric object
+) -> Metric:
 
   #TODO refactor 
   predictions, labels = eval_pred
-  predictions = numpy.argmax(predictions, axis = 1) #predictions.argmax(-1)
+  predictions = argmax(predictions, axis = 1) #predictions.argmax(-1)
   
   print("*************")
   
@@ -58,7 +51,7 @@ def _compute_metrics(
     if metrics_loaded[i] == 'accuracy':
       ret = met
 
-    wandb.log(met)
+    log(met)
     print(met)
     
   print("*************")
@@ -66,7 +59,7 @@ def _compute_metrics(
   return ret
 
 
-def _create_trainer(config = None) -> transformers.Trainer:
+def _create_trainer(config = None) -> Trainer:
   #TODO implement
   #TODO save locally
 
@@ -121,4 +114,4 @@ def _create_trainer(config = None) -> transformers.Trainer:
 
   # return trainer
   
-  return -1
+  return NotImplementedError

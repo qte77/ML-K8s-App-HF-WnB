@@ -1,8 +1,6 @@
 #!/usr/bin/env python
-'''
-Load configuration files
-'''
-from os import path
+"""Load configuration files"""
+from os.path import exists
 from yaml import safe_load
 
 #TODO export config in files.yml to separate from program flow?
@@ -13,10 +11,8 @@ cfg_defaults = [
     'sweep', 'sweep-wandb'
 ]
 
-def get_config(cfg_name: str):
-    '''
-    Parses config yaml and returns config objects
-    '''
+def get_config(cfg_name: str) -> object:
+    """Parses config yaml and returns config objects"""
     if cfg_defaults.__contains__(cfg_name):
         cfg = cfg_defaults[cfg_name]
     else:
@@ -24,11 +20,11 @@ def get_config(cfg_name: str):
 
     cfg = f'{cfg_path}/{cfg}.yml'
 
-    if not os.path.exists(cfg):
-        return Exception(f'Configuration {cfg_name} not found. Aborting')
+    if not exists(cfg):
+        return FileNotFoundError
 
     try:
         with open(cfg, 'r', encoding='utf8') as yml:
-            return yaml.safe_load(yml)
+            return safe_load(yml)
     except Exception as e:
         return e

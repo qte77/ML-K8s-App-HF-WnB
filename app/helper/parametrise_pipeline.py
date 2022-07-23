@@ -1,21 +1,19 @@
 #!/usr/bin/env python
-'''
-Parametrise and return a parameter object
-'''
+"""Parametrise and return a parameter object"""
 #TODO rename 'defaults' more specific and descriptive
 #TODO generalize provider parametrisation
 #TODO refactor Pipeline-object out into function only?
 
-from loadConfigs import get_config
+from load_configs import get_config
 from os import environ
 from torch import device
 from torch.cuda import is_available
 
 
 def get_param_object() -> dict:
-'''
-Returns parameter dict with values filled with `loadConfigs.get_config(<config>)`
-'''
+  """
+  Returns parameter dict with values filled with `loadConfigs.get_config(<config>)`
+  """
   defaults: dict = loadConfigs.get_config('defaults')
   hf_params: dict = loadConfigs.get_config('huggingface')
   sweep: dict = loadConfigs.get_config('sweep')
@@ -49,12 +47,15 @@ Returns parameter dict with values filled with `loadConfigs.get_config(<config>)
 
 
 def _get_defaults(defaults: dict) -> dict:
+  """Returns the default values"""
 
-  if not defaults.save_dir == '':
-    return { 'save_dir' : defaults.save_dir }
-  else:
-    #TODO check whether dir exists
-    return { 'save_dir' : './data' }
+  # if not defaults.save_dir == '':
+  #   return { 'save_dir' : defaults.save_dir }
+  # else:
+  #   #TODO check whether dir exists
+  #   return { 'save_dir' : './data' }
+
+  return NotImplementedError
 
 
 def _get_dataset_cfg(
@@ -121,11 +122,11 @@ def _get_metrics_to_load(
 def _get_device() -> str:
 
   try:
-    os.environ['TPU_NAME']
+    environ['TPU_NAME']
     return 'tpu'
   except:
     try:
-      return torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+      return device('cuda' if is_available() else 'cpu')
     except Exception as e:
       return e
 
@@ -148,16 +149,18 @@ def _get_wandb_env(
   wandb_params: object,
   project_name: str
 ) -> dict:
-  '''
+  """
   Checks for API-key first. Returns exception if not found
   Expects keyfile as yaml:
     username: ''
     key: ''
-  '''
+  """
   try:
-    wandb_user_key = loadConfigs.get_config(wandb_params['wandb_keyfile'])
+    wandb_user_key = get_config(wandb_params['wandb_keyfile'])
+  except FileNotFoundError:
+    return 'API-key not found'
   except Exception as e:
-    return e('API-key not found')
+    return e
 
   wandbobj = {}
   wandbobj['username'] = wandb_user_key['username']
@@ -178,6 +181,6 @@ def get_sweep_cfg(sweep: object) -> dict:
   if sweepobj['is_sweep']:
     sweepobj['train_count'] = sweep.train_count
     sweepobj['provider'] = sweep.provider
-    sweepobj['config'] = loadConfigs(f'sweep-{sweep.provider}')
+    sweepobj['config'] = get_config(f'sweep-{sweep.provider}')
 
   return sweepobj

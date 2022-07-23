@@ -4,8 +4,8 @@ Entrypoint for the app
 '''
 #TODO conditional import possible and best practice ?
 #TODO use color for CLI ?
-from createPipelineObject import Pipeline
-from parametrisePipeline import get_param_object
+from helper.create_pipeline_object import Pipeline
+from helper.parametrise_pipeline import get_param_object
 # from sys import color #or os?
 
 def main():

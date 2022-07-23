@@ -21,8 +21,7 @@
 #
 # [optional footer(s)]
 #
-# BREAKING CHANGE: 
-# Refs, Resolves, Addresses, Reviewed by
+# [BREAKING CHANGE:, Refs:, Resolves:, Addresses:, Reviewed by:]
 #
 #<--- usage ----------------------------------------------------------->
 #
