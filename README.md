@@ -1,17 +1,23 @@
-# App-K8s-HF-WnB
+App-K8s-HF-WnB
+===
 
 This project aims to create an end-to-end ML app as a functional MVP.  
 The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components.
 
-## Status
+Status
+---
 
 **[DRAFT]** **[WIP]** **----> Not fully implemented yet**
 
-## Quickstart
+The current version is <0.3.0>. For version history have a look at [CHANGELOG.md](./CHANGELOG.md).
+
+Quickstart
+---
 
 * Quickstart
 
-## TOC
+TOC
+---
 
 <!--
 * [Usage](#usage-)
@@ -28,12 +34,14 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 * [Inspirations](#inspirations-)
 * [Rescources](#resources-)
 
-## Purpose [↑](#app-k8s-hf-wnb)
+Purpose [↑](#app-k8s-hf-wnb)
+---
 
 * Showcase an end-to-end app with train and inference mode
 * Implement self-contained modular pipeline
 
-## Install [↑](#app-k8s-hf-wnb)
+Install [↑](#app-k8s-hf-wnb)
+---
 
 ### Local
 
@@ -47,9 +55,10 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 
 `make k8s-prod` or `make k8s-test`
 
-## App Structure [↑](#app-k8s-hf-wnb)
+App Structure [↑](#app-k8s-hf-wnb)
+---
 
-```
+```sh
 /
 ├─ app/
 │  ├─ config/
@@ -95,7 +104,8 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 └─ README.md
 ```
 
-## TODO [↑](#app-k8s-hf-wnb)
+TODO [↑](#app-k8s-hf-wnb)
+---
 
 ### Coding
 
@@ -122,8 +132,8 @@ The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce i
 
 ### Dependency tracking and app sourcing
 
-* [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to [requirements.txt]()
-  * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed' 
+* [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to `requirements.txt`
+  * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed'
 * [ ] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
 * [ ] Provide package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py`
 
