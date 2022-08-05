@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 datasets = "==2.3.0"
-numpy = "==1.21.6"
+numpy = "==1.23.1"
 protobuf = "==3.20.1"
 pyyaml = "==6.0"
 transformers = "==4.19.4"
