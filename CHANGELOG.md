@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+Logger added.
+
+### Added
+
+- `config/logging.conf`
+- `helper/config_logger.py`
+
 [1.2.0] - 2022-08-06
 ---
 
