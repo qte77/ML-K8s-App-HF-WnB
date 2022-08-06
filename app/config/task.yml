@@ -1,14 +1,13 @@
 ---
-task:
-  dataset: mrpc
-  model: bbu
-  metric_to_optimize: eval_loss
-  #https://huggingface.co/metrics
-  metrics_to_load:
-    - 'accuracy'
-    - 'precision'
-    - 'recall'
-    - 'f1'
-    - 'mae'
-    - 'mse'
+dataset: mrpc
+model: bbu
+metric_to_optimize: eval_loss
+#https://huggingface.co/metrics
+metrics_to_load:
+  - 'accuracy'
+  - 'precision'
+  - 'recall'
+  - 'f1'
+  - 'mae'
+  - 'mse'
 ...

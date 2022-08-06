@@ -13,7 +13,7 @@ def config_logger_or_exit(
     config_path: str = "config",
 ) -> None:
     """
-    Load [logger_name] from [root]/[config_path]/[config_fn]
+    Load [logger_name] from 'root/[config_path]/[config_fn]'
     Configure the logger or exit if not existing or error occurs
     The path to the config is constructed from app/package root
     https://docs.python.org/3/library/logging.html

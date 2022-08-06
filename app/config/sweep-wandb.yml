@@ -7,7 +7,6 @@ metric:
   #optimize multiple metrics
   #https://docs.wandb.ai/guides/sweeps/faq#optimizing-multiple-metrics
   #accuracy: maximize, eval_loss: minimize
-  goal: minimize
   name: loss
 early_terminate:
   type: hyperband

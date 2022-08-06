@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Entrypoint for the app"""
 
-from logging import debug
+from json import dump
 from sys import exit
 from typing import Literal, Union
 
@@ -10,7 +10,10 @@ from helper.parametrise_pipeline import get_param_dict
 from helper.Pipeline import Pipeline
 
 
-def main(mode: str = Union[Literal["train"], Literal["infer"]]) -> None:
+def main(
+    mode: str = Union[Literal["train"], Literal["infer"]],
+    save_config_json: bool = False,
+) -> None:
     """
     Create pipeline object parametrised with parameter object and execute task.
     The task performed depends on the input of the `mode` [train, infer].
@@ -18,9 +21,11 @@ def main(mode: str = Union[Literal["train"], Literal["infer"]]) -> None:
 
     config_logger_or_exit()
 
-    params = get_param_dict()
+    params: dict = get_param_dict()
 
-    debug(params)
+    if save_config_json:
+        with open("paramobj.json", "w") as outfile:
+            dump(params, outfile, indent=2)
 
     # pipeobj = Pipeline(get_param_dict())
     # pipeobj.do_prepare()
@@ -30,4 +35,4 @@ def main(mode: str = Union[Literal["train"], Literal["infer"]]) -> None:
 
 if __name__ == "__main__":
     # main(sys.argv[1], sys.argv[2], sys.argv[3])
-    exit(main())
+    exit(main(save_config_json=True))

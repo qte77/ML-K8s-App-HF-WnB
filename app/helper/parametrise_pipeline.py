@@ -4,89 +4,70 @@
 # TODO generalize provider parametrisation
 # TODO refactor Pipeline-object out into function only?
 
+from logging import debug
 from os import environ
 
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import get_config
+from .load_configs import get_config_content, get_keyfile_content
 
 # from logging import debug, error, getLogger, root
 
 
 def get_param_dict() -> dict:
     """
-    Returns parameter dict with values filled with `helper.load_configs.get_config(<config>)`
+    Returns parameter dict with values filled with
+    `helper.load_configs.get_config_content(<config>)`
     """
-    defaults: dict = get_config("defaults")
-    hf_params: dict = get_config("huggingface")
-    sweep: dict = get_config("sweep")
-    task: dict = get_config("task")
+
+    hf_params: dict = get_config_content("huggingface")
+    sweep: dict = get_config_content("sweep")
+    task: dict = get_config_content("task")
 
     paramobj = {}
-    paramobj["sweep"] = get_sweep_cfg(sweep)
-    paramobj["device"] = _get_device()
-    paramobj["dataset"] = _get_dataset_cfg(hf_params["datasets"], task["dataset"])
-    paramobj["project_name"] = _get_project_name(
+    paramobj["metrics"] = {}
+    paramobj["sweep"]: dict = _get_sweep_cfg(sweep)
+    paramobj["device"]: str = str(_get_device())
+    paramobj["dataset"]: dict = _get_dataset_cfg(hf_params["datasets"], task["dataset"])
+    paramobj["project_name"]: str = _get_project_name(
         task["model"],
-        paramobj["dataset"]["name"],
+        paramobj["dataset"]["dataset"],
         paramobj["device"],
         paramobj["sweep"]["is_sweep"],
     )
-    if paramobj["sweep"]["is_sweep"]:
-        # TODO case
-        if paramobj["sweep"]["provider"] == "wandb":
-            wandb_params = get_config("wandb")
-            paramobj["wandb"] = _get_wandb_env(wandb_params, paramobj["project_name"])
-    paramobj["defaults"] = _get_defaults(defaults)
-    paramobj["model_full_name"] = _get_model_full_name(
+    paramobj["model_full_name"]: str = _get_model_full_name(
         hf_params["models"], task["model"]
     )
-    paramobj["metrics"]["metric_to_optimize"] = _get_metric_to_optimize_cfg(
+    paramobj["metrics"]["metric_to_optimize"]: dict = _get_metric_to_optimize_cfg(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
     paramobj["metrics"]["metrics_to_load"] = _get_metrics_to_load(
-        hf_params["metrics_secondary_possible"], task["metrics_to_load"]
+        task["metrics_to_load"], hf_params["metrics_secondary_possible"]
     )
+
+    if paramobj["sweep"]["is_sweep"]:
+        if paramobj["sweep"]["provider"] == "wandb":
+            wandb_params = get_config_content("wandb")
+            paramobj["wandb"] = _get_wandb_env(wandb_params, paramobj["project_name"])
 
     return paramobj
 
 
-def _get_defaults(defaults: dict) -> dict:
-    """Returns the default values"""
-
-    # if not defaults.save_dir == '':
-    #   return { 'save_dir' : defaults.save_dir }
-    # else:
-    #   #TODO check whether dir exists
-    #   return { 'save_dir' : './data' }
-
-    return NotImplementedError
-
-
 def _get_dataset_cfg(datasets: dict, dataset: str) -> dict:
+    """Gets the configuration of the dataset"""
 
-    datasetobj = {}
     try:
-        dataset = dataset.lower()
-        (
-            datasetobj["name"],
-            datasetobj["configuration"],
-            datasetobj["avg"],
-            datasetobj["colsrename"],
-            datasetobj["colstokens"],
-            datasetobj["colsremove"],
-        ) = datasets.get(dataset, ["Invalid dataset", ""])
-        return datasetobj
+        return datasets[dataset.lower()]
     except Exception as e:
         return e
 
 
 def _get_model_full_name(models: dict, model: str) -> str:
+    """Loads the full name of the model"""
 
     try:
-        model = model.lower()
-        return models.get(model, ["Invalid model", ""])
+        return models.get(model.lower(), ["Invalid model", ""])
     except Exception as e:
         return e
 
@@ -94,34 +75,35 @@ def _get_model_full_name(models: dict, model: str) -> str:
 def _get_metric_to_optimize_cfg(
     metrics_to_optimize: dict, metric_to_optimize: str
 ) -> dict:
+    """Loads the primary metric to optimise for and its parameters"""
 
     metricsobj = {}
     try:
+        # TODO {}.get(metric_to_optimize, ["Invalid metric", ""])
         metric_to_optimize = metric_to_optimize.lower()
-        metricsobj["goal"], metricsobj["greater_is_better"] = metrics_to_optimize.get(
-            metric_to_optimize, ["Invalid metric", ""]
-        )
+        metricsobj["name"] = metric_to_optimize
+        metricsobj["goal"] = metrics_to_optimize[metric_to_optimize]["goal"]
+        metricsobj["greater_is_better"] = metrics_to_optimize[metric_to_optimize][
+            "greater_is_better"
+        ]
         return metricsobj
     except Exception as e:
         return e
 
 
 def _get_metrics_to_load(
-    metrics_to_load: list, metrics_secondary_possible: bool
+    metrics_to_load: list[str], metrics_secondary_possible: list[str]
 ) -> list:
+    """Loads secondary metrices"""
 
-    metrics = []
     try:
-        for metric in metrics_to_load:
-            metrics.append() if metrics_secondary_possible.count(metric) else print(
-                f"{metric} not contained"
-            )
-        return metrics
+        return [met for met in metrics_to_load if met in metrics_secondary_possible]
     except Exception as e:
         return e
 
 
 def _get_device() -> str:
+    """Returns the device as 'cpu', 'gpu' or 'tpu'"""
 
     try:
         environ["TPU_NAME"]
@@ -136,6 +118,7 @@ def _get_device() -> str:
 def _get_project_name(
     model: str, dataset_name: str, device: str, is_sweep: bool
 ) -> str:
+    """Returns the project name as f'{model}-{dataset_name}-{device}{suffix}'"""
 
     suffix = "-sweep" if is_sweep else ""
     try:
@@ -144,39 +127,39 @@ def _get_project_name(
         return e
 
 
+def _get_sweep_cfg(sweep: dict) -> dict:
+    """Gets the configuration of the sweep"""
+
+    sweepobj = {}
+    sweepobj["is_sweep"] = True if int(sweep["train_count"]) > 1 else False
+
+    if sweepobj["is_sweep"]:
+        sweep_provider = sweep["provider"]
+        sweepobj["provider"] = sweep_provider
+        sweepobj["config"] = get_config_content(f"sweep-{sweep_provider}")
+        sweepobj["train_count"] = sweep["train_count"]
+
+    return sweepobj
+
+
 def _get_wandb_env(wandb_params: object, project_name: str) -> dict:
     """
+    Not Implemented yet: WANDB_NOTES, WANDB_TAGS
     Checks for API-key first. Returns exception if not found
     Expects keyfile as yaml:
       username: ''
       key: ''
     """
-    try:
-        wandb_user_key = get_config(wandb_params["wandb_keyfile"])
-    except FileNotFoundError:
-        return "API-key not found"
-    except Exception as e:
-        return e
 
-    wandbobj = {}
-    wandbobj["username"] = wandb_user_key["username"]
-    wandbobj["key"] = wandb_user_key["key"]
-    wandbobj["entity"] = wandb_params["entity"]
-    wandbobj["project"] = project_name
-    wandbobj["watch"] = wandb_params["watch"]
-    wandbobj["save_code"] = wandb_params["save_code"]
-    wandbobj["log_model"] = wandb_params["log_model"]
+    wandbobj = wandb_params
+    wandbobj["WANDB_PROJECT"] = project_name
+    debug(wandbobj)
+
+    try:
+        keyfile_content = get_keyfile_content("wandb")
+        debug(f"kfc: {keyfile_content}")
+        wandbobj["username"], wandbobj["key"] = keyfile_content
+    except Exception as e:
+        debug(e)
 
     return wandbobj
-
-
-def get_sweep_cfg(sweep: object) -> dict:
-
-    sweepobj = {}
-    sweepobj["is_sweep"] = True if sweep.train_count > 1 else False
-    if sweepobj["is_sweep"]:
-        sweepobj["train_count"] = sweep.train_count
-        sweepobj["provider"] = sweep.provider
-        sweepobj["config"] = get_config(f"sweep-{sweep.provider}")
-
-    return sweepobj
