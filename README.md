@@ -77,14 +77,10 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  ├─ config/
 │  ├─ helper/
 │  ├─ model/
-│  │  ├─ inferModel.py
-│  │  └─ trainModel.py
 │  └─ app.py
 ├─ kubernetes/
 │  ├─ base/
 │  └─ overlay/
-│     ├─ prod/
-│     └─ test/
 ├─ CHANGELOG.md
 ├─ Dockerfile
 ├─ LICENSE
@@ -152,7 +148,6 @@ App Structure [↑](#app-k8s-hf-wnb)
 └─ README.md
 </pre>
 </details>
-<br/>
 
 TODO [↑](#app-k8s-hf-wnb)
 ---

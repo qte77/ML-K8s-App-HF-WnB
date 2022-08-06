@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Changed
+
+- `.bumpversion.cfg` to consider `__version.py` and `_version.py`
+- `Pipfile` to include torch==1.11.*, ran pipenv to update `Pipfile.lock`
+- `app/app.py` to include first type hinting
+
 [1.1.0] - 2022-08-06
 ---
 
