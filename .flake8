@@ -6,4 +6,3 @@ doctests = true
 statistics = true
 include = ["app", "tests"]
 max-complexity = 10
-# extend-ignore = "E203"

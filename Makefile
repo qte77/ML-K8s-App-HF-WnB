@@ -9,7 +9,20 @@ APP_PIPFILE := $(APP_PATH)/Pipfile
 KUBE := ./kubernetes/overlays
 KUBE_PROD := $(KUBE)/prod
 KUBE_TEST := $(KUBE)/test
-	
+
+# local_install_dev:
+# pipenv run pre-commit install
+# pipenv run mypy --install-types --non-interactive
+
+# local_update_dev:
+# pipenv run pre-commit autoupdate
+
+# local_test:
+# https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+
+# local_commit:
+#  --show-diff-on-failure
+
 python: $(APP_PIPFILE)
 	echo Installing Pipfile
 	/usr/bin/env python3 -m ensurepip

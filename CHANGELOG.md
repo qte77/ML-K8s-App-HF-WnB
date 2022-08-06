@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Added
+
+- `app/__main__.py` for later use in package required for tox
+
+### Changed
+
+- `README.md` updated
+- `Makefile`, `Pipfile`
+- Successful first run of `black`, `flake8`, `mypy`
+- Successful first run of `pre-commit` without `flake8`
+
 [1.0.0] - 2022-08-05
 ---
 
@@ -19,18 +30,17 @@ Major restructuring of the project to align with current qte77's SOTA project st
 - Project: `pyproject.toml`
 - App: `__version__.py`, `py.typed`
 - Tools config: `.bumpversion`, `flake8`, `.markdownlint.yml`, `.pre-commit-config.yaml`
-- gh-actions: `dependabot.yml`, `.markdownlint.yml`
+- gh-actions: `dependabot.yml`
 
 ### Changed
 
-- Project: `Pipfile`
+- Project: `Pipfile`, `Pipfile.lock`
 - App: `_version.py`
 - git: `.gitignore`, `.gitmessage`
 - MDs to adopt markdownlint.yml
 
 ### Removed
 
-- Project: `Pipfile.lock`
 - git: `ISSUE_TEMPLATE.md`
 
 [0.3.0] - 2022-07-23

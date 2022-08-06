@@ -1,7 +1,7 @@
 App-K8s-HF-WnB
 ===
 
-This project aims to create an end-to-end ML app as a functional MVP.  
+This project aims to create an end-to-end ML app as a functional MVP.
 The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components.
 
 Status
@@ -14,31 +14,26 @@ The current version is <1.0.0>. For version history have a look at [CHANGELOG.md
 Quickstart
 ---
 
-* Quickstart
+* TODO Quickstart
 
 TOC
 ---
 
-<!--
 * [Usage](#usage-)
 * [Install](#install-)
--->
-* [Purpose](#purpose-)
-<!--
 * [Reason](#reason-)
+* [Purpose](#purpose-)
 * [Paradigms](#paradigms-)
--->
 * [App Structure](#app-structure-)
 * [App Details](#app-details-)
 * [TODO](#todo-)
 * [Inspirations](#inspirations-)
 * [Rescources](#resources-)
 
-Purpose [↑](#app-k8s-hf-wnb)
+Usage [↑](#app-k8s-hf-wnb)
 ---
 
-* Showcase an end-to-end app with train and inference mode
-* Implement self-contained modular pipeline
+* TODO Usage
 
 Install [↑](#app-k8s-hf-wnb)
 ---
@@ -55,31 +50,78 @@ Install [↑](#app-k8s-hf-wnb)
 
 `make k8s-prod` or `make k8s-test`
 
+Reason [↑](#app-k8s-hf-wnb)
+---
+
+* TODO Reason
+
+Purpose [↑](#app-k8s-hf-wnb)
+---
+
+* Showcase an end-to-end app with train and inference mode
+* Implement self-contained modular pipeline
+
+Paradigms [↑](#app-k8s-hf-wnb)
+---
+
+* TODO Paragidms
+
 App Structure [↑](#app-k8s-hf-wnb)
 ---
 
-```sh
+<details>
+<summary>Show essential structure</summary>
+<pre>
+/
+├─ app/
+│  ├─ config/
+│  ├─ helper/
+│  ├─ model/
+│  │  ├─ inferModel.py
+│  │  └─ trainModel.py
+│  └─ app.py
+├─ kubernetes/
+│  ├─ base/
+│  └─ overlay/
+│     ├─ prod/
+│     └─ test/
+├─ CHANGELOG.md
+├─ Dockerfile
+├─ LICENSE
+├─ Makefile
+├─ Pipfile
+├─ pyproject.toml
+└─ README.md
+</pre>
+</details>
+
+<details>
+<summary>Show full structure</summary>
+<pre>
 /
 ├─ app/
 │  ├─ config/
 │  │  ├─ defaults.yml
 │  │  ├─ huggingface.yml
-│  │  ├─ sweep.yml
 │  │  ├─ sweep-wandb.yml
+│  │  ├─ sweep.yml
 │  │  ├─ task.yml
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
-│  ├─ modules/
-│  │  ├─ createPipelineObject.py
+│  ├─ helper/
+│  │  ├─ create_pipeline_object.py
+│  │  ├─ load_configs.py
+│  │  ├─ parametrise_pipeline.py
+│  │  ├─ prepare_ml_input.py
+│  │  └─ prepare_sweep.py
+│  ├─ model/
 │  │  ├─ inferModel.py
-│  │  ├─ loadConfigs.py
-│  │  ├─ parametrisePipeline.py
-│  │  ├─ prepareLoggingSweep.py
-│  │  ├─ prepareMLInput.py
 │  │  └─ trainModel.py
+│  ├─ __main__.py
+│  ├─ __version__.py
 │  ├─ _version.py
 │  ├─ app.py
-│  └─ Pipfile
+│  └─ py.typed
 ├─ kubernetes/
 │  ├─ base/
 │  │  ├─ deployment.yml
@@ -95,14 +137,22 @@ App Structure [↑](#app-k8s-hf-wnb)
 │        ├─ ingress.yml
 │        ├─ kustomization.yml
 │        └─ namespace.yml
+├─ .bumpversion.cfg
+├─ .flake8
 ├─ .gitignore
-├─ .python-version
+├─ .gitmessage
+├─ .markdownlint.yml
 ├─ CHANGELOG.md
 ├─ Dockerfile
 ├─ LICENSE
 ├─ Makefile
+├─ Pipfile
+├─ Pipfile.lock
+├─ pyproject.toml
 └─ README.md
-```
+</pre>
+</details>
+<br/>
 
 TODO [↑](#app-k8s-hf-wnb)
 ---
@@ -114,28 +164,33 @@ TODO [↑](#app-k8s-hf-wnb)
   * May be extended to other providers, but for MVP sufficient
 * [x] Basic exception handling
   * May be problematic with function returns
-* [x] Type handling in function calls
+* [x] Type hinting in function calls
   * Implemented to improve readability
-  * May be extended with pydantic or python typing
+  * May be extended with `typing`, `dataclasses` or `pydantic`
 * [x] Read multiple yml inside one file inside config loader
   * Abondoned, adds unnecessary complexity, use separate yml
 * [x] Try `dataclass` and `field` from [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
   * Used to auto add special classes like `__init__`, `__str__`, `__repr__`
   * Uses type hinting and decorators
   * Abandoned, classes in this app not complex enough
+* [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting instead of `typing` or `dataclasses`
+* [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 * [ ] Use `if` for to check if feature can be provided properly instead of `Ecxeption` to catch it
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
-* [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting
-* [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+  * Difference between Abstraction vs Decoupling
 * [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
+* [ ] Use `hydra`and/or `omegaconf` to load configs instead of own helper implementation
 
 ### Dependency tracking and app sourcing
 
 * [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to `requirements.txt`
   * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed'
-* [ ] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
+* [x] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
+  * Used to pool information for build, package, tools etc into one file
+  * Some tools like `flake8` do not support this approach
 * [ ] Provide package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py`
+  * Required for `tox`
 
 ### Project management
 
@@ -147,6 +202,18 @@ TODO [↑](#app-k8s-hf-wnb)
   * Seems to be reasonable
 * [x] Adopt [SemVer](https://semver.org/) for semantic versioning
   * Seems to be reasonable
-* [ ] Implement basic CI/CD-Skeleton
-* [ ] Have a look at [PyTest](http://pytest.org/)
+* [x] Implement basic CI/CD-Skeleton
+  * Using `bump2version`, `pre-commit`, `black` etc
+* [x] Have a look at [PyTest](http://pytest.org/)
+  * Explored in repo `TDD-Playground`
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
+
+Inspirations [↑](#app-k8s-hf-wnb)
+---
+
+* TODO
+
+Ressources [↑](#app-k8s-hf-wnb)
+---
+
+* TODO

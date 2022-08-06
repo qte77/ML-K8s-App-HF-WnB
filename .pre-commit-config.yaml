@@ -5,6 +5,8 @@
 # pre-commit and pyproject.toml
 # https://github.com/pre-commit/pre-commit/issues/1165#issuecomment-862603032
 # pre-commit will look for .pre-commit-hooks.yaml in specified repos
+# SKIP=<hooks>
+# https://pre-commit.com/#temporarily-disabling-hooks
 exclude: '.bumpversion.cfg'
 
 default_language_version:
