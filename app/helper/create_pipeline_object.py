@@ -42,16 +42,15 @@ class Pipeline:
             self["device"],
         )
 
-    # TODO following functionality may be too much for basic MVP, exclude?
+    def get_task(self):
+        return self.task
 
-    # def get_env_info():
-    # TODO unload module watermark
-    # TODO use build-in functionality to provide info?
-    # import watermark
-    # watermark -u -i -v -iv
+    def get_pipeobj(self) -> pipeobj:
+        return self
 
-    # def get_task(self):
-    #     return self.task
-
-    # def get_pipeobj(self) -> pipeobj:
-    #     return self
+    def get_env_info():
+        # TODO unload module watermark
+        # TODO use build-in functionality to provide info?
+        # import watermark
+        # watermark -u -i -v -iv
+        return NotImplementedError

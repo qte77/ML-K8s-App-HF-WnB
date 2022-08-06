@@ -152,9 +152,3 @@ def _set_wandb_env(wandb_param: dict) -> int:
         return 0
     except Exception as e:
         return e
-
-
-# def _set_storage():
-# TODO implement if needed, maybe use PVC ?
-#     #from google.colab import drive
-#     return -1

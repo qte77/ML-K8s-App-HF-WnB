@@ -29,9 +29,9 @@ def test_model(inputs: str, device: str) -> str:
             # top_prediction = predictions.argmax().item()
             # return ds['train'].features['labels'].int2str(top_prediction)
             pass
-        return "not implemented"
+        return NotImplementedError
     else:
-        return "NO CUDA"
+        return NotImplementedError  # "NO CUDA"
 
 
 def infer_model(input: str, device: str) -> str:  # TODO

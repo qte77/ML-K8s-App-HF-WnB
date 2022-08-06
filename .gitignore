@@ -1,8 +1,12 @@
-.vscode/
+# app
 .wandb/
 *__secret__*
 *.key.json
 *.key
+
+# editors
+.vscode/
+.idea/
 
 # pytest
 .pytest_cache/

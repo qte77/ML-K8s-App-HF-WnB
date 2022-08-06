@@ -1,0 +1,20 @@
+# https://www.git-scm.com/docs/gitattributes
+
+# no eol (-text), text diff (-diff) and merge (-merge)
+# https://www.git-scm.com/docs/gitattributes#_using_macro_attributes
+*.png   binary
+*.jpg   binary
+
+# https://www.git-scm.com/docs/gitattributes#_defining_a_custom_hunk_header
+*.html  diff=html
+*.md    diff=markdown
+*.py    diff=python
+*.sh    diff=bash
+
+# dont't diff, use other diff driver, generate 'Binary files differ'
+# https://www.git-scm.com/docs/gitattributes#_marking_files_as_binary
+Pipfile.lock -diff
+
+[attr]dos text eol=crlf
+*.bat   dos
+*.cmd   dos

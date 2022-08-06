@@ -22,3 +22,24 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 #    "requires_gpu: mark a test that requires a GPU to run.",
 #    "slow: mark a test that takes a long time to run.",
 # ]
+
+# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
+# https://mypy.readthedocs.io/en/stable/config_file.html#example-pyproject-toml
+[tool.mypy]
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_unreachable = true
+warn_return_any = true
+
+# [[tool.mypy.overrides]]
+# module = 'mypy-pytest'
+# ignore_missing_imports = true
+
+# src: https://github.com/aio-libs/aiohttp
+# [tool.towncrier]
+# package = "aiohttp"
+# filename = "CHANGES.rst"
+# directory = "CHANGES/"
+# title_format = "{version} ({project_date})"
+# template = "CHANGES/.TEMPLATE.rst"
+# issue_format = "`#{issue} <https://github.com/aio-libs/aiohttp/issues/{issue}>`_"

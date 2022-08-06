@@ -5,7 +5,7 @@
 # pre-commit and pyproject.toml
 # https://github.com/pre-commit/pre-commit/issues/1165#issuecomment-862603032
 # pre-commit will look for .pre-commit-hooks.yaml in specified repos
-# SKIP=<hooks>
+# SKIP=<hook1>,<hook2> ...
 # https://pre-commit.com/#temporarily-disabling-hooks
 exclude: '.bumpversion.cfg'
 
@@ -34,6 +34,11 @@ repos:
   # - id: check-json
   # - id: check-yaml
 
+- repo: https://github.com/pycqa/isort
+  rev: 5.10.1
+  hooks:
+  - id: isort
+
 - repo: https://github.com/psf/black
   rev: 22.6.0
   hooks:
@@ -50,18 +55,15 @@ repos:
   hooks:
   - id: flake8
 
-- repo: https://github.com/pycqa/isort
-  rev: 5.10.1
+# pre-commit runs mypy from an isolated virtualenv
+# has no access to cfg and pkgs
+# args and deps may have to be added here again
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: v0.971
   hooks:
-  - id: isort
-
-# pre-commit runs mypy from an isolated, args and deps may be needed
-# - repo: https://github.com/pre-commit/mirrors-mypy
-#   rev: v0.971
-#   hooks:
-#   - id: mypy
-#     args: [--no-strict-optional, --ignore-missing-imports]
-#     additional_dependencies: [tokenize-rt==3.2.0]
+  - id: mypy
+    args: [--no-strict-optional, --ignore-missing-imports]
+    # additional_dependencies: [tokenize-rt==3.2.0]
 
 - repo: https://github.com/asottile/pyupgrade
   rev: v2.37.3
