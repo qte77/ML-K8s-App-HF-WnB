@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+[1.1.0] - 2022-08-06
+---
+
 ### Added
 
 - `app/__main__.py` for later use in package required for tox
