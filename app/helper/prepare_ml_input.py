@@ -9,6 +9,15 @@ from os import environ
 from datasets import list_datasets, list_metrics, load_dataset, load_metric
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+# def do_prepare(self) -> None:
+#     """Fill the  the"""
+#     self["metrics"]["metrics_loaded"] = prepare_ml_components(
+#         self.paramobj.dataset,
+#         self.paramobj.model_full_name,
+#         self.paramobj.metrics_to_load,
+#         self.paramobj.wandb,
+#     )
+
 
 def prepare_ml_components(
     dataset: dict,
@@ -125,7 +134,7 @@ def _tokenize_dataset(
         return e
 
 
-def _get_metrics(metrics_to_load: list) -> list:
+def _get_metrics(metrics_to_load: list) -> list[dict]:
 
     metrics_loaded = []
 

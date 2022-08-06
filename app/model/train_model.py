@@ -2,13 +2,21 @@
 """
 Train model
 """
+from datasets import Metric, load_metric
 from numpy import argmax
-from transformers import Metric, Trainer, TrainingArguments
-
-# import bert_score
+from transformers import Trainer, TrainingArguments
 from wandb import log
 
-from ..helper.prepare_sweep import start_sweep
+from helper.prepare_sweep import start_sweep
+
+# def do_train(self) -> None:
+#     """Train the model"""
+#     train_model(
+#         self.paramobj.project_name,
+#         self.paramobj.metrics.metrics_to_optimize,
+#         self.paramobj.sweep.provider,
+#         self.paramobj.metrics.metrics_loaded,
+#     )
 
 
 def train_model(
@@ -25,9 +33,7 @@ def train_model(
     return NotImplementedError
 
 
-def _compute_metrics(
-    eval_pred: list, metrics_loaded: list, metrics_avg: str  # TOCO check type
-) -> Metric:
+def _compute_metrics(eval_pred: list, metrics_loaded: list, metrics_avg: str) -> Metric:
 
     # TODO refactor
     predictions, labels = eval_pred

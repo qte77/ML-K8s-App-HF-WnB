@@ -6,19 +6,22 @@
 
 from os import environ
 
-from load_configs import get_config
 from torch import device
 from torch.cuda import is_available
 
+from .load_configs import get_config
 
-def get_param_object() -> dict:
+# from logging import debug, error, getLogger, root
+
+
+def get_param_dict() -> dict:
     """
-    Returns parameter dict with values filled with `loadConfigs.get_config(<config>)`
+    Returns parameter dict with values filled with `helper.load_configs.get_config(<config>)`
     """
-    defaults: dict = loadConfigs.get_config("defaults")
-    hf_params: dict = loadConfigs.get_config("huggingface")
-    sweep: dict = loadConfigs.get_config("sweep")
-    task: dict = loadConfigs.get_config("task")
+    defaults: dict = get_config("defaults")
+    hf_params: dict = get_config("huggingface")
+    sweep: dict = get_config("sweep")
+    task: dict = get_config("task")
 
     paramobj = {}
     paramobj["sweep"] = get_sweep_cfg(sweep)
@@ -33,7 +36,7 @@ def get_param_object() -> dict:
     if paramobj["sweep"]["is_sweep"]:
         # TODO case
         if paramobj["sweep"]["provider"] == "wandb":
-            wandb_params = loadConfigs.get_config("wandb")
+            wandb_params = get_config("wandb")
             paramobj["wandb"] = _get_wandb_env(wandb_params, paramobj["project_name"])
     paramobj["defaults"] = _get_defaults(defaults)
     paramobj["model_full_name"] = _get_model_full_name(

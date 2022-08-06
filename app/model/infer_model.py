@@ -6,6 +6,16 @@ from transformers import AutoTokenizer
 # from torch import cuda, no_grad
 
 
+# def do_infer(self, input):
+#     """Infer with model"""
+#     infer_model(
+#         input,
+#         get_tokenizer(self.paramobj.model_full_name),
+#         get_model(self.paramobj.model_full_name),
+#         self["device"],
+#     )
+
+
 def test_model(inputs: str, device: str) -> str:
     """
     Test model output before fine-tuning.
