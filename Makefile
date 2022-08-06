@@ -21,7 +21,10 @@ KUBE_TEST := $(KUBE)/test
 # https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
 
 # local_commit:
-#  --show-diff-on-failure
+# git add .
+# pipenv run pre-commit run --show-diff-on-failure
+# git commit -m ""
+# bump2version <part>
 
 python: $(APP_PIPFILE)
 	echo Installing Pipfile
