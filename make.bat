@@ -74,7 +74,7 @@ goto:eof
         endlocal
         exit /b %err_git_msg_undef%
     ) else (
-        %perun% git commit -m "!git_msg!"
+        %perun% git commit -m "%git_msg%"
     )
 goto:eof
 
