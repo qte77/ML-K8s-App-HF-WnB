@@ -66,15 +66,15 @@ goto:eof
 
 :local_commit
 	git add .
-	%perun% pre-commit run --show-diff-on-failure
-    set git_msg=%1
-    set git_msg=%git_msg:"=%
-    if defined %git_msg% (
-        %perun% git commit -m "%git_msg%"
-    ) else (
+	@REM %perun% pre-commit run --show-diff-on-failure
+    set "git_msg=%1"
+    set "git_msg=%git_msg:"=%"
+    if _!git_msg!_ == __ (
         echo %msg_git_no_msg%
         endlocal
         exit /b %err_git_msg_undef%
+    ) else (
+        %perun% git commit -m "!git_msg!"
     )
 goto:eof
 
