@@ -70,7 +70,6 @@ goto:eof
 	@REM %perun% pre-commit run --show-diff-on-failure
     set "git_msg=%1"
     set "git_msg=%git_msg:"=%"
-    echo !git_msg!
     if _!git_msg!_ == __ (
         echo %msg_git_no_msg%
         endlocal
