@@ -1,7 +1,6 @@
 @echo off
 rem For Windows to replace Makefile
 setlocal
-setlocal enabledelayedexpansion
 set "warning=############ Not Fully Implemented ############"
 
 call:errorcodes
@@ -28,7 +27,7 @@ if _%1_ == _cleanup_ goto:run
     echo - local_update_dev -
     echo - local_test -
     echo - local_static_checks -
-    echo - local_commit -
+    echo - local_commit - %%2 taken as git msg, !!! use with "git_msg" !!!
     echo - local_bump_part -
 	echo - cleanup -
 endlocal
@@ -68,14 +67,12 @@ goto:eof
 :local_commit
 	git add .
 	@REM %perun% pre-commit run --show-diff-on-failure
-    set "git_msg=%1"
-    set "git_msg=%git_msg:"=%"
-    if _!git_msg!_ == __ (
+    if _%1_ == __ (
         echo %msg_git_no_msg%
         endlocal
         exit /b %err_git_msg_undef%
     ) else (
-        %perun% git commit -m "!git_msg!"
+        %perun% git commit -m %1
     )
 goto:eof
 
