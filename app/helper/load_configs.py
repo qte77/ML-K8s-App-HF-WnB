@@ -56,7 +56,7 @@ def _check_or_get_default(
     TODO load defaults onyl once ?!
     """
 
-    if not mode_check_get in ["check", "get"]:
+    if mode_check_get not in ["check", "get"]:
         mode_check_get = "check"
 
     try:

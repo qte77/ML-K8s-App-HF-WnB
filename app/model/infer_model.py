@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Model inference"""
 
-from transformers import AutoTokenizer
+# from transformers import AutoTokenizer
 
 # from torch import cuda, no_grad
 
@@ -24,7 +24,7 @@ def test_model(inputs: str, device: str) -> str:
 
     # TODO source for test function, WandB colab?
     # TODO multi inputs
-    device = device.tolower()
+    device = device.lower()
     if device == "cuda":
         for i in inputs:
             # print(i)
@@ -32,7 +32,8 @@ def test_model(inputs: str, device: str) -> str:
             # ensure model and inputs are on the same device (GPU)
             # inputs = {name: tensor.cuda() for name, tensor in inputs.items()}
             # model = model.cuda()
-            # get prediction - 10 classes "probabilities" (not really true because they still need to be normalized)
+            # get prediction - 10 classes "probabilities"
+            # (not really true because they still need to be normalized)
             # with torch.no_grad():
             #     predictions = model(**inputs)[0].cpu().numpy()
             # get the top prediction class and convert it to its associated label

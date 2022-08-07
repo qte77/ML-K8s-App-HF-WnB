@@ -24,13 +24,13 @@ class Pipeline:
         """Switch mode between train and infer"""
         self.paramobj.train_mode = train_mode
 
-    def get_task(self):
+    def get_task(self) -> None:
         return self.task
 
     def get_paramobj(self) -> object:  # TODO type hint as Pipeline or dict
         return self.paramobj
 
-    def get_sys_info():
+    def get_sys_info() -> None:
         # TODO unload module watermark
         # TODO use build-in functionality to provide info?
         # import watermark
@@ -61,10 +61,10 @@ class Pipeline:
         except Exception as e:
             return e
 
-    def do_train(self):
+    def do_train(self) -> None:
         """TODO"""
         return NotImplementedError
 
-    def do_infer(self):
+    def do_infer(self) -> None:
         """TODO"""
         return NotImplementedError

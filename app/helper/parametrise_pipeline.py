@@ -6,6 +6,7 @@
 
 from logging import debug
 from os import environ
+from typing import Union
 
 from torch import device
 from torch.cuda import is_available
@@ -110,7 +111,8 @@ def _get_device() -> str:
     try:
         environ["TPU_NAME"]
         return "tpu"
-    except:
+    except Exception as e:
+        debug(e)
         try:
             return device("cuda" if is_available() else "cpu")
         except Exception as e:
@@ -119,7 +121,7 @@ def _get_device() -> str:
 
 def _get_project_name(
     model: str, dataset_name: str, device: str, is_sweep: bool
-) -> str:
+) -> Union[str, Exception]:
     """Returns the project name as f'{model}-{dataset_name}-{device}{suffix}'"""
 
     suffix = "-sweep" if is_sweep else ""

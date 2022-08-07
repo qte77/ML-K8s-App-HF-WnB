@@ -2,9 +2,9 @@
 """
 Train model
 """
-from datasets import Metric, load_metric
+from datasets import Metric  # , load_metric
 from numpy import argmax
-from transformers import Trainer, TrainingArguments
+from transformers import Trainer  # , TrainingArguments
 from wandb import log
 
 from helper.prepare_sweep import start_sweep
@@ -91,7 +91,8 @@ def _create_trainer(config=None) -> Trainer:
     #     save_steps = save_steps,
     #     metric_for_best_model = metric_to_optimize,
     #     greater_is_better = greaterBool,
-    #     # avoid info 'The following columns in the evaluation set  don't have a corresponding argument'
+    #     # avoid info 'The following columns in the evaluation set
+    #     # don't have a corresponding argument'
     #     # remove_unused_columns = True,
     #     # the following will be changed by sweep agent
     #     learning_rate = config.learning_rate,
@@ -110,7 +111,8 @@ def _create_trainer(config=None) -> Trainer:
     # )
 
     #   print(orange,"*************")
-    #   print("Metric: %s, #Labels: %s, Avg: %s" % (metric_to_optimize, num_labels, ds_avg))
+    #   print("Metric: %s, #Labels: %s, Avg: %s" %
+    #   (metric_to_optimize, num_labels, ds_avg))
     #   print("eval_steps: %s, save_steps: %s" % (eval_steps, save_steps))
     #   print(orange,"*************")
 

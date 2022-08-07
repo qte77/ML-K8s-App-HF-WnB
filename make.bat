@@ -1,18 +1,23 @@
 @echo off
 rem For Windows to replace Makefile
-set warning=############ not fully implemented ############
+setlocal
+set "warning=############ Not Fully Implemented ############"
 
 call:errorcodes
+call:messages
+call:commands
 
-if _%1_ == _local_install_dev_ goto:local_install_dev
-if _%1_ == _local_update_dev_ goto:local_update_dev
-if _%1_ == _local_test_ goto:local_test
-if _%1_ == _local_commit_ goto:local_commit
-if _%1_ == _cleanup_ goto:cleanup
+if _%1_ == _local_install_dev_ goto:run
+if _%1_ == _local_update_dev_ goto:run
+if _%1_ == _local_test_ goto:run
+if _%1_ == _local_static_checks_ goto:run
+if _%1_ == _local_commit_ goto:run
+if _%1_ == _local_bump_part_ goto:run
+if _%1_ == _cleanup_ goto:run
 
 :help
     echo.
-    if defined _%warning%_ (
+    if defined %warning% (
         echo %warning%
         echo.
     )
@@ -21,42 +26,84 @@ if _%1_ == _cleanup_ goto:cleanup
     echo - local_install_dev -
     echo - local_update_dev -
     echo - local_test -
+    echo - local_static_checks -
     echo - local_commit -
+    echo - local_bump_part -
 	echo - cleanup -
+endlocal
 exit /b %err_help_called%
 
-:setup_local
-	echo not implemented
-	rem local_install_dev:
-	rem pipenv run pre-commit install
-	rem pipenv run mypy --install-types --non-interactive
+:run
+    set "label=%1"
+    echo starting %label%
+    call:%label%
+    echo done %label%
+    endlocal
 exit /b
+
+:local_install_dev
+    pipenv install --dev
+	%perun% pre-commit install
+	%perun% mypy --install-types --non-interactive
+goto:eof
 
 :local_update_dev
-	echo not implemented
-	rem pipenv run pre-commit autoupdate
-exit /b
+	pipenv update
+	%perun% pre-commit autoupdate
+goto:eof
 
 :local_test
-	echo not implemented
+	echo %msg_not_impl%
 	rem https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-exit /b
+goto:eof
 
-:local_commit:
-	echo not implemented
-	rem git add .
-	rem pipenv run pre-commit run --show-diff-on-failure
-	rem git commit -m ""
-	rem bump2version %part%
-exit /b
+:local_static_checks:
+    echo isort && %perun% isort .
+    echo black && %perun% black .
+    echo flake8 && %perun% flake8
+    echo mypy && %perun% mypy .
+goto:eof
+
+:local_commit
+	git add .
+	rem %perun% pre-commit run --show-diff-on-failure
+    set msg=%2 && set msg=%msg:"=%
+    if defined %msg% (
+        %perun% git commit -m "%msg%"
+    ) else (
+        echo ho
+        echo %msg_git_no_msg%
+        endlocal
+        exit /b %err_git_msg_undef%
+    )
+goto:eof
+
+:local_bump_part
+	echo %msg_not_impl%
+    rem if defined %part% (
+    rem    %perun% bump2version %part%
+    rem ) else (
+    rem    exit /b %err_b2v_part_empty%
+	rem )
+goto:eof
 
 :cleanup
-    echo cleanup
+	echo %msg_not_impl%
     rem rm -rf .pytest_cache .coverage
     rem pipenv --rm
-exit /b
+goto:eof
 
 :errorcodes
-    set err_help_called=-1
+    set err_help_called=-10
     set err_b2v_part_empty=-20
+    set err_git_msg_undef=-30
+goto:eof
+
+:messages
+    set "msg_git_no_msg=No git message provided. Exiting without changes."
+    set "msg_not_impl=############ Function Not Implemented ############"
+goto:eof
+
+:commands
+    set perun=pipenv run
 goto:eof
