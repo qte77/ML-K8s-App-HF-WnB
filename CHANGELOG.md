@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+Successful downloads of datasets, models, tokenizer and metrics
+
+### Changed
+
+- Major: `parametrise_pipeline.py`, `prepare_ml_input.py`
+- Minor: `app.py`, `Pipeline.py`
+
 [1.4.0] - 2022-08-07
 ---
 

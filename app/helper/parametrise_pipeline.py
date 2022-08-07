@@ -49,7 +49,9 @@ def get_param_dict() -> dict:
     if paramobj["sweep"]["is_sweep"]:
         if paramobj["sweep"]["provider"] == "wandb":
             wandb_params = get_config_content("wandb")
-            paramobj["wandb"] = _get_wandb_env(wandb_params, paramobj["project_name"])
+            paramobj["wandb"] = _get_wandb_env_params(
+                wandb_params, paramobj["project_name"]
+            )
 
     return paramobj
 
@@ -142,7 +144,7 @@ def _get_sweep_cfg(sweep: dict) -> dict:
     return sweepobj
 
 
-def _get_wandb_env(wandb_params: object, project_name: str) -> dict:
+def _get_wandb_env_params(wandb_params: object, project_name: str) -> dict:
     """
     Not Implemented yet: WANDB_NOTES, WANDB_TAGS
     Checks for API-key first. Returns exception if not found
@@ -153,13 +155,11 @@ def _get_wandb_env(wandb_params: object, project_name: str) -> dict:
 
     wandbobj = wandb_params
     wandbobj["WANDB_PROJECT"] = project_name
-    debug(wandbobj)
 
     try:
         keyfile_content = get_keyfile_content("wandb")
-        debug(f"kfc: {keyfile_content}")
         wandbobj["username"], wandbobj["key"] = keyfile_content
     except Exception as e:
-        debug(e)
+        return e
 
     return wandbobj

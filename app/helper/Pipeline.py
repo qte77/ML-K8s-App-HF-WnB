@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-from model.infer_model import infer_model
-from model.train_model import train_model
 
-from .prepare_ml_input import get_model, get_tokenizer, prepare_ml_components
+# from model.infer_model import infer_model
+# from model.train_model import train_model
+from .prepare_ml_input import get_metrics_to_load_objects, prepare_ml_components
 
 
 class Pipeline:
@@ -27,3 +27,16 @@ class Pipeline:
         # import watermark
         # watermark -u -i -v -iv
         return NotImplementedError
+
+    def prepare_ml_input(self) -> None:
+        """Fill the TODO"""
+
+        providerobj = {"wandb": self.paramobj["wandb"]}
+
+        prepare_ml_components(
+            self.paramobj["dataset"], self.paramobj["model_full_name"], providerobj
+        )
+
+        self.paramobj["metrics"]["metrics_loaded"] = get_metrics_to_load_objects(
+            self.paramobj["metrics"]["metrics_to_load"]
+        )

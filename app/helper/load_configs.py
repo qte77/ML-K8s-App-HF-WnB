@@ -5,25 +5,25 @@ TODO some error checks missing
 """
 
 from logging import debug
-from operator import contains
 from os.path import abspath, dirname, exists, expanduser, join, split
 from typing import Literal, Union
 
 from yaml import safe_load
 
 
-def get_config_content(cfg_name: str) -> dict:
+def get_config_content(cfg_name: str, dbg_on: bool = False) -> dict:
     """Returns config objects"""
 
     defaults_dbg_msg = f"'{cfg_name}' found in defaults."
 
-    # TODO test case and type
-    if _check_or_get_default("config_fn", cfg_name):
-        debug(defaults_dbg_msg)
-    else:
-        debug(f"No {defaults_dbg_msg} Trying to find the file anyway.")
+    if dbg_on:
+        # TODO test case and type
+        if _check_or_get_default("config_fn", cfg_name):
+            debug(defaults_dbg_msg)
+        else:
+            debug(f"No {defaults_dbg_msg} Trying to find the file anyway.")
 
-    cfg: dict = _load_yml(cfg_name)
+    cfg: dict = _load_yml(cfg_name, dbg_on=dbg_on)
 
     return cfg
 
@@ -76,7 +76,9 @@ def _check_or_get_default(
         return e
 
 
-def _load_yml(cfg_filename: str = "defaults", cfg_path: str = "config") -> dict:
+def _load_yml(
+    cfg_filename: str = "defaults", cfg_path: str = "config", dbg_on: bool = False
+) -> dict:
     """
     Loads a YAML from 'root/[cfg_path]/[cfg_filename].yml',  parses and returns it
     """
@@ -93,7 +95,8 @@ def _load_yml(cfg_filename: str = "defaults", cfg_path: str = "config") -> dict:
     cfg_abs_path = split(dirname(abspath(__file__)))[0]
     cfg_abs_path = join(cfg_abs_path, cfg_path, f"{cfg_filename}.yml")
 
-    debug(f"load: {cfg_abs_path}")
+    if dbg_on:
+        debug(f"load: {cfg_abs_path}")
 
     if not exists(cfg_abs_path):
         return FileNotFoundError

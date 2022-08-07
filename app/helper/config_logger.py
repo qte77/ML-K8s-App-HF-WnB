@@ -4,10 +4,9 @@
 from logging import error, getLogger
 from logging.config import fileConfig
 from os.path import abspath, dirname, exists, join, split
-from sys import exit
 
 
-def config_logger_or_exit(
+def config_logger(
     logger_name: str = "simpleExample",
     config_fn: str = "logging.conf",
     config_path: str = "config",
@@ -25,12 +24,11 @@ def config_logger_or_exit(
 
     if not exists(abs_path):
         error("Can not find config. Exiting.")
-        exit()
+        return FileNotFoundError
 
     # TODO simpleExample not loaded from logging.conf
     try:
         fileConfig(abs_path)
         getLogger(logger_name)
     except Exception as e:
-        error(e)
-        exit()
+        return e
