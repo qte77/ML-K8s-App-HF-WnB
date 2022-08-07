@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Added
+
+- `make.bat` as a replacement for `Makefile`
+
+### Changed
+
+- `README` with instructions to install and run
+
 [1.5.0] - 2022-08-07
 ---
 

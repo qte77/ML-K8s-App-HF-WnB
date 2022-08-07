@@ -19,7 +19,7 @@ The current version is <1.5.0>. For version history have a look at [CHANGELOG.md
 Quickstart
 ---
 
-* TODO Quickstart
+* TODO <!-- `make run_all` -->
 
 TOC
 ---
@@ -38,27 +38,67 @@ TOC
 Usage [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO Usage
+If inside the venv
+
+```sh
+python -m app
+```
+
+or if outside
+
+```sh
+pipenv run python -m app`
+```
 
 Install [↑](#app-k8s-hf-wnb)
 ---
 
-### Local
+### Python
 
-`make local`
+From an environment with available `make`
+
+```sh
+make setup_local_dev
+```
+
+or from an environment with available `pipenv`
+
+```sh
+python -m pipenv install --dev -e .
+```
+
+or with `conda`
+
+```sh
+$envname = 'TDD-Playground'
+# create new conda venv with pipenv installed
+conda create -ym -n $envname pipenv
+conda activate $envname
+# install from Pipfile and create new venv
+python -m pipenv install --dev
+# run command inside pipenv venv
+python -m pipenv run python --version
+python -m pipenv run pip list
+```
+
+or with `conda-forge`
+
+```sh
+conda install -c conda-forge pipfile
+```
 
 ### Docker
 
-`make build`
+* TODO <!-- `make build` -->
 
 ### Kubernetes
 
-`make k8s-prod` or `make k8s-test`
+* TODO <!-- `make k8s-prod` or `make k8s-test` -->
 
 Reason [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO Reason
+* TODO
 
 Purpose [↑](#app-k8s-hf-wnb)
 ---
@@ -69,7 +109,7 @@ Purpose [↑](#app-k8s-hf-wnb)
 Paradigms [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO Paragidms
+* TODO
 
 App Structure [↑](#app-k8s-hf-wnb)
 ---
