@@ -36,7 +36,7 @@ exit /b %err_help_called%
 :run
     set "label=%1"
     echo starting %label%
-    call:%label%
+    call:%label% %2
     echo done %label%
     endlocal
 exit /b
@@ -66,12 +66,12 @@ goto:eof
 
 :local_commit
 	git add .
-	rem %perun% pre-commit run --show-diff-on-failure
-    set msg=%2 && set msg=%msg:"=%
-    if defined %msg% (
-        %perun% git commit -m "%msg%"
+	%perun% pre-commit run --show-diff-on-failure
+    set git_msg=%1
+    set git_msg=%git_msg:"=%
+    if defined %git_msg% (
+        %perun% git commit -m "%git_msg%"
     ) else (
-        echo ho
         echo %msg_git_no_msg%
         endlocal
         exit /b %err_git_msg_undef%
