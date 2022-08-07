@@ -47,7 +47,7 @@ python -m app
 or if outside
 
 ```sh
-pipenv run python -m app`
+pipenv run python -m app
 ```
 
 Install [↑](#app-k8s-hf-wnb)

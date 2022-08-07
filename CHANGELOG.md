@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Added
+
+- `dataclasses` to `Pipeline`
+  - Exersise stricter type hinting
+  - Easier defaulting, comparing and printing of data
+  - `fields` possible which are not initialised and represented
+  - `order` and sorting of objects possible
+  - `frozen`read-only objects possible
+  - `__post_init__()` possible
+- `@classmethod` to `Pipeline.prepare_ml_input()`
+
+### Changed
+
+- Tokenizer in `prepare_ml_input.py` now with list comprehension inside mapped function
+- Global debug state to be set in `__main__.py` or `app.py`
+
 [1.6.0] - 2022-08-07
 ---
 

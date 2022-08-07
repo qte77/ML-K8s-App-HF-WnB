@@ -3,31 +3,61 @@
 Download and save components from providers, e.g. Hugging Face.
 Components could be models, datasets, tokenizers, metrics etc.
 """
+
+# TODO return None or Exception ?
+# TODO load local versions of models, datasets, metrics and tokenizer if not cached
 # TODO function def with actual objects, not placeholder 'object'
 from logging import debug
 from os import environ
+from typing import Union
 
-from datasets import load_dataset, load_metric
+from datasets import dataset_dict, load_dataset, load_metric
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
-def prepare_ml_components(
-    dataset: dict, model_full_name: str, providerobj: dict
-) -> None:
-    """Tokenize dataset and load model"""
+def set_debug_state(debug_on: bool = False):
+    global debug_state
+    debug_state = debug_on
+
+
+def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
+    """Load model and tokenized dataset"""
 
     try:
-        _get_tokenized_dataset(_get_dataset(dataset), _get_tokenizer(model_full_name))
+        dataset["num_labels"] = _get_tokenized_dataset(dataset, model_full_name)
         _get_model(model_full_name, dataset["num_labels"])
-        _set_provider_env(providerobj)
+    except Exception as e:
+        return e
+
+
+def set_provider_env(provider: str, provider_param: dict) -> None:
+    """Set the environment parameters for the sweep provider"""
+
+    try:
+        for k, v in provider_param.items():
+            environ[k] = v
+            if debug_state:
+                debug(f"Setting '{provider}' env '{k}'")
     except Exception as e:
         return e
 
 
 def get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
-    """TODO"""
+    """Downloads Hugging Face Metrics Builder Scripts"""
 
-    return _get_metrics(metrics_to_load)
+    # metrics_loaded = []
+    if debug_state:
+        debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load}")
+
+    try:
+        # for met in metrics_to_load:
+        #     if debug_state:
+        #         debug(f"Downloading HF Metrics Builder Script for '{met}'")
+        #     metrics_loaded.append(load_metric(met))
+        # return metrics_loaded
+        return [load_metric(met) for met in metrics_to_load]
+    except Exception as e:
+        return e
 
 
 def _get_tokenizer(model_full_name: str) -> AutoTokenizer:  # TODO check return type
@@ -35,8 +65,10 @@ def _get_tokenizer(model_full_name: str) -> AutoTokenizer:  # TODO check return 
     Downloads tokenizer specified by model
     """
 
-    debug(f"Downloading Tokenizer for {model_full_name=}")
-    AutoTokenizer.from_pretrained(
+    if debug_state:
+        debug(f"Downloading Tokenizer for {model_full_name=}")
+
+    return AutoTokenizer.from_pretrained(
         model_full_name, use_fast=True, truncation=True, padding=True
     )
 
@@ -48,117 +80,92 @@ def _get_model(
     Downloads specified model
     """
 
-    debug(f"Downloading {model_full_name=} with {num_labels=}")
+    if debug_state:
+        debug(f"Downloading {model_full_name=} with {num_labels=}")
     AutoModelForSequenceClassification.from_pretrained(
         model_full_name, num_labels=num_labels
     )
 
 
-def _get_dataset(dataset: dict) -> object:
+def _get_dataset(dataset: dict) -> Union[dataset_dict.DatasetDict, str]:
     """TODO"""
 
     ds_name, ds_config = [dataset["dataset"], dataset["configuration"]]
 
     try:
         if ds_config:
-            debug(f"Downloading configuration {ds_config=} from dataset {ds_name=}")
+            if debug_state:
+                debug(f"Downloading configuration {ds_config=} from dataset {ds_name=}")
             dataset_plain = load_dataset(ds_name, ds_config)
         else:
-            debug(f"Downloading dataset {ds_name=}")
+            if debug_state:
+                debug(f"Downloading dataset {ds_name=}")
             dataset_plain = load_dataset(ds_name)
     except Exception as e:
         return e
 
     # get unique labels and save into dataset-object
-    dataset["num_labels"] = len(dataset_plain["train"].unique(dataset["colsrename"]))
+    num_labels = len(dataset_plain["train"].unique(dataset["col_to_rename"]))
 
-    # rename column 'dscol_rename', model expects 'labels'
+    # rename column '[col_to_rename]' bceause model expects 'labels'
     # loop through train/eval/test
     # TODO catch or elif if coumns not contained in dataset?
     for name in dataset_plain:
-        if dataset["colsrename"] in dataset_plain[name].column_names:
+        if dataset["col_to_rename"] in dataset_plain[name].column_names:
             dataset_plain[name] = dataset_plain[name].rename_column(
-                dataset["colsrename"], "labels"
+                dataset["col_to_rename"], "labels"
             )
-        # else:
-        #     msg = dataset['colsrename']
-        #     msg = f'Attribute/Feature/Column "{msg}" not found in "{name}"'
-        #     msg += f'\nFound: {dataset_plain[name].column_names}'
+        else:
+            msg = dataset["col_to_rename"]
+            msg = f"Attribute/Feature/Column '{msg}' not found in '{name}'"
+            if debug_state:
+                debug(f"{msg}\nFound: {dataset_plain[name].column_names}")
 
-    return dataset_plain
+    # TODO save local copy of dataset_plain
+
+    return dataset_plain, num_labels
 
 
-def _get_tokenized_dataset(dataset: object, tokenizer: object) -> object:
+def _tokenize_dataset(
+    dataset_plain: object, cols_to_tok: list[str], tokenizer: object
+) -> object:
+    """Returns tokenized dataset"""
+
+    if debug_state:
+        debug(f"Tokenizing dataset with {len(cols_to_tok)} columns to tokenize")
+
+    def _tokenize(dataset_plain):
+        cols = [dataset_plain[col] for col in cols_to_tok]
+        return tokenizer(*cols, truncation=True)
+
+    return dataset_plain.map(_tokenize, batched=True)
+
+
+def _get_tokenized_dataset(dataset: str, model_full_name: str) -> str:
     """
     Loads dataset, splits into train/eval/test and tokenizes
     """
 
-    # tokenize
-    dataset_tokenized = dataset.map(
-        _tokenize_dataset(dataset, dataset["colstokens"], tokenizer), batched=True
+    dataset_plain, num_labels = _get_dataset(dataset)
+    tokenizer = _get_tokenizer(model_full_name)
+    dataset_tokenized = _tokenize_dataset(
+        dataset_plain, dataset["cols_to_tok"], tokenizer
     )
+
+    tok_msg = "This is a test sentence."
+    tok_res = tokenizer.encode(tok_msg)
+
+    if debug_state:
+        debug(f"Tokenizing '{tok_msg}': {tok_res}")
 
     # remove columns not neccessary
     try:
         dataset_tokenized = dataset_tokenized.remove_columns(
-            dataset["colstokens"]
-        ).remove_columns(dataset["colsremove"])
+            dataset["cols_to_tok"]
+        ).remove_columns(dataset["cols_to_remove"])
     except Exception as e:
         return e
 
-    return dataset_tokenized
+    # TODO save local copy of dataset_tokenized
 
-
-def _tokenize_dataset(
-    dataset: object, ds_colstokens: list, tokenizer: object
-) -> object:
-    """
-    Returns tokenized dataset
-    """
-
-    # TODO use lambda or list comprehension with tupels instead of explicit elif
-    colen = len(ds_colstokens)
-    # TODO use cached tokenizer
-    # tokenizer = -1
-    debug("Tokenizing dataset")
-    try:
-        if colen == 3:
-            return tokenizer(
-                dataset[ds_colstokens[0]],
-                dataset[ds_colstokens[1]],
-                dataset[ds_colstokens[2]],
-                truncation=True,
-            )
-        elif colen == 2:
-            return tokenizer(
-                dataset[ds_colstokens[0]], dataset[ds_colstokens[1]], truncation=True
-            )
-        elif colen == 1:
-            return tokenizer(dataset[ds_colstokens[0]], truncation=True)
-    except Exception as e:
-        return e
-
-
-def _get_metrics(metrics_to_load: list) -> list[dict]:
-
-    metrics_loaded = []
-
-    # downloading metrics builder scripts
-    try:
-        for met in metrics_to_load:
-            print(f'Downloading builder script for "{met}"')
-            metrics_loaded.append(load_metric(met))
-    except Exception as e:
-        return e
-
-    return metrics_loaded
-
-
-def _set_provider_env(wandb_param: dict) -> None:
-    """"""
-
-    try:
-        for k, v in wandb_param.items():
-            environ[k] = v
-    except Exception as e:
-        return e
+    return num_labels
