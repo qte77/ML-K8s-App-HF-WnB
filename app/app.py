@@ -11,7 +11,7 @@ from .helper.parametrise_pipeline import get_param_dict
 from .helper.Pipeline import Pipeline
 
 
-def main(mode: str = Literal["train", "infer"], debug_on: bool = False) -> None:
+def main(mode: Literal["train", "infer"] = "train", debug_on: bool = False) -> None:
     """
     Create pipeline object parametrised with parameter object and execute task.
     The task performed depends on the input of the `mode` [train, infer].

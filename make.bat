@@ -27,7 +27,7 @@ if _%1_ == _cleanup_ goto:run
     echo - local_update_dev -
     echo - local_test -
     echo - local_static_checks -
-    echo - local_commit - %%2 taken as git msg, !!! use with "git_msg" !!!
+    echo - local_commit - %%2 taken as git msg, !!! use with "git msg" !!!
     echo - local_bump_part -
 	echo - cleanup -
 endlocal
