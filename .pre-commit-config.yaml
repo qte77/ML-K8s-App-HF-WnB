@@ -25,8 +25,15 @@ repos:
   - id: check-ast
   - id: check-merge-conflict
   - id: check-case-conflict
+  - id: check-docstring-first
+  # - id: check-shebang-scripts-are-executable
+  - id: check-executables-have-shebangs
   - id: check-added-large-files
     args: ['--maxkb=500']
+  - id: check-yaml
+  # - id: check-json
+  # - id: pretty-format-json
+  - id: check-toml
   # forbid utf-8 BOM
   # deprecated: check-byte-order-marker
   - id: fix-byte-order-marker
@@ -74,4 +81,18 @@ repos:
   hooks:
   - id: pyupgrade
     args: [--py37-plus]
+# use on pre-commit-hooks?
+#
+# - id: hadolint-docker
+#   name: Lint Dockerfiles
+#   description: Runs hadolint Docker image to lint Dockerfiles
+#   language: docker_image
+#   types: ["dockerfile"]
+#   entry: ghcr.io/hadolint/hadolint hadolint
+# - id: hadolint
+#   name: Lint Dockerfiles
+#   description: Runs hadolint to lint Dockerfiles
+#   language: system
+#   types: ["dockerfile"]
+#   entry: hadolint
 ...
