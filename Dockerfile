@@ -1,7 +1,7 @@
 ARG BASEIMAGE="docker.io/library/python:3.8-slim"
 ARG BASEIMAGE_USECASE="baseimage"
 
-#TODO --platform=x86_64
+# TODO --platform=x86_64
 FROM ${BASEIMAGE} as baseimage
 
 LABEL site="https://qte77.github.io"
@@ -18,10 +18,10 @@ RUN set -xe \
 RUN rm -rf /var/cache/apt/* /tmp/* \
   /usr/lib/python*/ensurepip
 
-#TODO --platform=x86_64
+# TODO --platform=x86_64
 FROM ${BASEIMAGE_USECASE} as usecase
 
-#EXPOSE 8080
+# EXPOSE 8080
 
 ARG USER="user"
 ARG HOME="/home/${USER}"
@@ -30,14 +30,14 @@ ARG FILES_OUT="${HOME}/app"
 ARG FILES_CONF="${FILES_OUT}/config"
 ARG APP="${FILES_OUT}/app.py"
 ARG WANDB_KEYFILE=".wandb/wandb.key"
-#ARG WANDB_KEY="<token>"
+# ARG WANDB_KEY="<token>"
 
 RUN useradd -m -d ${HOME} ${USER}
 USER ${USER}
 WORKDIR ${HOME}
 
 ENV PATH="${FILES_OUT}:/home/user/.local/bin:${PATH}"
-#ENV WANDB_KEY=${WANDB_KEY}
+# ENV WANDB_KEY=${WANDB_KEY}
 
 COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
   "${HOME}/${WANDB_KEYFILE}"
@@ -50,5 +50,5 @@ RUN set -xe \
 RUN chmod +x ${APP}
 ENTRYPOINT ${APP}
 
-#TODO FastAPI etc.
-#CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", "uvicorn.workers.UvicornWorker", "app.py:app"]
+# TODO FastAPI etc.
+# CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", "uvicorn.workers.UvicornWorker", "app.py:app"]

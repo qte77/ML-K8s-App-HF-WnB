@@ -21,7 +21,7 @@ def set_debug_state(debug_on: bool = False):
 
 
 def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
-    """Load model and tokenized dataset"""
+    """Load tokenized dataset and model"""
 
     try:
         dataset["num_labels"] = _get_tokenized_dataset(dataset, model_full_name)
@@ -141,31 +141,42 @@ def _tokenize_dataset(
     return dataset_plain.map(_tokenize, batched=True)
 
 
+def _remove_columns_from_dataset(
+    dataset_tokenized: dataset_dict.DatasetDict,
+    cols_to_tok: list[str],
+    cols_to_remove: list[str],
+):
+    """Remove columns from dataset"""
+
+    if debug_state:
+        debug(f"Removing columns {cols_to_tok} and {cols_to_remove}")
+
+    try:
+        return dataset_tokenized.remove_columns(cols_to_tok).remove_columns(
+            cols_to_remove
+        )
+    except Exception as e:
+        return e
+
+
 def _get_tokenized_dataset(dataset: str, model_full_name: str) -> str:
     """
     Loads dataset, splits into train/eval/test and tokenizes
     """
+    # TODO save local copy of dataset_tokenized
 
     dataset_plain, num_labels = _get_dataset(dataset)
     tokenizer = _get_tokenizer(model_full_name)
     dataset_tokenized = _tokenize_dataset(
         dataset_plain, dataset["cols_to_tok"], tokenizer
     )
-
-    tok_msg = "This is a test sentence."
-    tok_res = tokenizer.encode(tok_msg)
+    dataset_tokenized = _remove_columns_from_dataset(
+        dataset_tokenized, dataset["cols_to_tok"], dataset["cols_to_remove"]
+    )
 
     if debug_state:
+        tok_msg = "This is a test sentence."
+        tok_res = tokenizer.encode(tok_msg)
         debug(f"Tokenizing '{tok_msg}': {tok_res}")
-
-    # remove columns not neccessary
-    try:
-        dataset_tokenized = dataset_tokenized.remove_columns(
-            dataset["cols_to_tok"]
-        ).remove_columns(dataset["cols_to_remove"])
-    except Exception as e:
-        return e
-
-    # TODO save local copy of dataset_tokenized
 
     return num_labels

@@ -4,7 +4,7 @@
 # TODO generalize provider parametrisation
 # TODO refactor Pipeline-object out into function only?
 
-from logging import debug
+# from logging import debug
 from os import environ
 from typing import Union
 
@@ -108,11 +108,10 @@ def _get_metrics_to_load(
 def _get_device() -> str:
     """Returns the device as 'cpu', 'gpu' or 'tpu'"""
 
-    try:
-        environ["TPU_NAME"]
+    # TODO make it platform independent, TPU_NAME used by Google Colab
+    if "TPU_NAME" in environ:
         return "tpu"
-    except Exception as e:
-        debug(e)
+    else:
         try:
             return device("cuda" if is_available() else "cpu")
         except Exception as e:
