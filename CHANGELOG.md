@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+Restructure all functions loading Hugging Face components into own module. Download and optionally save the components for reuse.
+
+### Added
+
+- `load_hf_components.py` containing the functions to load components from Hugging Face
+
+### Changed
+
+- `prepare_ml_input.py` now only calls external functions to load Hugging Face components
+
 [1.7.0] - 2022-08-07
 ---
 

@@ -10,31 +10,43 @@ Components could be models, datasets, tokenizers, metrics etc.
 from logging import debug
 from os import environ
 
-from datasets import dataset_dict, load_dataset, load_metric
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from datasets import dataset_dict
+from transformers import AutoTokenizer
+
+from .load_hf_components import (
+    get_dataset,
+    get_metrics_to_load_objects_hf,
+    get_model,
+    get_tokenizer,
+    set_debug_state_hf,
+)
 
 
 def set_debug_state(debug_on: bool = False):
     global debug_state
     debug_state = debug_on
+    set_debug_state_hf(debug_on)
 
 
 def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
     """Load tokenized dataset and model"""
 
     try:
-        dataset_plain = _get_dataset(dataset["dataset"], dataset["configuration"])
+        dataset_plain = get_dataset(dataset["dataset"], dataset["configuration"])
+
+        # TODO get dataset card and extract num_labels instead of count
         dataset["num_labels"] = len(
             dataset_plain["train"].unique(dataset["col_to_rename"])
         )
-        tokenizer = _get_tokenizer(model_full_name)
+
         _ = _get_tokenized_dataset(
             dataset_plain,
-            tokenizer,
+            get_tokenizer(model_full_name),
             dataset["cols_to_tok"],
             dataset["cols_to_remove"],
         )
-        _ = _get_model(model_full_name, dataset["num_labels"])
+        _ = get_model(model_full_name, dataset["num_labels"])
+
     except Exception as e:
         return e
 
@@ -51,62 +63,12 @@ def set_provider_env(provider: str, provider_param: dict) -> None:
         return e
 
 
-def _get_model(
-    model_full_name: str, num_labels: int
-) -> AutoModelForSequenceClassification:  # TODO check return type
-    """Downloads specified model"""
-
-    if debug_state:
-        debug(f"Downloading {model_full_name=} with {num_labels=}")
-    return AutoModelForSequenceClassification.from_pretrained(
-        model_full_name, num_labels=num_labels
-    )
-
-
-def _get_dataset(dataset: str, configuration: str) -> dataset_dict.DatasetDict:
-    """TODO"""
-
-    try:
-        if configuration:
-            if debug_state:
-                debug(f"Downloading {configuration=} from {dataset=}")
-            return load_dataset(dataset, configuration)
-        else:
-            if debug_state:
-                debug(f"Downloading dataset {dataset=}")
-            return load_dataset(dataset)
-    except Exception as e:
-        return e
-
-
 def get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
-    """Downloads Hugging Face Metrics Builder Scripts"""
-
-    if debug_state:
-        debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load}")
-
-    try:
-        return [load_metric(met) for met in metrics_to_load]
-    except Exception as e:
-        return e
-
-
-def _get_tokenizer(model_full_name: str) -> AutoTokenizer:  # TODO check return type
-    """Downloads tokenizer for the specified model"""
-
-    if debug_state:
-        debug(f"Downloading Tokenizer for {model_full_name=}")
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_full_name, use_fast=True, truncation=True, padding=True
-    )
-
-    if debug_state:
-        tok_msg = "This is a test sentence."
-        tok_res = tokenizer.encode(tok_msg)
-        debug(f"Tokenizing '{tok_msg}': {tok_res}")
-
-    return tokenizer
+    """
+    Downloads metrics objects by calling the appropriate handling function.
+    To date onyl from Hugging Face
+    """
+    return get_metrics_to_load_objects_hf(metrics_to_load)
 
 
 def _get_raw_tokenized_dataset(

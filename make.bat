@@ -58,10 +58,13 @@ goto:eof
 goto:eof
 
 :local_static_checks:
+    echo mypy will be skipped
     echo isort && %perun% isort .
     echo black && %perun% black .
     echo flake8 && %perun% flake8
-    echo mypy && %perun% mypy .
+    @REM echo mypy && %perun% mypy .
+    set skip=mypy
+	echo pre-commit && %perun% pre-commit run --all-files
 goto:eof
 
 :local_commit
