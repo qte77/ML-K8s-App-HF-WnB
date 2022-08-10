@@ -14,10 +14,10 @@ from datasets import dataset_dict
 from transformers import AutoTokenizer
 
 from .load_hf_components import (
-    get_dataset,
+    get_dataset_hf,
     get_metrics_to_load_objects_hf,
-    get_model,
-    get_tokenizer,
+    get_model_hf,
+    get_tokenizer_hf,
     set_debug_state_hf,
 )
 
@@ -32,7 +32,7 @@ def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
     """Load tokenized dataset and model"""
 
     try:
-        dataset_plain = get_dataset(dataset["dataset"], dataset["configuration"])
+        dataset_plain = get_dataset_hf(dataset["dataset"], dataset["configuration"])
 
         # TODO get dataset card and extract num_labels instead of count
         dataset["num_labels"] = len(
@@ -41,11 +41,11 @@ def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
 
         _ = _get_tokenized_dataset(
             dataset_plain,
-            get_tokenizer(model_full_name),
+            get_tokenizer_hf(model_full_name),
             dataset["cols_to_tok"],
             dataset["cols_to_remove"],
         )
-        _ = get_model(model_full_name, dataset["num_labels"])
+        _ = get_model_hf(model_full_name, dataset["num_labels"])
 
     except Exception as e:
         return e
@@ -90,7 +90,6 @@ def _get_tokenized_dataset(
     cols_to_remove: list[str],
 ) -> dataset_dict.DatasetDict:
     """TODO"""
-    # TODO save local copy of dataset_tokenized
 
     if debug_state:
         debug(f"Tokenizing dataset with {len(cols_to_tok)} columns to tokenize and")

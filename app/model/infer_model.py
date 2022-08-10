@@ -6,14 +6,17 @@
 # from torch import cuda, no_grad
 
 
-# def do_infer(self, input):
-#     """Infer with model"""
-#     infer_model(
-#         input,
-#         get_tokenizer(self.paramobj.model_full_name),
-#         get_model(self.paramobj.model_full_name),
-#         self["device"],
-#     )
+def do_infer(self, input):
+    """Infer with model"""
+
+    # infer_model(
+    #     input,
+    #     get_tokenizer(self.paramobj.model_full_name),
+    #     get_model(self.paramobj.model_full_name),
+    #     self["device"],
+    # )
+
+    return NotImplementedError
 
 
 def test_model(inputs: str, device: str) -> str:
@@ -50,7 +53,9 @@ def infer_model(input: str, device: str) -> str:  # TODO
 
     # TODO adopt to model and task
     # if dataset == 'YAHOO':
-    input = "Why is cheese so much better with wine?"
-    return test_model(input, device)
+    # input = "Why is cheese so much better with wine?"
+    # return test_model(input, device)
     # elif dataset == 'MRPC':
     #   print(test_model('hallo', 'hedda'))
+
+    return NotImplementedError

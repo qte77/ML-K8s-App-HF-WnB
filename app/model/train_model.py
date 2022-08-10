@@ -3,11 +3,13 @@
 Train model
 """
 from datasets import Metric  # , load_metric
-from numpy import argmax
-from transformers import Trainer  # , TrainingArguments
-from wandb import log
 
-from helper.prepare_sweep import start_sweep
+# from numpy import argmax
+from transformers import Trainer  # , TrainingArguments
+
+# from wandb import log
+
+# from helper.prepare_sweep import start_sweep
 
 # def do_train(self) -> None:
 #     """Train the model"""
@@ -26,42 +28,46 @@ def train_model(
     sweep_config: dict,
     provider: str,
 ) -> object:
-    """Fine-tune the model"""
+    """Fine-tune the model on down-stream task"""
 
-    start_sweep(provider)
+    # start_sweep(provider)
 
     return NotImplementedError
 
 
 def _compute_metrics(eval_pred: list, metrics_loaded: list, metrics_avg: str) -> Metric:
+    """TODO"""
 
     # TODO refactor
-    predictions, labels = eval_pred
-    predictions = argmax(predictions, axis=1)  # predictions.argmax(-1)
+    # predictions, labels = eval_pred
+    # predictions = argmax(predictions, axis=1)  # predictions.argmax(-1)
 
-    print("*************")
+    # print("*************")
 
-    for i, m in enumerate(metrics_loaded):
+    # for i, m in enumerate(metrics_loaded):
 
-        if metrics_loaded[i] in ["precision", "recall", "f1"]:
-            met = m.compute(
-                predictions=predictions, references=labels, average=metrics_avg
-            )
-        else:
-            met = m.compute(predictions=predictions, references=labels)
+    #     if metrics_loaded[i] in ["precision", "recall", "f1"]:
+    #         met = m.compute(
+    #             predictions=predictions, references=labels, average=metrics_avg
+    #         )
+    #     else:
+    #         met = m.compute(predictions=predictions, references=labels)
 
-        if metrics_loaded[i] == "accuracy":
-            ret = met
+    #     if metrics_loaded[i] == "accuracy":
+    #         ret = met
 
-        log(met)
-        print(met)
+    #     log(met)
+    #     print(met)
 
-    print("*************")
+    # print("*************")
 
-    return ret
+    # return ret
+
+    return NotImplementedError
 
 
 def _create_trainer(config=None) -> Trainer:
+    """TODO"""
     # TODO implement
     # TODO save locally
 
