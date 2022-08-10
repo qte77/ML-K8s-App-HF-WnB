@@ -144,15 +144,18 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  ├─ config/
 │  │  ├─ defaults.yml
 │  │  ├─ huggingface.yml
+│  │  ├─ logging.conf
 │  │  ├─ sweep-wandb.yml
 │  │  ├─ sweep.yml
 │  │  ├─ task.yml
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
 │  ├─ helper/
-│  │  ├─ create_pipeline_object.py
+│  │  ├─ config_logger.py
 │  │  ├─ load_configs.py
+│  │  ├─ load_hf_components.py
 │  │  ├─ parametrise_pipeline.py
+│  │  ├─ Pipeline.py
 │  │  ├─ prepare_ml_input.py
 │  │  └─ prepare_sweep.py
 │  ├─ model/
@@ -183,9 +186,11 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ .gitignore
 ├─ .gitmessage
 ├─ .markdownlint.yml
+├─ .pre-commit-config.yaml
 ├─ CHANGELOG.md
 ├─ Dockerfile
 ├─ LICENSE
+├─ make.bat
 ├─ Makefile
 ├─ Pipfile
 ├─ Pipfile.lock
