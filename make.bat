@@ -80,12 +80,14 @@ goto:eof
 goto:eof
 
 :local_bump_part
-	echo %msg_not_impl%
-    rem if defined %part% (
-    rem    %perun% bump2version %part%
-    rem ) else (
-    rem    exit /b %err_b2v_part_empty%
-	rem )
+	@REM echo %msg_not_impl%
+    echo %1
+    if not _%1_ == __ (
+        %perun% bump2version %1
+    ) else (
+        echo Parameter for 'part' is empty. Exiting.
+        exit /b %err_b2v_part_empty%
+	)
 goto:eof
 
 :cleanup
