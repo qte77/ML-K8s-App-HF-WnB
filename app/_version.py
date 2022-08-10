@@ -1,4 +1,4 @@
 #!/usr/bin/env python
-__version__: str = "1.7.0"
+__version__: str = "1.8.0"
 __authors__: str = "qte77"
 # __email__ : str = '@'
