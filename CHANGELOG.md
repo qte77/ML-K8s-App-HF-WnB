@@ -17,6 +17,8 @@ Restructure all functions loading Hugging Face components into own module. Downl
 ### Added
 
 - `load_hf_components.py` containing the functions to load components from Hugging Face
+  - HF Metric Builder Scripts not loaded with list comprehension anymore to enable logging
+- `load_configs.py:_sanitize_path()` to expand `~` to `$HOME` and return OS-specific paths
 
 ### Changed
 

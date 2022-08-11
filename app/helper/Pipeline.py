@@ -3,9 +3,11 @@
 
 from dataclasses import dataclass
 
-from .prepare_ml_input import (  # prepare_ml_components,; set_provider_env,
-    get_metrics_to_load_objects,
-)
+# from .prepare_ml_input import (
+#     # set_provider_env,
+#     # get_metrics_to_load_objects,
+#     # prepare_ml_components,
+# )
 
 
 @dataclass
@@ -39,15 +41,15 @@ class Pipeline:
         """
 
         try:
-
+            pass
             # prepare_ml_components(
             #     self.paramobj["dataset"], self.paramobj["model_full_name"]
             # )
 
             # get metrics
-            self.paramobj["metrics"]["metrics_loaded"] = get_metrics_to_load_objects(
-                self.paramobj["metrics"]["metrics_to_load"]
-            )
+            # self.paramobj["metrics"]["metrics_loaded"] = get_metrics_to_load_objects(
+            #     self.paramobj["metrics"]["metrics_to_load"]
+            # )
 
             # provider = self.paramobj["sweep"]["provider"]
             # set_provider_env(provider, self.paramobj[provider])

@@ -11,7 +11,11 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import get_config_content, get_keyfile_content, set_debug_state_cfg
+from .load_configs import (  # get_default_save_dir,
+    get_config_content,
+    get_keyfile_content,
+    set_debug_state_cfg,
+)
 from .prepare_ml_input import set_debug_state_ml
 
 # from logging import debug, error, getLogger, root
@@ -33,6 +37,8 @@ def get_param_dict() -> dict:
     hf_params: dict = get_config_content("huggingface")
     sweep: dict = get_config_content("sweep")
     task: dict = get_config_content("task")
+
+    # save_dir = get_default_save_dir()
 
     paramobj = {}
     paramobj["metrics"] = {}

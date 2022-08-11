@@ -4,7 +4,7 @@ Load configuration files
 TODO some error checks missing
 """
 
-from logging import debug
+from logging import debug, error
 from os.path import abspath, dirname, exists, expanduser, join, split
 from typing import Literal, Union
 
@@ -30,10 +30,21 @@ def get_config_content(cfg_name: str) -> dict:
     return _load_yml(cfg_name)
 
 
+def _sanitize_path(path: str = "~") -> str:
+    """Expands '~' to $HOME if given and returns OS-specific path"""
+
+    if "\\" in path:
+        path = path.replace("\\", "/")
+    if path.startswith("~"):
+        path = expanduser(path)
+
+    return join(*path.split("/"))
+
+
 def get_default_save_dir() -> dict:
     """Looks for 'save_dir' inside 'defaults.yml' and returns it if found"""
 
-    return _check_or_get_default("save_dir", mode_check_get="get")
+    return _sanitize_path(_check_or_get_default("save_dir", mode_check_get="get"))
 
 
 def get_keyfile_content(provider: str = "wandb") -> dict:
@@ -53,7 +64,7 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
 
 def _check_or_get_default(
     cfg_keyname: str,
-    cfg_value_to_search: str,
+    cfg_value_to_search: str = None,
     cfg_defaults_fn: str = "defaults",
     cfg_path: str = "config",
     mode_check_get: Literal["check", "get"] = "check",
@@ -70,12 +81,15 @@ def _check_or_get_default(
 
     try:
         defaults: list[str] = _load_yml(cfg_defaults_fn, cfg_path)[cfg_keyname]
-        values_exists = defaults.__contains__(cfg_value_to_search)
 
-        if mode_check_get == "check":
-            return values_exists
-        elif values_exists and mode_check_get == "get":
-            return defaults[cfg_value_to_search]
+        if cfg_value_to_search:
+            values_exists = defaults.__contains__(cfg_value_to_search)
+            if mode_check_get == "check":
+                return values_exists
+            elif values_exists:
+                return defaults[cfg_value_to_search]
+        else:
+            return defaults
 
     except TypeError as e:
         return e
@@ -87,16 +101,14 @@ def _check_or_get_default(
 
 def _load_yml(cfg_filename: str = "defaults", cfg_path: str = "config") -> dict:
     """
-    Loads a YAML from 'root/[cfg_path]/[cfg_filename].yml',  parses and returns it
+    Loads a YAML from 'root/[cfg_path]/[cfg_filename].yml', parses and returns it
     """
 
     # sanitize
     # TODO case-insensitive yml and yaml as RegExp on end of str
     if ".yml" in cfg_filename:
         cfg_filename = cfg_filename.replace(".yml", "")
-    # TODO ~ RegExp at start of str
-    if "~" in cfg_path:
-        cfg_path = cfg_path.replace("~", expanduser(cfg_path))
+    cfg_path = _sanitize_path(cfg_path)
 
     # create absolute path
     cfg_abs_path = split(dirname(abspath(__file__)))[0]
@@ -112,4 +124,5 @@ def _load_yml(cfg_filename: str = "defaults", cfg_path: str = "config") -> dict:
         with open(cfg_abs_path, encoding="utf8") as yml:
             return safe_load(yml)
     except Exception as e:
+        error(e)
         return e

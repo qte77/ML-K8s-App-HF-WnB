@@ -1,6 +1,5 @@
 ---
-save_dir:
-  - ~
+save_dir: "~/App"
 config_fn:
   - "defaults"
   - "task"
