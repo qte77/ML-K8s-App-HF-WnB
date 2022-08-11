@@ -11,26 +11,24 @@ from transformers import Trainer  # , TrainingArguments
 
 # from helper.prepare_sweep import start_sweep
 
-# def do_train(self) -> None:
-#     """Train the model"""
-#     train_model(
-#         self.paramobj.project_name,
-#         self.paramobj.metrics.metrics_to_optimize,
-#         self.paramobj.sweep.provider,
-#         self.paramobj.metrics.metrics_loaded,
-#     )
-
 
 def train_model(
-    project_name: str,
-    metric_to_optimize: str,
-    metrics_loaded: list,
-    sweep_config: dict,
-    provider: str,
-) -> object:
+    # project_name: str,
+    # metric_to_optimize: str,
+    # metrics_loaded: list,
+    # sweep_config: dict,
+    # provider: str,
+) -> None:
     """Fine-tune the model on down-stream task"""
 
     # start_sweep(provider)
+
+    # train_model(
+    #     self.paramobj.project_name,
+    #     self.paramobj.metrics.metrics_to_optimize,
+    #     self.paramobj.sweep.provider,
+    #     self.paramobj.metrics.metrics_loaded,
+    # )
 
     return NotImplementedError
 

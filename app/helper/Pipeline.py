@@ -3,8 +3,6 @@
 
 from dataclasses import dataclass
 
-# from model.infer_model import infer_model
-# from model.train_model import train_model
 from .prepare_ml_input import (  # prepare_ml_components,; set_provider_env,
     get_metrics_to_load_objects,
 )
@@ -16,9 +14,9 @@ class Pipeline:
 
     paramobj: dict
 
-    def set_train_mode(self, train_mode: bool) -> None:
-        """Switch mode between train and infer"""
-        self.paramobj.train_mode = train_mode
+    # def set_train_mode(self, train_mode: bool) -> None:
+    #     """Switch mode between train and infer"""
+    #     self.paramobj.train_mode = train_mode
 
     def get_task(self) -> None:
         return self.task
@@ -55,11 +53,3 @@ class Pipeline:
             # set_provider_env(provider, self.paramobj[provider])
         except Exception as e:
             return e
-
-    def do_train(self) -> None:
-        """TODO"""
-        return NotImplementedError
-
-    def do_infer(self) -> None:
-        """TODO"""
-        return NotImplementedError

@@ -9,6 +9,10 @@ from typing import Literal
 from .helper.config_logger import config_logger
 from .helper.parametrise_pipeline import get_param_dict, set_debug_on_pipeline
 from .helper.Pipeline import Pipeline
+from .model.infer_model import infer_model
+from .model.train_model import train_model
+
+# modes = Literal["train", "infer"]
 
 
 def main(mode: Literal["train", "infer"] = "train", debug_on: bool = False) -> None:
@@ -16,6 +20,9 @@ def main(mode: Literal["train", "infer"] = "train", debug_on: bool = False) -> N
     Create pipeline object parametrised with parameter object and execute task.
     The task performed depends on the input of the `mode` [train, infer].
     """
+
+    if mode not in ["train", "infer"]:
+        mode = "train"
 
     config_logger()
     set_debug_on_pipeline(debug_on)
@@ -30,8 +37,8 @@ def main(mode: Literal["train", "infer"] = "train", debug_on: bool = False) -> N
 
     pipeobj = Pipeline(paramobj)
     pipeobj.prepare_ml_external_components()
-    # pipeobj.do_infer()
-    # pipeobj.do_train()
+
+    train_model() if (mode == "train") else infer_model()
 
 
 if __name__ == "__main__":

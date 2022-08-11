@@ -6,19 +6,6 @@
 # from torch import cuda, no_grad
 
 
-def do_infer(self, input):
-    """Infer with model"""
-
-    # infer_model(
-    #     input,
-    #     get_tokenizer(self.paramobj.model_full_name),
-    #     get_model(self.paramobj.model_full_name),
-    #     self["device"],
-    # )
-
-    return NotImplementedError
-
-
 def test_model(inputs: str, device: str) -> str:
     """
     Test model output before fine-tuning.
@@ -48,7 +35,9 @@ def test_model(inputs: str, device: str) -> str:
         return NotImplementedError  # "NO CUDA"
 
 
-def infer_model(input: str, device: str) -> str:  # TODO
+def infer_model(
+    # input: str, device: str
+) -> str:  # TODO
     """Infers result from model given input"""
 
     # TODO adopt to model and task
@@ -57,5 +46,12 @@ def infer_model(input: str, device: str) -> str:  # TODO
     # return test_model(input, device)
     # elif dataset == 'MRPC':
     #   print(test_model('hallo', 'hedda'))
+
+    # infer_model(
+    #     input,
+    #     get_tokenizer(self.paramobj.model_full_name),
+    #     get_model(self.paramobj.model_full_name),
+    #     self["device"],
+    # )
 
     return NotImplementedError
