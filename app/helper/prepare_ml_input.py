@@ -22,7 +22,7 @@ from .load_hf_components import (
 )
 
 
-def set_debug_state(debug_on: bool = False):
+def set_debug_state_ml(debug_on: bool = False):
     global debug_state
     debug_state = debug_on
     set_debug_state_hf(debug_on)

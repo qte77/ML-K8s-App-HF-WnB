@@ -5,11 +5,8 @@ from dataclasses import dataclass
 
 # from model.infer_model import infer_model
 # from model.train_model import train_model
-from .prepare_ml_input import (
+from .prepare_ml_input import (  # prepare_ml_components,; set_provider_env,
     get_metrics_to_load_objects,
-    prepare_ml_components,
-    set_debug_state,
-    set_provider_env,
 )
 
 
@@ -18,7 +15,6 @@ class Pipeline:
     """Create a pipeline object with a parameter object"""
 
     paramobj: dict
-    debug_on: bool = False
 
     def set_train_mode(self, train_mode: bool) -> None:
         """Switch mode between train and infer"""
@@ -45,19 +41,18 @@ class Pipeline:
         """
 
         try:
-            set_debug_state(self.debug_on)
 
-            prepare_ml_components(
-                self.paramobj["dataset"], self.paramobj["model_full_name"]
-            )
+            # prepare_ml_components(
+            #     self.paramobj["dataset"], self.paramobj["model_full_name"]
+            # )
 
             # get metrics
             self.paramobj["metrics"]["metrics_loaded"] = get_metrics_to_load_objects(
                 self.paramobj["metrics"]["metrics_to_load"]
             )
 
-            provider = self.paramobj["sweep"]["provider"]
-            set_provider_env(provider, self.paramobj[provider])
+            # provider = self.paramobj["sweep"]["provider"]
+            # set_provider_env(provider, self.paramobj[provider])
         except Exception as e:
             return e
 

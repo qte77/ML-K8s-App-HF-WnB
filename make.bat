@@ -75,7 +75,7 @@ goto:eof
         endlocal
         exit /b %err_git_msg_undef%
     ) else (
-        %perun% git commit -m %1
+        %perun% git commit -m %1 || echo "%msg_test_fail%"
     )
 goto:eof
 
@@ -103,6 +103,7 @@ goto:eof
 :messages
     set "msg_git_no_msg=No git message provided. Exiting without changes."
     set "msg_not_impl=############ Function Not Implemented ############"
+    set "msg_test_fail=Test(s) failed. Nothing commited."
 goto:eof
 
 :commands

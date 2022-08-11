@@ -11,9 +11,17 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import get_config_content, get_keyfile_content
+from .load_configs import get_config_content, get_keyfile_content, set_debug_state_cfg
+from .prepare_ml_input import set_debug_state_ml
 
 # from logging import debug, error, getLogger, root
+
+
+def set_debug_on_pipeline(debug_on: bool = False) -> None:
+    # global debug_on_glob
+    # debug_on_glob = debug_on
+    set_debug_state_cfg(debug_on)
+    set_debug_state_ml(debug_on)
 
 
 def get_param_dict() -> dict:
@@ -28,6 +36,7 @@ def get_param_dict() -> dict:
 
     paramobj = {}
     paramobj["metrics"] = {}
+    # paramobj["savedir"] =
     paramobj["sweep"]: dict = _get_sweep_cfg(sweep)
     paramobj["device"]: str = str(_get_device())
     paramobj["dataset"]: dict = _get_dataset_cfg(hf_params["datasets"], task["dataset"])
