@@ -5,6 +5,8 @@
 # TODO refactor Pipeline-object out into function only?
 
 # from logging import debug
+from json import dump
+from logging import debug
 from os import environ
 from typing import Union
 
@@ -17,6 +19,11 @@ from .load_configs import (  # get_default_save_dir,
 )
 
 # from logging import debug, error, getLogger, root
+
+
+def set_debug_state_parse(debug_on: bool = False):
+    global debug_state
+    debug_state = debug_on
 
 
 def get_param_dict() -> dict:
@@ -59,6 +66,12 @@ def get_param_dict() -> dict:
             paramobj["wandb"] = _get_wandb_env_params(
                 wandb_params, paramobj["project_name"]
             )
+
+    if debug_state:
+        paramobj_file = "./paramobj.json"
+        debug(f"Printing paramobj to '{paramobj_file}'")
+        with open(paramobj_file, "w") as outfile:
+            dump(paramobj, outfile, indent=2)
 
     return paramobj
 
