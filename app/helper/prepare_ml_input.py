@@ -28,16 +28,11 @@ def set_debug_state_ml(debug_on: bool = False):
     set_debug_state_hf(debug_on)
 
 
-def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
+def get_dataset(dataset: dict, model_full_name: str) -> int:
     """Load tokenized dataset and model"""
 
     try:
         dataset_plain = get_dataset_hf(dataset["dataset"], dataset["configuration"])
-
-        # TODO get dataset card and extract num_labels instead of count
-        dataset["num_labels"] = len(
-            dataset_plain["train"].unique(dataset["col_to_rename"])
-        )
 
         _ = _get_tokenized_dataset(
             dataset_plain,
@@ -45,10 +40,26 @@ def prepare_ml_components(dataset: dict, model_full_name: str) -> str:
             dataset["cols_to_tok"],
             dataset["cols_to_remove"],
         )
-        _ = get_model_hf(model_full_name, dataset["num_labels"])
+
+        return len(dataset_plain["train"].unique(dataset["col_to_rename"]))
 
     except Exception as e:
         return e
+
+
+def get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
+    """
+    Downloads metrics objects by calling the appropriate handling function.
+    To date onyl from Hugging Face
+    """
+    # TODO implement other providers
+    return get_metrics_to_load_objects_hf(metrics_to_load)
+
+
+def get_model(model_full_name: str = None, num_labels: str = None):
+    """TODO"""
+    # TODO implement other providers
+    return get_model_hf(model_full_name, num_labels)
 
 
 def set_provider_env(provider: str, provider_param: dict) -> None:
@@ -61,14 +72,6 @@ def set_provider_env(provider: str, provider_param: dict) -> None:
                 debug(f"Setting '{provider}' env '{k}'")
     except Exception as e:
         return e
-
-
-def get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
-    """
-    Downloads metrics objects by calling the appropriate handling function.
-    To date onyl from Hugging Face
-    """
-    return get_metrics_to_load_objects_hf(metrics_to_load)
 
 
 def _get_raw_tokenized_dataset(

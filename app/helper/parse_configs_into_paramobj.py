@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Parametrise and return a parameter object"""
+"""Parse configs and return a parameter object"""
 # TODO rename 'defaults' more specific and descriptive
 # TODO generalize provider parametrisation
 # TODO refactor Pipeline-object out into function only?
@@ -14,18 +14,9 @@ from torch.cuda import is_available
 from .load_configs import (  # get_default_save_dir,
     get_config_content,
     get_keyfile_content,
-    set_debug_state_cfg,
 )
-from .prepare_ml_input import set_debug_state_ml
 
 # from logging import debug, error, getLogger, root
-
-
-def set_debug_on_pipeline(debug_on: bool = False) -> None:
-    # global debug_on_glob
-    # debug_on_glob = debug_on
-    set_debug_state_cfg(debug_on)
-    set_debug_state_ml(debug_on)
 
 
 def get_param_dict() -> dict:

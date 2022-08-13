@@ -24,6 +24,10 @@ Restructure all functions loading Hugging Face components into own module. Downl
 
 - `prepare_ml_input.py` now only calls external functions to load Hugging Face components
 
+### Removed
+
+- `Pipeline.py` factored out this object to functional only
+
 [1.7.0] - 2022-08-07
 ---
 

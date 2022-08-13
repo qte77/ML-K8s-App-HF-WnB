@@ -143,18 +143,21 @@ def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:
     """Downloads Hugging Face Metrics Builder Scripts"""
 
     # TODO metrics save and load locally possible ?
+    # TODO error handling, what about empty metrics?
 
     if debug_on_glob:
-        debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
+        debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
 
     metrics_loaded = []
 
     for met in metrics_to_load:
 
         if debug_on_glob:
-            debug(f"Trying to load {met=}")
+            debug(f"Trying to load {met!r}")
 
         try:
             metrics_loaded.append(load_metric(met))
         except Exception as e:
             error(e)
+
+    return metrics_loaded

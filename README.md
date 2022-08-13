@@ -214,19 +214,21 @@ TODO [↑](#app-k8s-hf-wnb)
   * May be extended with `typing`, `dataclasses` or `pydantic`
 * [x] Read multiple yml inside one file inside config loader
   * Abondoned, adds unnecessary complexity, use separate yml
+* [x] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
 * [x] Try `dataclass` and `field` from [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
   * Used to auto add special classes like `__init__`, `__str__`, `__repr__`
   * Uses type hinting and decorators
-  * Abandoned, classes in this app not complex enough
-* [ ] Test [pydantic](https://pydantic-docs.helpmanual.io/) for type checking and hinting instead of `typing` or `dataclasses`
-* [ ] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+* [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking and hinting instead of `typing` or `dataclasses`
+  * `pydantic` build for parsing and checking types at runtime
+  * Could be a
+  * If the app uses data it produced itself, it may not be suitable
 * [ ] Use `if` for to check if feature can be provided properly instead of `Ecxeption` to catch it
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
   * Difference between Abstraction vs Decoupling
 * [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
 * [ ] Use `hydra`and/or `omegaconf` to load configs instead of own helper implementation
-* Factor out `Pipeline.py` into functional only
+* [ ] Factor out `Pipeline.py` into functional only
   * Sole purpose of `Pipeline.py` is to represent the gathered configs
 
 ### Dependency tracking and app sourcing
