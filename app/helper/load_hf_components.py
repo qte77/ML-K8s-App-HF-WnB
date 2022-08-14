@@ -3,15 +3,14 @@
 Load components from Hugging Face or local if already present
 """
 # TODO load and save locally, use save path from defaults.yml
-from logging import debug, error
+
+from os import environ as env
+
+if "APP_DEBUG_IS_ON" in env:
+    from logging import debug
 
 from datasets import dataset_dict, load_dataset, load_metric
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
-
-
-def set_debug_state_hf(debug_on: bool = False):
-    global debug_on_glob
-    debug_on_glob = debug_on
 
 
 def get_dataset_hf(dataset: str, configuration: str) -> dataset_dict.DatasetDict:
@@ -44,11 +43,11 @@ def get_dataset_hf(dataset: str, configuration: str) -> dataset_dict.DatasetDict
 
     try:
         if configuration:
-            if debug_on_glob:
+            if "APP_DEBUG_IS_ON" in env:
                 debug(f"Downloading {configuration=} from {dataset=}")
             return load_dataset(dataset, configuration)
         else:
-            if debug_on_glob:
+            if "APP_DEBUG_IS_ON" in env:
                 debug(f"Downloading dataset {dataset=}")
             return load_dataset(dataset)
     except Exception as e:
@@ -77,14 +76,14 @@ def get_tokenizer_hf(model_full_name: str) -> AutoTokenizer:  # TODO check retur
     # except Exception as e:
     #   print(red, e)
 
-    if debug_on_glob:
+    if "APP_DEBUG_IS_ON" in env:
         debug(f"Downloading Tokenizer for {model_full_name=}")
 
     tokenizer = AutoTokenizer.from_pretrained(
         model_full_name, use_fast=True, truncation=True, padding=True
     )
 
-    if debug_on_glob:
+    if "APP_DEBUG_IS_ON" in env:
         tok_msg = "This is a test sentence."
         tok_res = tokenizer.encode(tok_msg)
         debug(f"Tokenizing '{tok_msg}': {tok_res}")
@@ -131,7 +130,7 @@ def get_model_hf(
     # except Exception as e:
     #     print(red, e)
 
-    if debug_on_glob:
+    if "APP_DEBUG_IS_ON" in env:
         debug(f"Downloading {model_full_name=} with {num_labels=}")
 
     return AutoModelForSequenceClassification.from_pretrained(
@@ -145,19 +144,21 @@ def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:
     # TODO metrics save and load locally possible ?
     # TODO error handling, what about empty metrics?
 
-    if debug_on_glob:
+    if "APP_DEBUG_IS_ON" in env:
         debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
 
     metrics_loaded = []
 
     for met in metrics_to_load:
 
-        if debug_on_glob:
+        if "APP_DEBUG_IS_ON" in env:
             debug(f"Trying to load {met!r}")
 
         try:
             metrics_loaded.append(load_metric(met))
-        except Exception as e:
-            error(e)
+        except Exception:  # as e:
+            # TODO handle erro while loading metrics from HF
+            # error(e)
+            pass
 
     return metrics_loaded

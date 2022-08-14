@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 """"Load [logger_name] from [root]/[config_path]/[config_fn]"""
 
-from logging import error, getLogger
+from logging import Logger, error, getLogger
 from logging.config import fileConfig
 from os.path import abspath, dirname, exists, join, split
 
 
-def config_logger(
+def configure_logger(
     logger_name: str = "simpleExample",
     config_fn: str = "logging.conf",
     config_path: str = "config",
-) -> None:
+) -> Logger:
     """
     Load [logger_name] from 'root/[config_path]/[config_fn]'
     Configure the logger or exit if not existing or error occurs
@@ -29,6 +29,6 @@ def config_logger(
     # TODO simpleExample not loaded from logging.conf
     try:
         fileConfig(abs_path)
-        getLogger(logger_name)
+        return getLogger(logger_name)
     except Exception as e:
         return e

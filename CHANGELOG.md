@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `omegaconf` package to load YAML configuration files
   - Defaults are loaded globally to avoid multiple files operations
 
+### Changed
+
+- Refactored `main()` in `app.py` for a simpler structure
+- Refactored `global debug_on_global` in modules using the `logging` module to `os.environ["APP_DEBUG_IS_ON"]`
+  - Also used for conditional import of `logging`
+
 [1.8.0] - 2022-08-10
 ---
 

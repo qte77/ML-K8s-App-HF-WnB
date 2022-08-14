@@ -1,64 +1,44 @@
 #!/usr/bin/env python
 """Entrypoint for the app"""
 
-from logging import debug
-from sys import exit
-from typing import Literal, Optional
+from os import environ as env
+from typing import Final, NoReturn
 
-from .helper.config_logger import config_logger
+if "APP_DEBUG_IS_ON" in env:
+    from logging import debug, Logger
+
+from .helper.configure_logger import configure_logger
 from .helper.get_system_info import get_system_info
-from .helper.load_configs import set_debug_state_cfg
-from .helper.parse_configs_into_paramdict import get_param_dict, set_debug_state_parse
-from .helper.prepare_ml_input import (
-    get_dataset,
-    get_metrics_to_load_objects,
-    get_model,
-    set_debug_state_ml,
-    set_provider_env,
-)
+from .helper.parse_configs_into_paramdict import get_param_dict
+from .helper.prepare_ml_input import prepare_pipeline
 
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
 
-# modes = Literal["train", "infer"]
+APP_MODES: Final = ["train", "infer"]
 
 
-def main(
-    mode: Optional[Literal["train", "infer"]] = "train", debug_on: bool = False
-) -> None:
+def main(mode: APP_MODES = "train", debug_on: bool = False) -> NoReturn:
     """
     Create pipeline object parametrised with parameter object and execute task.
-    The task performed depends on the input of the `mode` Optional["train", "infer"].
+    The task performed depends on the input of the
+    `APP_MODES: Final = ["train", "infer"]`.\n
     Gets dateset and model from Hugging Face if not locally cached.\n
     Downloads the Metrics Builder Scripts from HF and returns their objects.\n
     Sets the environment variables the sweep provider needs.
     """
 
-    config_logger()
+    # TODO remove mode check with pydantic
+    if mode not in APP_MODES:
+        mode = "train"
 
-    if debug_on:
-        debug(f"{debug_on=}, app running in {mode=}")
+    if "APP_DEBUG_IS_ON" in env:
+        logger: Logger = configure_logger()
+        debug(f"App is running in {mode=}")
+        debug(f"Debug is set to {logger=}")
         debug(f"{get_system_info()=}")
-        set_debug_state_cfg(debug_on)
-        set_debug_state_ml(debug_on)
-        set_debug_state_parse(debug_on)
 
-    paramobj: dict = get_param_dict()
-    paramobj["dataset"]["num_labels"] = get_dataset(
-        paramobj["dataset"], paramobj["model_full_name"]
-    )
-    paramobj["metrics"]["metrics_loaded"] = get_metrics_to_load_objects(
-        paramobj["metrics"]["metrics_to_load"]
-    )
-    get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
-    provider = paramobj["sweep"]["provider"]
-    set_provider_env(provider, paramobj[provider])
+    # paramobj = prepare_pipeline(get_param_dict())
+    prepare_pipeline(get_param_dict())
 
-    # if mode not in ["train", "infer"]:
-    #     mode = "train"
     # _ = train_model(paramobj) if (mode == "train") else infer_model(paramobj)
-
-
-if __name__ == "__main__":
-    # main(sys.argv[1], sys.argv[2], sys.argv[3])
-    exit(main())
