@@ -166,6 +166,7 @@ def _parse_sweep_config(sweep: dict) -> dict:
 
 def _parse_wandb_api_user_and_key(keyfile_content: dict) -> dict:
     """TODO"""
+
     try:
         return {
             "wandb_username": keyfile_content["username"],

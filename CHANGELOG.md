@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
-- None
+### Added
+
+- Local saving and loading of Hugging Face componenents, except Metric Builder Scripts
 
 [1.9.0] - 2022-08-14
 ---
@@ -19,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `omegaconf` package to load YAML configuration files
   - Defaults are loaded globally to avoid multiple files operations
   - `OmegaConf.to_object(config)` tor return type `dict`
+- Systeminformation with `check_output(['systeminfo'])`
 
 ### Changed
 

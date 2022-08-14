@@ -40,11 +40,13 @@ def get_config_content(
 
 def get_default_save_dir() -> dict:
     """Looks for 'save_dir' inside 'defaults.yml' and returns it if found"""
+
     return default_configs["save_dir"]
 
 
 def get_keyfile_content(provider: str = "wandb") -> dict:
     """Returns keyfile objects"""
+
     try:
         # TODO handle multiple keyfiles
         keyfile_default = "~/wandb.key.yml" if provider == "wandb" else "~/key.yml"
@@ -64,6 +66,7 @@ def _load_config(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
 ) -> dict:
     """Loads and returns a config. Only accepts yaml/yml."""
+
     if "APP_DEBUG_IS_ON" in env:
         debug(f"Loading {cfg_filename_ex_ext=}")
     try:

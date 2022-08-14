@@ -228,6 +228,7 @@ TODO [↑](#app-k8s-hf-wnb)
 * [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
 * [ ] Use `hydra`and/or `omegaconf` to load configs instead of own helper implementation
+  * Hydra supports importing of custom `dataclasses.dataclass`
 * [ ] Factor out `Pipeline.py` into functional only
   * Sole purpose of `Pipeline.py` is to represent the gathered configs
 
