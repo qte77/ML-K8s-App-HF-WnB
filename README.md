@@ -14,7 +14,7 @@ Status
 
 **[DRAFT]** **[WIP]** **----> Not fully implemented yet**
 
-The current version is <1.8.0>. For version history have a look at [CHANGELOG.md](./CHANGELOG.md).
+The current version is <1.9.0>. For version history have a look at [CHANGELOG.md](./CHANGELOG.md).
 
 Quickstart
 ---
