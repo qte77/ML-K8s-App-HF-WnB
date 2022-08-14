@@ -15,27 +15,21 @@ if "APP_DEBUG_IS_ON" in env:
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import (  # get_default_save_dir,
-    get_config_content,
-    get_keyfile_content,
-    load_defaults,
-)
+from .load_configs import get_config_content, get_defaults, load_defaults
 
 
 def get_param_dict() -> dict:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`
-    Not Implemented yet: WANDB_NOTES, WANDB_TAGS
+    Not Implemented yet: WANDB_NOTES, WANDB_TAGS, WANDB_MODE
     """
 
     load_defaults()
     hf_params: dict = get_config_content("huggingface")
     task: dict = get_config_content("task")
-
-    # save_dir = get_default_save_dir()
-
     paramobj = {}
+    paramobj["save_dir"] = get_defaults()
     paramobj["metrics"] = {}
     # paramobj["savedir"] =
     paramobj["sweep"]: dict = _parse_sweep_config(get_config_content("sweep"))
@@ -61,9 +55,6 @@ def get_param_dict() -> dict:
 
     if paramobj["sweep"]["provider"] == "wandb":
         paramobj["wandb"] = get_config_content("wandb")
-        paramobj["wandb"].update(
-            _parse_wandb_api_user_and_key(get_keyfile_content("wandb"))
-        )
         # TODO wandb docu for env var names used for API access
         paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
 
@@ -162,15 +153,3 @@ def _parse_sweep_config(sweep: dict) -> dict:
         sweepobj["train_count"] = sweep["train_count"]
 
     return sweepobj
-
-
-def _parse_wandb_api_user_and_key(keyfile_content: dict) -> dict:
-    """TODO"""
-
-    try:
-        return {
-            "wandb_username": keyfile_content["username"],
-            "wandb_api_key": keyfile_content["key"],
-        }
-    except Exception as e:
-        return e

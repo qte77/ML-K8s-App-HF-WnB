@@ -15,6 +15,7 @@ if "APP_DEBUG_IS_ON" in env:
 from datasets import dataset_dict
 from transformers import AutoTokenizer
 
+from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
     get_metrics_to_load_objects_hf,
@@ -26,13 +27,13 @@ from .load_hf_components import (
 def prepare_pipeline(paramobj: dict) -> dict:
     """TODO"""
 
-    paramobj["dataset"]["num_labels"] = _get_dataset(
-        paramobj["dataset"], paramobj["model_full_name"]
-    )
-    paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
-        paramobj["metrics"]["metrics_to_load"]
-    )
-    _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
+    # paramobj["dataset"]["num_labels"] = _get_dataset(
+    #     paramobj["dataset"], paramobj["model_full_name"]
+    # )
+    # paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
+    #     paramobj["metrics"]["metrics_to_load"]
+    # )
+    # _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
     provider = paramobj["sweep"]["provider"]
     _set_provider_env(provider, paramobj[provider])
 
@@ -79,8 +80,12 @@ def _set_provider_env(provider: str, provider_param: dict) -> None:
     try:
         for k, v in provider_param.items():
             env[k] = v
-            if "APP_DEBUG_IS_ON" in env:
-                debug(f"Setting '{provider}' env '{k}'")
+        env["WANDB_API_KEY"] = get_keyfile_content("wandb")["WANDB_API_KEY"]
+        if "APP_DEBUG_IS_ON" in env:
+            debug(f"Environment set for {provider=}")
+            for s in env:
+                if "WANDB_" in s:
+                    debug(f"{s}=***") if "API_KEY" in s else debug(f"{s}={env[s]}")
     except Exception as e:
         return e
 

@@ -129,6 +129,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ CHANGELOG.md
 ├─ Dockerfile
 ├─ LICENSE
+├─ make.bat
 ├─ Makefile
 ├─ Pipfile
 ├─ pyproject.toml
@@ -145,22 +146,23 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ defaults.yml
 │  │  ├─ huggingface.yml
 │  │  ├─ logging.conf
+│  │  ├─ paramobj.dummy.json
 │  │  ├─ sweep-wandb.yml
 │  │  ├─ sweep.yml
 │  │  ├─ task.yml
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
 │  ├─ helper/
-│  │  ├─ config_logger.py
+│  │  ├─ configure_logger.py
+│  │  ├─ get_system_info
 │  │  ├─ load_configs.py
 │  │  ├─ load_hf_components.py
-│  │  ├─ parametrise_pipeline.py
-│  │  ├─ Pipeline.py
+│  │  ├─ parse_configs_into_paramdict.py
 │  │  ├─ prepare_ml_input.py
 │  │  └─ prepare_sweep.py
 │  ├─ model/
-│  │  ├─ inferModel.py
-│  │  └─ trainModel.py
+│  │  ├─ infer_model.py
+│  │  └─ train_model.py
 │  ├─ __main__.py
 │  ├─ __version__.py
 │  ├─ _version.py
@@ -183,6 +185,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 │        └─ namespace.yml
 ├─ .bumpversion.cfg
 ├─ .flake8
+├─ .gitattributes
 ├─ .gitignore
 ├─ .gitmessage
 ├─ .markdownlint.yml
@@ -198,6 +201,11 @@ App Structure [↑](#app-k8s-hf-wnb)
 └─ README.md
 </pre>
 </details>
+
+App Details [↑](#app-k8s-hf-wnb)
+---
+
+* [`helper/paramobj.dummy.json`](./app/config/paramobj.dummy.json) presents an example of the data model the pipeline uses
 
 TODO [↑](#app-k8s-hf-wnb)
 ---

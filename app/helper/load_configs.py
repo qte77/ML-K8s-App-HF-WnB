@@ -23,6 +23,14 @@ def load_defaults(
         debug(f"{default_configs=}")
 
 
+def get_defaults(key_to_search_and_return: str = "save_dir") -> str:
+    """
+    Searches for '<key_to_search_and_return>' inside 'defaults.yml'
+    and returns its value if found
+    """
+    return default_configs[key_to_search_and_return]
+
+
 def get_config_content(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
 ) -> dict:
@@ -36,12 +44,6 @@ def get_config_content(
             debug(f"No {defaults_dbg_msg} Trying to find the file anyway.")
 
     return _load_config(cfg_filename_ex_ext, cfg_path)
-
-
-def get_default_save_dir() -> dict:
-    """Looks for 'save_dir' inside 'defaults.yml' and returns it if found"""
-
-    return default_configs["save_dir"]
 
 
 def get_keyfile_content(provider: str = "wandb") -> dict:

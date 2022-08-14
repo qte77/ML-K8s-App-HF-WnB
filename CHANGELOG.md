@@ -21,7 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `omegaconf` package to load YAML configuration files
   - Defaults are loaded globally to avoid multiple files operations
   - `OmegaConf.to_object(config)` tor return type `dict`
-- Systeminformation with `check_output(['systeminfo'])`
+- System information with `check_output(['systeminfo'])`
+- Debug output of environment variables for logging and sweep provider
+- `helper/paramobj.dummy.json` added as an example for the data model used by the pipeline
 
 ### Changed
 
