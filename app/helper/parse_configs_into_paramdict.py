@@ -15,8 +15,9 @@ if "APP_DEBUG_IS_ON" in env:
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import (  # get_default_save_dir,; get_keyfile_content,
+from .load_configs import (  # get_default_save_dir,
     get_config_content,
+    get_keyfile_content,
     load_defaults,
 )
 
@@ -30,7 +31,6 @@ def get_param_dict() -> dict:
 
     load_defaults()
     hf_params: dict = get_config_content("huggingface")
-    sweep: dict = get_config_content("sweep")
     task: dict = get_config_content("task")
 
     # save_dir = get_default_save_dir()
@@ -38,31 +38,34 @@ def get_param_dict() -> dict:
     paramobj = {}
     paramobj["metrics"] = {}
     # paramobj["savedir"] =
-    paramobj["sweep"]: dict = _get_sweep_cfg(sweep)
+    paramobj["sweep"]: dict = _parse_sweep_config(get_config_content("sweep"))
     paramobj["device"]: str = str(_get_device())
-    paramobj["dataset"]: dict = _get_dataset_cfg(hf_params["datasets"], task["dataset"])
-    paramobj["project_name"]: str = _get_project_name(
+    paramobj["dataset"]: dict = _parse_dataset_config(
+        hf_params["datasets"], task["dataset"]
+    )
+    paramobj["project_name"]: str = _create_project_name(
         task["model"],
         paramobj["dataset"]["dataset"],
         paramobj["device"],
         paramobj["sweep"]["is_sweep"],
     )
-    paramobj["model_full_name"]: str = _get_model_full_name(
+    paramobj["model_full_name"]: str = _create_model_full_name(
         hf_params["models"], task["model"]
     )
-    paramobj["metrics"]["metric_to_optimize"]: dict = _get_metric_to_optimize_cfg(
+    paramobj["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    paramobj["metrics"]["metrics_to_load"] = _get_metrics_to_load(
+    paramobj["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
         task["metrics_to_load"], hf_params["metrics_secondary_possible"]
     )
 
-    if paramobj["sweep"]["is_sweep"]:
-        if paramobj["sweep"]["provider"] == "wandb":
-            paramobj["wandb"] = get_config_content("wandb")
-            paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
-            # TODO wandb docu for env var names used for API access
-            paramobj["wandb"]["user"], paramobj["wandb"]["key"] = _get_wandb_api_key()
+    if paramobj["sweep"]["provider"] == "wandb":
+        paramobj["wandb"] = get_config_content("wandb")
+        paramobj["wandb"].update(
+            _parse_wandb_api_user_and_key(get_keyfile_content("wandb"))
+        )
+        # TODO wandb docu for env var names used for API access
+        paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
 
     if "APP_DEBUG_IS_ON" in env:
         paramobj_file = "./paramobj.json"
@@ -73,7 +76,7 @@ def get_param_dict() -> dict:
     return paramobj
 
 
-def _get_dataset_cfg(datasets: dict, dataset: str) -> dict:
+def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
     """Gets the configuration of the dataset"""
 
     try:
@@ -82,7 +85,7 @@ def _get_dataset_cfg(datasets: dict, dataset: str) -> dict:
         return e
 
 
-def _get_model_full_name(models: dict, model: str) -> str:
+def _create_model_full_name(models: dict, model: str) -> str:
     """Loads the full name of the model"""
 
     try:
@@ -91,7 +94,7 @@ def _get_model_full_name(models: dict, model: str) -> str:
         return e
 
 
-def _get_metric_to_optimize_cfg(
+def _parse_metric_to_optimize_config(
     metrics_to_optimize: dict, metric_to_optimize: str
 ) -> dict:
     """Loads the primary metric to optimise for and its parameters"""
@@ -110,7 +113,7 @@ def _get_metric_to_optimize_cfg(
         return e
 
 
-def _get_metrics_to_load(
+def _parse_metrics_to_load(
     metrics_to_load: list[str], metrics_secondary_possible: list[str]
 ) -> list:
     """Loads secondary metrices"""
@@ -134,7 +137,7 @@ def _get_device() -> str:
             return e
 
 
-def _get_project_name(
+def _create_project_name(
     model: str, dataset_name: str, device: str, is_sweep: bool
 ) -> Union[str, Exception]:
     """Returns the project name as f'{model}-{dataset_name}-{device}{suffix}'"""
@@ -146,7 +149,7 @@ def _get_project_name(
         return e
 
 
-def _get_sweep_cfg(sweep: dict) -> dict:
+def _parse_sweep_config(sweep: dict) -> dict:
     """Gets the configuration of the sweep"""
 
     sweepobj = {}
@@ -161,12 +164,12 @@ def _get_sweep_cfg(sweep: dict) -> dict:
     return sweepobj
 
 
-def _get_wandb_api_key() -> tuple:
+def _parse_wandb_api_user_and_key(keyfile_content: dict) -> dict:
     """TODO"""
     try:
-        # TODO load from keyfile
-        # keyfile_content = get_keyfile_content("wandb")
-        keyfile_content = ("username", "keycontent")
-        return keyfile_content
+        return {
+            "wandb_username": keyfile_content["username"],
+            "wandb_api_key": keyfile_content["key"],
+        }
     except Exception as e:
         return e

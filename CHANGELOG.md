@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+- None
+
 [1.9.0] - 2022-08-14
 ---
 
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored `main()` in `app.py` for a simpler structure
 - Refactored `global debug_on_global` in modules using the `logging` module to `os.environ["APP_DEBUG_IS_ON"]`
   - Also used for conditional import of `logging`
+- Keyfile successful loaded with `OmegaConf` inside `helper.load_configs::_load_config()`
 
 [1.8.0] - 2022-08-10
 ---

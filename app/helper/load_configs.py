@@ -2,7 +2,7 @@
 """Load configuration files"""
 
 from os import environ as env
-from os.path import join  # , expanduser , abspath, dirname, exists, split
+from os.path import expanduser, join  # , abspath, dirname, exists, split
 from typing import Literal, Optional, Union
 
 if "APP_DEBUG_IS_ON" in env:
@@ -38,20 +38,6 @@ def get_config_content(
     return _load_config(cfg_filename_ex_ext, cfg_path)
 
 
-def _load_config(
-    cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
-) -> dict:
-    """Loads and returns a config. Only accepts yaml/yml."""
-    if "APP_DEBUG_IS_ON" in env:
-        debug(f"Loading {cfg_filename_ex_ext=}")
-    try:
-        # TODO sanitization of yaml/yml extension
-        config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))
-        return OmegaConf.to_object(config)
-    except Exception as e:
-        return e
-
-
 def get_default_save_dir() -> dict:
     """Looks for 'save_dir' inside 'defaults.yml' and returns it if found"""
     return default_configs["save_dir"]
@@ -63,7 +49,27 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
         # TODO handle multiple keyfiles
         keyfile_default = "~/wandb.key.yml" if provider == "wandb" else "~/key.yml"
         keyfiles = default_configs.get("keyfiles", keyfile_default)
-        return OmegaConf.load(keyfiles)
+        keyfile = _sanitize_path(keyfiles[provider])
+
+        if "APP_DEBUG_IS_ON" in env:
+            debug(f"{keyfile=}")
+
+        # TODO refactor to less convoluted call
+        return _load_config(keyfile[-1].replace(".yml", ""), *keyfile[:-1])
+    except Exception as e:
+        return e
+
+
+def _load_config(
+    cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
+) -> dict:
+    """Loads and returns a config. Only accepts yaml/yml."""
+    if "APP_DEBUG_IS_ON" in env:
+        debug(f"Loading {cfg_filename_ex_ext=}")
+    try:
+        # TODO sanitization of yaml/yml extension
+        config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))
+        return OmegaConf.to_object(config)
     except Exception as e:
         return e
 
@@ -89,41 +95,14 @@ def _check_or_get_default(
         return default_configs
 
 
-# def _sanitize_path(path: str = "~") -> str:
-#     """Expands '~' to $HOME if given and returns OS-specific path"""
+def _sanitize_path(path: str = "~") -> list[str]:
+    """Expands '~' to $HOME if given and returns OS-specific path"""
 
-#     if "\\" in path:
-#         path = path.replace("\\", "/")
-#     if path.startswith("~"):
-#         path = expanduser(path)
-
-#     return join(*path.split("/"))
-
-
-# def _load_yml(cfg_filename: str = "defaults", cfg_path: str = "config") -> dict:
-#     """
-#     Loads a YAML from 'root/[cfg_path]/[cfg_filename].yml', parses and returns it
-#     """
-
-#     # sanitize
-#     # TODO case-insensitive yml and yaml as RegExp on end of str
-#     if ".yml" in cfg_filename:
-#         cfg_filename = cfg_filename.replace(".yml", "")
-#     cfg_path = _sanitize_path(cfg_path)
-
-#     # create absolute path
-#     cfg_abs_path = split(dirname(abspath(__file__)))[0]
-#     cfg_abs_path = join(cfg_abs_path, cfg_path, f"{cfg_filename}.yml")
-
-#     if environ["APP_DEBUG_IS_ON"]:
-#         debug(f"load: {cfg_abs_path}")
-
-#     if not exists(cfg_abs_path):
-#         return FileNotFoundError
-
-#     try:
-#         with open(cfg_abs_path, encoding="utf8") as yml:
-#             return safe_load(yml)
-#     except Exception as e:
-#         error(e)
-#         return e
+    try:
+        if "\\" in path:
+            path = path.replace("\\", "/")
+        if path.startswith("~"):
+            path = expanduser(path)
+        return path.split("/")
+    except Exception as e:
+        return e
