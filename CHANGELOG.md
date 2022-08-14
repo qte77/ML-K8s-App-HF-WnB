@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `omegaconf` package to load YAML configuration files
   - Defaults are loaded globally to avoid multiple files operations
+  - `OmegaConf.to_object(config)` tor return type `dict`
 
 ### Changed
 

@@ -14,8 +14,11 @@ from omegaconf import OmegaConf
 def load_defaults(
     cfg_defaults_fn: str = "defaults", cfg_path: str = "app/config"
 ) -> None:
+    """TODO"""
+
     global default_configs
     default_configs = _load_config(cfg_defaults_fn, cfg_path)
+
     if "APP_DEBUG_IS_ON" in env:
         debug(f"{default_configs=}")
 
@@ -37,16 +40,16 @@ def get_config_content(
 
 def _load_config(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
-) -> OmegaConf:
+) -> dict:
     """Loads and returns a config. Only accepts yaml/yml."""
     if "APP_DEBUG_IS_ON" in env:
         debug(f"Loading {cfg_filename_ex_ext=}")
     try:
         # TODO sanitization of yaml/yml extension
         config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))
+        return OmegaConf.to_object(config)
     except Exception as e:
         return e
-    return config
 
 
 def get_default_save_dir() -> dict:

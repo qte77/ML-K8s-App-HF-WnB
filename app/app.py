@@ -18,7 +18,7 @@ from .helper.prepare_ml_input import prepare_pipeline
 APP_MODES: Final = ["train", "infer"]
 
 
-def main(mode: APP_MODES = "train", debug_on: bool = False) -> NoReturn:
+def main(mode: APP_MODES = "train") -> NoReturn:
     """
     Create pipeline object parametrised with parameter object and execute task.
     The task performed depends on the input of the

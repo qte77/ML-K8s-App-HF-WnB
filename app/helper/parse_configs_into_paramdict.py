@@ -15,9 +15,8 @@ if "APP_DEBUG_IS_ON" in env:
 from torch import device
 from torch.cuda import is_available
 
-from .load_configs import (  # get_default_save_dir,
+from .load_configs import (  # get_default_save_dir,; get_keyfile_content,
     get_config_content,
-    get_keyfile_content,
     load_defaults,
 )
 
@@ -26,6 +25,7 @@ def get_param_dict() -> dict:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`
+    Not Implemented yet: WANDB_NOTES, WANDB_TAGS
     """
 
     load_defaults()
@@ -59,10 +59,10 @@ def get_param_dict() -> dict:
 
     if paramobj["sweep"]["is_sweep"]:
         if paramobj["sweep"]["provider"] == "wandb":
-            wandb_params = get_config_content("wandb")
-            paramobj["wandb"] = _get_wandb_env_params(
-                wandb_params, paramobj["project_name"]
-            )
+            paramobj["wandb"] = get_config_content("wandb")
+            paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
+            # TODO wandb docu for env var names used for API access
+            paramobj["wandb"]["user"], paramobj["wandb"]["key"] = _get_wandb_api_key()
 
     if "APP_DEBUG_IS_ON" in env:
         paramobj_file = "./paramobj.json"
@@ -161,24 +161,12 @@ def _get_sweep_cfg(sweep: dict) -> dict:
     return sweepobj
 
 
-def _get_wandb_env_params(wandb_params: object, project_name: str) -> dict:
-    """
-    Not Implemented yet: WANDB_NOTES, WANDB_TAGS
-    Checks for API-key first. Returns exception if not found
-    Expects keyfile as yaml:
-      username: ''
-      key: ''
-    """
-
-    wandbobj = wandb_params
-    wandbobj["WANDB_PROJECT"] = project_name
-
+def _get_wandb_api_key() -> tuple:
+    """TODO"""
     try:
+        # TODO load from keyfile
         # keyfile_content = get_keyfile_content("wandb")
-        keyfile_content = get_keyfile_content("wandb")
-        debug(keyfile_content)
-        wandbobj["username"], wandbobj["key"] = keyfile_content
+        keyfile_content = ("username", "keycontent")
+        return keyfile_content
     except Exception as e:
         return e
-
-    return wandbobj
