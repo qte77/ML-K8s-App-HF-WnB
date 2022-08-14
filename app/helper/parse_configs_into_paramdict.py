@@ -16,6 +16,7 @@ from torch.cuda import is_available
 from .load_configs import (  # get_default_save_dir,
     get_config_content,
     get_keyfile_content,
+    load_defaults,
 )
 
 # from logging import debug, error, getLogger, root
@@ -32,6 +33,7 @@ def get_param_dict() -> dict:
     `helper.load_configs.get_config_content(<config>)`
     """
 
+    load_defaults()
     hf_params: dict = get_config_content("huggingface")
     sweep: dict = get_config_content("sweep")
     task: dict = get_config_content("task")
@@ -177,7 +179,9 @@ def _get_wandb_env_params(wandb_params: object, project_name: str) -> dict:
     wandbobj["WANDB_PROJECT"] = project_name
 
     try:
+        # keyfile_content = get_keyfile_content("wandb")
         keyfile_content = get_keyfile_content("wandb")
+        debug(keyfile_content)
         wandbobj["username"], wandbobj["key"] = keyfile_content
     except Exception as e:
         return e
