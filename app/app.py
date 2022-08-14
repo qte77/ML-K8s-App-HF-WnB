@@ -36,8 +36,9 @@ def main(mode: APP_MODES = "train") -> NoReturn:
         logger: Logger = configure_logger()
         debug(f"App is running in {mode=}")
         debug(f"Debug is set to {logger=}")
-        for item in get_system_info():
-            debug(item)
+        if "APP_SHOW_SYSINFO" in env:
+            for item in get_system_info():
+                debug(item)
 
     # paramobj = prepare_pipeline(get_param_dict())
     prepare_pipeline(get_param_dict())

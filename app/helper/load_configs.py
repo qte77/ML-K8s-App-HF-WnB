@@ -16,7 +16,10 @@ from .sanitize_path import sanitize_path
 def load_defaults(
     cfg_defaults_fn: str = "defaults", cfg_path: str = "app/config"
 ) -> None:
-    """TODO"""
+    """
+    Load the defaults from '<cfg_defaults_fn>' and creates
+    a global copy inside the module
+    """
 
     global default_configs
     default_configs = _load_config(cfg_defaults_fn, cfg_path)
@@ -85,7 +88,7 @@ def _check_or_get_default(
     cfg_value_to_search: str = None,
     mode_check_get: Optional[Literal["check", "get"]] = "check",
 ) -> Union[bool, str]:
-    """TODO"""
+    """Checks whether a default exists or returns it if 'get' is provided"""
 
     if mode_check_get not in ["check", "get"]:
         mode_check_get = "check"

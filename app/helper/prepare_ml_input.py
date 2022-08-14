@@ -27,15 +27,15 @@ from .load_hf_components import (
 def prepare_pipeline(paramobj: dict) -> dict:
     """TODO"""
 
-    # paramobj["dataset"]["num_labels"] = _get_dataset(
-    #     paramobj["dataset"], paramobj["model_full_name"]
-    # )
+    paramobj["dataset"]["num_labels"] = _get_dataset(
+        paramobj["dataset"], paramobj["model_full_name"]
+    )
     # paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
     #     paramobj["metrics"]["metrics_to_load"]
     # )
     # _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
-    provider = paramobj["sweep"]["provider"]
-    _set_provider_env(provider, paramobj[provider])
+    # provider = paramobj["sweep"]["provider"]
+    # _set_provider_env(provider, paramobj[provider])
 
     return paramobj
 

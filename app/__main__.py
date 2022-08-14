@@ -8,6 +8,7 @@ from sys import exit
 # conditional to avoid flake8 E402 module level import not at top of file
 if True:
     env["APP_DEBUG_IS_ON"] = "True"
+    # env["APP_SHOW_SYSINFO"] = "True"
 
 from .app import main
 

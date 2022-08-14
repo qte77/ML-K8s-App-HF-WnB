@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `helper/paramobj.dummy.json` added as an example for the data model used by the pipeline
 - `.github/` to full app structure in `README.md`
 - `helper/sanitize_path.py` for path sanitization
+- `APP_SHOW_SYSINFO` to env in `__main__` for debugging
 
 ### Changed
 
