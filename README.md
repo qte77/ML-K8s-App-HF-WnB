@@ -141,6 +141,12 @@ App Structure [↑](#app-k8s-hf-wnb)
 <summary>Show full structure</summary>
 <pre>
 /
+├─ .github/
+│  ├─ workflows/
+│  │  ├─ codeql.yml
+│  │  ├─ links-fail-fast.yml
+│  │  └─ linter.yml
+│  └─ dependabot.yml
 ├─ app/
 │  ├─ config/
 │  │  ├─ defaults.yml
