@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Debug output of environment variables for logging and sweep provider
 - `helper/paramobj.dummy.json` added as an example for the data model used by the pipeline
 - `.github/` to full app structure in `README.md`
+- `helper/sanitize_path.py` for path sanitization
 
 ### Changed
 
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored `global debug_on_global` in modules using the `logging` module to `os.environ["APP_DEBUG_IS_ON"]`
   - Also used for conditional import of `logging`
 - Keyfile successful loaded with `OmegaConf` inside `helper.load_configs::_load_config()`
+- `README.md` for app structure and details
 
 [1.8.0] - 2022-08-10
 ---

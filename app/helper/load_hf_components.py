@@ -5,20 +5,27 @@ Load components from Hugging Face or local if already present
 # TODO load and save locally, use save path from defaults.yml
 
 from os import environ as env
-
-if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
+from os import makedirs
+from os.path import exists
 
 from datasets import dataset_dict, load_dataset, load_metric
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
+if "APP_DEBUG_IS_ON" in env:
+    from logging import debug
 
-def get_dataset_hf(dataset: str, configuration: str) -> dataset_dict.DatasetDict:
-    """TODO"""
+from .sanitize_path import sanitize_path
 
-    # TODO dataset save and load locally
-    # https://huggingface.co/docs/datasets/v1.2.1/loading_datasets.html
-    # https://huggingface.co/docs/datasets/loading#local-and-remote-files
+
+def get_dataset_hf(
+    dataset: str, configuration: str, safe_dir: str = None
+) -> dataset_dict.DatasetDict:
+    """
+    TODO
+    https://huggingface.co/docs/datasets/v1.2.1/loading_datasets.html
+    https://huggingface.co/docs/datasets/loading#local-and-remote-files
+    """
+
     # dataset_dir = f'{save_dir}/Datasets/{dataset}'
     # try:
     #   if not os.path.exists(dataset_dir):
@@ -162,3 +169,14 @@ def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:
             pass
 
     return metrics_loaded
+
+
+def _check_and_create_path(path_to_check: str) -> str:
+    """TODO"""
+
+    path_dict = sanitize_path(path_to_check)
+
+    if not exists(path_dict["dir"]):
+        makedirs(path_dict["dir"])
+
+    return path_dict

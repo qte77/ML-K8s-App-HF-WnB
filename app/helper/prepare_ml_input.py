@@ -9,11 +9,11 @@ Components could be models, datasets, tokenizers, metrics etc.
 # TODO function def with actual objects, not placeholder 'object'
 from os import environ as env
 
-if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
-
 from datasets import dataset_dict
 from transformers import AutoTokenizer
+
+if "APP_DEBUG_IS_ON" in env:
+    from logging import debug
 
 from .load_configs import get_keyfile_content
 from .load_hf_components import (

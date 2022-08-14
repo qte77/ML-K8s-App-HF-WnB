@@ -9,11 +9,11 @@ from json import dump
 from os import environ as env
 from typing import Union
 
-if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
-
 from torch import device
 from torch.cuda import is_available
+
+if "APP_DEBUG_IS_ON" in env:
+    from logging import debug
 
 from .load_configs import get_config_content, get_defaults, load_defaults
 
@@ -76,15 +76,6 @@ def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
         return e
 
 
-def _create_model_full_name(models: dict, model: str) -> str:
-    """Loads the full name of the model"""
-
-    try:
-        return models.get(model.lower(), ["Invalid model", ""])
-    except Exception as e:
-        return e
-
-
 def _parse_metric_to_optimize_config(
     metrics_to_optimize: dict, metric_to_optimize: str
 ) -> dict:
@@ -104,6 +95,21 @@ def _parse_metric_to_optimize_config(
         return e
 
 
+def _parse_sweep_config(sweep: dict) -> dict:
+    """Gets the configuration of the sweep"""
+
+    sweepobj = {}
+    sweepobj["is_sweep"] = True if int(sweep["train_count"]) > 1 else False
+
+    if sweepobj["is_sweep"]:
+        sweep_provider = sweep["provider"]
+        sweepobj["provider"] = sweep_provider
+        sweepobj["config"] = get_config_content(f"sweep-{sweep_provider}")
+        sweepobj["train_count"] = sweep["train_count"]
+
+    return sweepobj
+
+
 def _parse_metrics_to_load(
     metrics_to_load: list[str], metrics_secondary_possible: list[str]
 ) -> list:
@@ -115,17 +121,13 @@ def _parse_metrics_to_load(
         return e
 
 
-def _get_device() -> str:
-    """Returns the device as 'cpu', 'gpu' or 'tpu'"""
+def _create_model_full_name(models: dict, model: str) -> str:
+    """Loads the full name of the model"""
 
-    # TODO make it platform independent, TPU_NAME used by Google Colab
-    if "TPU_NAME" in env:
-        return "tpu"
-    else:
-        try:
-            return device("cuda" if is_available() else "cpu")
-        except Exception as e:
-            return e
+    try:
+        return models.get(model.lower(), ["Invalid model", ""])
+    except Exception as e:
+        return e
 
 
 def _create_project_name(
@@ -140,16 +142,14 @@ def _create_project_name(
         return e
 
 
-def _parse_sweep_config(sweep: dict) -> dict:
-    """Gets the configuration of the sweep"""
+def _get_device() -> str:
+    """Returns the device as 'cpu', 'cuda' or 'tpu'"""
 
-    sweepobj = {}
-    sweepobj["is_sweep"] = True if int(sweep["train_count"]) > 1 else False
-
-    if sweepobj["is_sweep"]:
-        sweep_provider = sweep["provider"]
-        sweepobj["provider"] = sweep_provider
-        sweepobj["config"] = get_config_content(f"sweep-{sweep_provider}")
-        sweepobj["train_count"] = sweep["train_count"]
-
-    return sweepobj
+    # TODO make it platform independent, TPU_NAME used by Google Colab
+    if "TPU_NAME" in env:
+        return "tpu"
+    else:
+        try:
+            return device("cuda" if is_available() else "cpu")
+        except Exception as e:
+            return e

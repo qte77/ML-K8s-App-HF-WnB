@@ -2,13 +2,15 @@
 """Load configuration files"""
 
 from os import environ as env
-from os.path import expanduser, join  # , abspath, dirname, exists, split
+from os.path import join
 from typing import Literal, Optional, Union
+
+from omegaconf import OmegaConf
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
 
-from omegaconf import OmegaConf
+from .sanitize_path import sanitize_path
 
 
 def load_defaults(
@@ -53,13 +55,13 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
         # TODO handle multiple keyfiles
         keyfile_default = "~/wandb.key.yml" if provider == "wandb" else "~/key.yml"
         keyfiles = default_configs.get("keyfiles", keyfile_default)
-        keyfile = _sanitize_path(keyfiles[provider])
+        keyfile = sanitize_path(keyfiles[provider])
 
         if "APP_DEBUG_IS_ON" in env:
             debug(f"{keyfile=}")
 
         # TODO refactor to less convoluted call
-        return _load_config(keyfile[-1].replace(".yml", ""), *keyfile[:-1])
+        return _load_config(keyfile["base"], keyfile["dir"])
     except Exception as e:
         return e
 
@@ -67,12 +69,12 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
 def _load_config(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
 ) -> dict:
-    """Loads and returns a config. Only accepts yaml/yml."""
+    """Loads and returns a config. Only accepts yml."""
 
     if "APP_DEBUG_IS_ON" in env:
         debug(f"Loading {cfg_filename_ex_ext=}")
     try:
-        # TODO sanitization of yaml/yml extension
+        # TODO sanitization of yml extension.
         config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))
         return OmegaConf.to_object(config)
     except Exception as e:
@@ -98,16 +100,3 @@ def _check_or_get_default(
             return ValueError
     else:
         return default_configs
-
-
-def _sanitize_path(path: str = "~") -> list[str]:
-    """Expands '~' to $HOME if given and returns OS-specific path"""
-
-    try:
-        if "\\" in path:
-            path = path.replace("\\", "/")
-        if path.startswith("~"):
-            path = expanduser(path)
-        return path.split("/")
-    except Exception as e:
-        return e

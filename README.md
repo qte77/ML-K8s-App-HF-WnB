@@ -165,7 +165,8 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ load_hf_components.py
 │  │  ├─ parse_configs_into_paramdict.py
 │  │  ├─ prepare_ml_input.py
-│  │  └─ prepare_sweep.py
+│  │  ├─ prepare_sweep.py
+│  │  └─ sanitize_path.py
 │  ├─ model/
 │  │  ├─ infer_model.py
 │  │  └─ train_model.py
@@ -211,6 +212,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 App Details [↑](#app-k8s-hf-wnb)
 ---
 
+* App accepts only `.yml` as config right now
 * [`config/wandb.key.dummy.yml`](./app/config/wandb.key.dummy.yml) showcases a keyfile to be used with the provider Weights&Biases (wandb)
 * [`config/paramobj.dummy.json`](./app/config/paramobj.dummy.json) presents an example of the data model the pipeline uses
 
@@ -233,19 +235,22 @@ TODO [↑](#app-k8s-hf-wnb)
 * [x] Try `dataclass` and `field` from [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
   * Used to auto add special classes like `__init__`, `__str__`, `__repr__`
   * Uses type hinting and decorators
+* [x] Factor out `Pipeline.py` into functional only
+  * Sole purpose of `Pipeline.py` is to represent the gathered configs
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking and hinting instead of `typing` or `dataclasses`
   * `pydantic` build for parsing and checking types at runtime
-  * Could be a
   * If the app uses data it produced itself, it may not be suitable
 * [ ] Use `if` for to check if feature can be provided properly instead of `Ecxeption` to catch it
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
   * Difference between Abstraction vs Decoupling
+  * Difference between Cohesion and Coupling
 * [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
 * [ ] Use `hydra`and/or `omegaconf` to load configs instead of own helper implementation
   * Hydra supports importing of custom `dataclasses.dataclass`
-* [ ] Factor out `Pipeline.py` into functional only
-  * Sole purpose of `Pipeline.py` is to represent the gathered configs
+* [ ] Propagate debug state through app
+  * Env `APP_DEBUG_IS_ON` or
+  * Setter functions in each module
 
 ### Dependency tracking and app sourcing
 
