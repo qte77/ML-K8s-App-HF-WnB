@@ -205,7 +205,8 @@ App Structure [↑](#app-k8s-hf-wnb)
 App Details [↑](#app-k8s-hf-wnb)
 ---
 
-* [`helper/paramobj.dummy.json`](./app/config/paramobj.dummy.json) presents an example of the data model the pipeline uses
+* [`config/wandb.key.dummy.yml`](./app/config/wandb.key.dummy.yml) showcases a keyfile to be used with the provider Weights&Biases (wandb)
+* [`config/paramobj.dummy.json`](./app/config/paramobj.dummy.json) presents an example of the data model the pipeline uses
 
 TODO [↑](#app-k8s-hf-wnb)
 ---

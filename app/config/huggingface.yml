@@ -5,7 +5,7 @@ datasets:
     configuration: ''
     average: micro
     col_to_rename: topic
-    cols_to_tok:
+    cols_to_tokenize:
     - question_title
     cols_to_remove:
     - id
@@ -16,7 +16,7 @@ datasets:
     configuration: mrpc
     average: binary
     col_to_rename: label
-    cols_to_tok:
+    cols_to_tokenize:
     - sentence1
     - sentence2
     cols_to_remove:
@@ -26,7 +26,7 @@ datasets:
     configuration: mnli
     average: binary
     col_to_rename: label
-    cols_to_tok:
+    cols_to_tokenize:
     - premise
     - hypothesis
     cols_to_remove:
