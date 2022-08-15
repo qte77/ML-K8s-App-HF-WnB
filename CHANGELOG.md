@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+- Decorator for `get_dataset_hf()` and `get_tokenizer_hf()`
+- Save and load local models and Metric Builder Scripts
+
 [2.0.0] - 2022-08-15
 ---
 

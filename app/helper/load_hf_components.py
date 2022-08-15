@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
 Load components from Hugging Face or local if already present
+Hugging Face caches components into '~/.cache/huggingface'
 """
 # TODO load and save locally, use save path from defaults.yml
 
@@ -40,7 +41,6 @@ def get_dataset_hf(
 
     if path_exists:
         try:
-            # data_files = "train"
             if debug_on_global:
                 debug(f"Loading local copy of dataset from {save_path}")
             dataset = (
@@ -48,7 +48,6 @@ def get_dataset_hf(
                     path=dataset_name,
                     name=configuration,
                     data_dir=save_path,
-                    # data_files=data_files,
                 )
                 if configuration
                 else load_dataset(path=dataset_name, data_dir=save_path)

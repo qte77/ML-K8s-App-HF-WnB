@@ -31,6 +31,9 @@ from .load_hf_components import (
 def prepare_pipeline(paramobj: dict) -> Union[dict, DatasetDict]:
     """TODO"""
 
+    provider = paramobj["sweep"]["provider"]
+    _set_provider_env(provider, paramobj[provider])
+
     dataset_plain = get_dataset_hf(
         paramobj["dataset"]["dataset"],
         paramobj["dataset"]["configuration"],
@@ -53,12 +56,10 @@ def prepare_pipeline(paramobj: dict) -> Union[dict, DatasetDict]:
         paramobj["dataset"]["cols_to_remove"],
     )
 
-    # paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
-    #     paramobj["metrics"]["metrics_to_load"]
-    # )
+    paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
+        paramobj["metrics"]["metrics_to_load"]
+    )
     # _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
-    # provider = paramobj["sweep"]["provider"]
-    # _set_provider_env(provider, paramobj[provider])
 
     return paramobj
 
