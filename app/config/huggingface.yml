@@ -32,9 +32,15 @@ datasets:
     cols_to_remove:
     - idx
 models:
-  dbbu: distilbert-base-uncased
-  bbu: bert-base-uncased
-  lbu: allenai/longformer-base-4096
+  dbbu:
+    name: BERT
+    full_name: distilbert-base-uncased
+  bbu:
+    name: BERT
+    full_name: bert-base-uncased
+  lbu:
+    name: LONGFORMER
+    full_name: allenai/longformer-base-4096
 metrics_to_optimize:
   accuracy:
     goal: maximize

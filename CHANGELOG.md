@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Local saving and loading of Hugging Face componenents, except Metric Builder Scripts
 
+### Changed
+
+- Debugging triggered with global final constant inside imports
+
 [1.9.0] - 2022-08-14
 ---
 

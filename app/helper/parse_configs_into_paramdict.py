@@ -4,16 +4,19 @@
 # TODO generalize provider parametrisation
 # TODO refactor Pipeline-object out into function only?
 
-# from logging import debug
 from json import dump
+from logging import error
 from os import environ as env
-from typing import Union
+from typing import Final, Union
 
 from torch import device
 from torch.cuda import is_available
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
+
+    global debug_on_global
+    debug_on_global: Final = True
 
 from .load_configs import get_config_content, get_defaults, load_defaults
 
@@ -28,6 +31,8 @@ def get_param_dict() -> dict:
     load_defaults()
     hf_params: dict = get_config_content("huggingface")
     task: dict = get_config_content("task")
+    task_model = hf_params["models"][task["model"]]
+
     paramobj = {}
     paramobj["save_dir"] = get_defaults()
     paramobj["metrics"] = {}
@@ -43,9 +48,15 @@ def get_param_dict() -> dict:
         paramobj["device"],
         paramobj["sweep"]["is_sweep"],
     )
-    paramobj["model_full_name"]: str = _create_model_full_name(
-        hf_params["models"], task["model"]
-    )
+
+    try:
+        debug(task_model["name"])
+        debug(task_model["full_name"])
+        paramobj["model_name"] = task_model["name"]
+        paramobj["model_full_name"] = task_model["full_name"]
+    except Exception as e:
+        error(e)
+
     paramobj["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
@@ -58,7 +69,7 @@ def get_param_dict() -> dict:
         # TODO wandb docu for env var names used for API access
         paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
 
-    if "APP_DEBUG_IS_ON" in env:
+    if debug_on_global:
         paramobj_file = "./paramobj.json"
         debug(f"Printing paramobj to '{paramobj_file}'")
         with open(paramobj_file, "w") as outfile:
@@ -125,7 +136,7 @@ def _create_model_full_name(models: dict, model: str) -> str:
     """Loads the full name of the model"""
 
     try:
-        return models.get(model.lower(), ["Invalid model", ""])
+        return models.get(model.lower(), ["Invalid model", ""])["full_name"]
     except Exception as e:
         return e
 
@@ -137,7 +148,7 @@ def _create_project_name(
 
     suffix = "-sweep" if is_sweep else ""
     try:
-        return f"{model}-{dataset_name}-{device}{suffix}"
+        return f"{model}-{dataset_name}-{device}{suffix}".upper()
     except Exception as e:
         return e
 

@@ -3,12 +3,15 @@
 
 from os import environ as env
 from os.path import join
-from typing import Literal, Optional, Union
+from typing import Final, Literal, Optional, Union
 
 from omegaconf import OmegaConf
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
+
+    global debug_on_global
+    debug_on_global: Final = True
 
 from .sanitize_path import sanitize_path
 
@@ -24,7 +27,7 @@ def load_defaults(
     global default_configs
     default_configs = _load_config(cfg_defaults_fn, cfg_path)
 
-    if "APP_DEBUG_IS_ON" in env:
+    if debug_on_global:
         debug(f"{default_configs=}")
 
 
@@ -41,7 +44,7 @@ def get_config_content(
 ) -> dict:
     """Returns config objects"""
 
-    if "APP_DEBUG_IS_ON" in env:
+    if debug_on_global:
         defaults_dbg_msg = f"'{cfg_filename_ex_ext}' found in defaults."
         if _check_or_get_default("config_fn", cfg_filename_ex_ext):
             debug(defaults_dbg_msg)
@@ -60,7 +63,7 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
         keyfiles = default_configs.get("keyfiles", keyfile_default)
         keyfile = sanitize_path(keyfiles[provider])
 
-        if "APP_DEBUG_IS_ON" in env:
+        if debug_on_global:
             debug(f"{keyfile=}")
 
         # TODO refactor to less convoluted call
@@ -74,7 +77,7 @@ def _load_config(
 ) -> dict:
     """Loads and returns a config. Only accepts yml."""
 
-    if "APP_DEBUG_IS_ON" in env:
+    if debug_on_global:
         debug(f"Loading {cfg_filename_ex_ext=}")
     try:
         # TODO sanitization of yml extension.
