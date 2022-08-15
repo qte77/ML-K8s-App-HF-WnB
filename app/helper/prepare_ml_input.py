@@ -5,12 +5,8 @@ Components could be models, datasets, tokenizers, metrics etc.
 """
 
 from dataclasses import dataclass
-
-# TODO return None or Exception ?
-# TODO load local versions of models, datasets, metrics and tokenizer if not cached
-# TODO function def with actual objects, not placeholder 'object'
 from os import environ as env
-from typing import Final
+from typing import Final, Union
 
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
@@ -31,15 +27,20 @@ from .load_hf_components import (
 
 
 @dataclass
+class Paramobj:
+    paramobj: dict[str, Union[str, list, dict]]
+
+
+@dataclass
 class Pipeline_Output:
-    paramobj: dict
+    paramobj: Paramobj
     tokenizer: AutoTokenizer
     dataset_tokenized: DatasetDict
     model: AutoModelForSequenceClassification
     metrics_loaded: list[dict]
 
 
-def prepare_pipeline(paramobj: dict) -> Pipeline_Output:
+def prepare_pipeline(paramobj: Paramobj) -> Pipeline_Output:
     """TODO"""
 
     provider = paramobj["sweep"]["provider"]

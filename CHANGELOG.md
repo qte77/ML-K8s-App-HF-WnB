@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Decorator for `get_dataset_hf()` and `get_tokenizer_hf()`
 - Save and load local models and Metric Builder Scripts
-- Dataclass `prepare_ml_input:Pipeline_Output` for passing through pipeline
+- Dataclass `prepare_ml_input:Pipeline_Output` for passing artifacts through pipeline
+- Dataclass `prepare_ml_input:Paramobj` for parametrization of the pipeline
 
 ### Changed
 

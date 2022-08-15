@@ -19,9 +19,10 @@ if "APP_DEBUG_IS_ON" in env:
     debug_on_global: Final = True
 
 from .load_configs import get_config_content, get_defaults, load_defaults
+from .prepare_ml_input import Paramobj
 
 
-def get_param_dict() -> dict:
+def get_param_dict() -> Paramobj:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`
@@ -31,7 +32,7 @@ def get_param_dict() -> dict:
     load_defaults()
     hf_params: dict = get_config_content("huggingface")
     task: dict = get_config_content("task")
-    task_model = hf_params["models"][task["model"]]
+    task_model: dict = hf_params["models"][task["model"]]
 
     paramobj = {}
     paramobj["save_dir"] = get_defaults()
@@ -50,8 +51,6 @@ def get_param_dict() -> dict:
     )
 
     try:
-        debug(task_model["name"])
-        debug(task_model["full_name"])
         paramobj["model_name"] = task_model["name"]
         paramobj["model_full_name"] = task_model["full_name"]
     except Exception as e:
@@ -66,7 +65,6 @@ def get_param_dict() -> dict:
 
     if paramobj["sweep"]["provider"] == "wandb":
         paramobj["wandb"] = get_config_content("wandb")
-        # TODO wandb docu for env var names used for API access
         paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
 
     if debug_on_global:
