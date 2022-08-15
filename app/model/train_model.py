@@ -7,18 +7,13 @@ from datasets import Metric  # , load_metric
 # from numpy import argmax
 from transformers import Trainer  # , TrainingArguments
 
+# from ..helper.prepare_sweep import start_sweep
+from ..helper.prepare_ml_input import Pipeline_Output
+
 # from wandb import log
 
-# from helper.prepare_sweep import start_sweep
 
-
-def train_model(
-    # project_name: str,
-    # metric_to_optimize: str,
-    # metrics_loaded: list,
-    # sweep_config: dict,
-    # provider: str,
-) -> None:
+def train_model(pipe_out: Pipeline_Output = None) -> None:
     """Fine-tune the model on down-stream task"""
 
     # start_sweep(provider)

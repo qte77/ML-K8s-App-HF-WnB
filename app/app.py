@@ -14,7 +14,7 @@ if "APP_DEBUG_IS_ON" in env:
     debug_on_global: Final = True
 
 from .helper.parse_configs_into_paramdict import get_param_dict
-from .helper.prepare_ml_input import prepare_pipeline
+from .helper.prepare_ml_input import Pipeline_Output, prepare_pipeline
 
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
@@ -44,11 +44,11 @@ def main(mode: APP_MODES = "train") -> None:
             for item in get_system_info():
                 debug(item)
 
-    # paramobj, dataset_tokenized = prepare_pipeline(get_param_dict())
-    _ = prepare_pipeline(get_param_dict())
+    # pipeline_objects: Pipeline_Output = prepare_pipeline(get_param_dict())
+    _: Pipeline_Output = prepare_pipeline(get_param_dict())
 
     # _ = (
-    #     train_model(paramobj, dataset_tokenized)
+    #     train_model(**pipeline_objects)
     #     if (mode == "train")
-    #     else infer_model(paramobj, dataset_tokenized)
+    #     else infer_model(**pipeline_objects)
     # )

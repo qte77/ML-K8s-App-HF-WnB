@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Added
+
 - Decorator for `get_dataset_hf()` and `get_tokenizer_hf()`
 - Save and load local models and Metric Builder Scripts
+- Dataclass `prepare_ml_input:Pipeline_Output` for passing through pipeline
+
+### Changed
+
+- Refactored output of `prepare_ml_input:sprepare_pipeline()` to dict for `train` and `infer`
 
 [2.0.0] - 2022-08-15
 ---

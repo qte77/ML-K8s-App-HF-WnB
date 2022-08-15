@@ -4,14 +4,16 @@ Download and save components from providers, e.g. Hugging Face.
 Components could be models, datasets, tokenizers, metrics etc.
 """
 
+from dataclasses import dataclass
+
 # TODO return None or Exception ?
 # TODO load local versions of models, datasets, metrics and tokenizer if not cached
 # TODO function def with actual objects, not placeholder 'object'
 from os import environ as env
-from typing import Final, Union
+from typing import Final
 
 from datasets.dataset_dict import DatasetDict
-from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
@@ -28,7 +30,16 @@ from .load_hf_components import (
 )
 
 
-def prepare_pipeline(paramobj: dict) -> Union[dict, DatasetDict]:
+@dataclass
+class Pipeline_Output:
+    paramobj: dict
+    tokenizer: AutoTokenizer
+    dataset_tokenized: DatasetDict
+    model: AutoModelForSequenceClassification
+    metrics_loaded: list[dict]
+
+
+def prepare_pipeline(paramobj: dict) -> Pipeline_Output:
     """TODO"""
 
     provider = paramobj["sweep"]["provider"]
@@ -46,22 +57,28 @@ def prepare_pipeline(paramobj: dict) -> Union[dict, DatasetDict]:
     if debug_on_global:
         debug(f"The number of unique labels is {num_labels}")
 
-    _ = _get_tokenized_dataset(
+    tokenizer = get_tokenizer_hf(
+        paramobj["model_full_name"],
+        paramobj["save_dir"],
+    )
+
+    dataset_tokenized = _get_tokenized_dataset(
         dataset_plain,
-        get_tokenizer_hf(
-            paramobj["model_full_name"],
-            paramobj["save_dir"],
-        ),
+        tokenizer,
         paramobj["dataset"]["cols_to_tokenize"],
         paramobj["dataset"]["cols_to_remove"],
     )
 
-    paramobj["metrics"]["metrics_loaded"] = _get_metrics_to_load_objects(
+    # model = _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
+    model = ""
+
+    metrics_loaded = _get_metrics_to_load_objects(
         paramobj["metrics"]["metrics_to_load"]
     )
-    # _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
 
-    return paramobj
+    return Pipeline_Output(
+        paramobj, tokenizer, dataset_tokenized, model, metrics_loaded
+    )
 
 
 def _get_tokenized_dataset(
