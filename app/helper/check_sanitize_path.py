@@ -30,7 +30,7 @@ def sanitize_path(path_to_sanitize: str = "~") -> dict[str, str]:
 
 def check_and_create_path(path_to_check: str) -> tuple[str, bool]:
     """
-    Checks whether a path exists and creates it if not.
+    Checks whether a path exists and creates it if not.\n
     Returns (joined path, bool path exists).
     """
 

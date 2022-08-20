@@ -35,7 +35,7 @@ def get_dataset_hf(
         f"{save_dir}/Datasets/{dataset_name}/{configuration}"
     )
     ds_load_params = {
-        "path": dataset_name if path_exists else "",
+        "path": dataset_name,
         "name": configuration if configuration else "",
         "data_dir": save_path if path_exists else "",
     }
@@ -70,31 +70,32 @@ def get_tokenizer_hf(
     A tokenizer converts the input tokens to vocabulary indices and pads the data
     """
 
-    tokenizer = AutoTokenizer
     save_path, path_exists = check_and_create_path(f"{save_dir}/Tokenizer/{model_name}")
-
-    if path_exists:
-        try:
-            if debug_on_global:
-                debug(f"Loading local copy of tokenizer from {save_path}")
-            tokenizer = AutoTokenizer.from_pretrained(save_path)
-        except Exception as e:
-            return e
-    else:
-        try:
-            if debug_on_global:
-                debug(f"Downloading tokenizer for {model_name=}")
-            tokenizer = AutoTokenizer.from_pretrained(
-                model_name, use_fast=True, truncation=True, padding=True
-            )
-            if debug_on_global:
-                debug(f"Saving to {save_path=}")
-            tokenizer.save_pretrained(save_path)
-        except Exception as e:
-            return e
+    tokenizer_download_params_bool = True if not path_exists else ""
+    tokenizer_load_params = {
+        "pretrained_model_name_or_path": save_path if path_exists else model_name,
+        "use_fast": tokenizer_download_params_bool,
+        "truncation": tokenizer_download_params_bool,
+        "padding": tokenizer_download_params_bool,
+    }
 
     if debug_on_global:
-        tok_msg = "This is a test sentence."
+        if path_exists:
+            debug(f"Loading local copy of tokenizer for {model_name=} from {save_path}")
+        else:
+            debug(f"Downloading tokenizer for {model_name=}")
+
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
+        if not path_exists:
+            if debug_on_global:
+                debug(f"Saving tokenizer to {save_path=}")
+            tokenizer.save_pretrained(save_path)
+    except Exception as e:
+        return e
+
+    if debug_on_global:
+        tok_msg = "This is a test sentence for the loaded tokenizer."
         tok_res = tokenizer.encode(tok_msg)
         debug(f"Tokenizing '{tok_msg}': {tok_res}")
 
