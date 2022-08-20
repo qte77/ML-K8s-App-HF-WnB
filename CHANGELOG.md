@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Refactored output of `prepare_ml_input:sprepare_pipeline()` to dict for `train` and `infer`
+- Refactored output of `prepare_ml_input:prepare_pipeline()` to dict for `train` and `infer`
+- Added parameters to dataclasses in `prepare_ml_input`
+- `README.md`
 
 [2.0.0] - 2022-08-15
 ---

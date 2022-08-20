@@ -232,25 +232,31 @@ TODO [↑](#app-k8s-hf-wnb)
 * [x] Read multiple yml inside one file inside config loader
   * Abondoned, adds unnecessary complexity, use separate yml
 * [x] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
+* [x] Use `if` for to check if feature can be provided properly instead of `Ecxeption` to catch it
 * [x] Try `dataclass` and `field` from [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)
   * Used to auto add special classes like `__init__`, `__str__`, `__repr__`
   * Uses type hinting and decorators
-* [x] Factor out `Pipeline.py` into functional only
+* [x] Factor out `Pipeline.py` to prepare for functional only
   * Sole purpose of `Pipeline.py` is to represent the gathered configs
-* [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking and hinting instead of `typing` or `dataclasses`
+  * Replaced by dataclasses
+* [x] Propagate debug state through app
+  * Env `APP_DEBUG_IS_ON` checked by modules and written to `global debug_on_global`
+* [x] Use `omegaconf` to load configs instead of own helper implementation
+  * This package manages loading of configs from json or yaml
+* [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
+  * `typing` and `dataclasses` only annotat for hinting
   * `pydantic` build for parsing and checking types at runtime
   * If the app uses data it produced itself, it may not be suitable
-* [ ] Use `if` for to check if feature can be provided properly instead of `Ecxeption` to catch it
+* [ ] Use `hydra` to parametrize the app
+  * Hydra supports importing of custom `dataclasses.dataclass`
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
   * Difference between Abstraction vs Decoupling
   * Difference between Cohesion and Coupling
 * [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
-* [ ] Use `hydra`and/or `omegaconf` to load configs instead of own helper implementation
-  * Hydra supports importing of custom `dataclasses.dataclass`
-* [ ] Propagate debug state through app
-  * Env `APP_DEBUG_IS_ON` or
-  * Setter functions in each module
+* [ ] Check `dataclasses` whether
+  * it is suitable for functional programming
+  * it is a code smell because it does not provide behavior but only a structure
 
 ### Dependency tracking and app sourcing
 
