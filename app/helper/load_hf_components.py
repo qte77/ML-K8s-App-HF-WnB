@@ -27,8 +27,15 @@ def get_dataset_hf(
 ) -> DatasetDict:
     """
     Load and save vanilla dataset from Hugging Face
-    https://huggingface.co/docs/datasets/v1.2.1/loading_datasets.html
-    https://huggingface.co/docs/datasets/loading#local-and-remote-files
+
+    See Hugging Face documentation for\
+    [loading datasets](\
+https://huggingface.co/docs/datasets/v1.2.1/loading_datasets.html\
+)\
+    and\
+    [local and remote files](\
+https://huggingface.co/docs/datasets/loading#local-and-remote-files\
+).
     """
 
     save_path, path_exists = check_and_create_path(
@@ -69,17 +76,20 @@ def get_tokenizer_hf(
     model_name: str = None, save_dir: str = None
 ) -> AutoTokenizer:  # TODO check return type
     """
-    Downloads tokenizer for the specified model
-    A tokenizer converts the input tokens to vocabulary indices and pads the data
+    Downloads tokenizer for the specified model.
+
+    A tokenizer converts the input tokens to vocabulary indices and pads the data.
+    See [AutoTokenizer Documentation](\
+https://huggingface.co/docs/transformers/main/en/\
+model_doc/auto#transformers.AutoTokenizer\
+).
     """
 
     save_path, path_exists = check_and_create_path(f"{save_dir}/Tokenizer/{model_name}")
-    tokenizer_download_args_bool = True if not path_exists else ""
     tokenizer_load_params = {
         "pretrained_model_name_or_path": save_path if path_exists else model_name,
-        "use_fast": tokenizer_download_args_bool,
-        "truncation": tokenizer_download_args_bool,
-        "padding": tokenizer_download_args_bool,
+        "truncation": True,
+        "padding": True,
     }
 
     if debug_on_global:

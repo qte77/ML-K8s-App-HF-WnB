@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
 Download and save components from providers, e.g. Hugging Face.
+
 Components could be models, datasets, tokenizers, metrics etc.
 """
 
@@ -33,7 +34,8 @@ from .parse_configs_into_paramdict import ParamDict
 @dataclass(repr=False, eq=False)  # slots only >=3.10
 class PipelineOutput:
     """
-    Holds structured mutable data in the form of
+    Holds structured mutable data for the pipeline.
+
     - `paramdict` as `ParamDict`
     - `tokenizer` as `AutoTokenizer`
     - `dataset_tokenized` as `DatasetDict`
@@ -51,7 +53,8 @@ class PipelineOutput:
 def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
     """
     Prepares the pipeline by loading Dataset, Tokenizer, Model and Metrics as well
-    as setting parameter for the used provider in the system environment.\n
+    as setting parameter for the used provider in the system environment.
+
     Expects a populated `ParamDict` and returns a `PipelineOutput`.
     """
 
@@ -92,9 +95,10 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     # )
     dataset_tokenized = ""
 
-    paramdict["dataset"]["num_labels"] = 2
-    model = _get_model(paramdict["model_full_name"], paramdict["dataset"]["num_labels"])
-    # model = ""
+    # paramdict["dataset"]["num_labels"] = 2
+    # model = _get_model(paramdict["model_full_name"],
+    #   paramdict["dataset"]["num_labels"])
+    model = ""
 
     # metrics_loaded = _get_metrics_to_load_objects(
     #     paramdict["metrics"]["metrics_to_load"]
@@ -114,7 +118,8 @@ def _get_dataset(
     name: str, configuration: str = None, save_dir: str = None
 ) -> DatasetDict:
     """
-    Downloads the dataset by calling the appropriate provider handling function.\n
+    Downloads the dataset by calling the appropriate provider handling function.
+
     To date only from Hugging Face.
     """
     return get_dataset_hf(name, configuration, save_dir)
@@ -122,7 +127,8 @@ def _get_dataset(
 
 def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
     """
-    Downloads the tokenizer by calling the appropriate provider handling function.\n
+    Downloads the tokenizer by calling the appropriate provider handling function.
+
     To date only from Hugging Face.
     """
     return get_tokenizer_hf(model_full_name, save_dir)
@@ -130,7 +136,8 @@ def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
 
 def _get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
     """
-    Downloads metrics objects by calling the appropriate provider handling function.\n
+    Downloads metrics objects by calling the appropriate provider handling function.
+
     To date only from Hugging Face.
     """
     return get_metrics_to_load_objects_hf(metrics_to_load)
@@ -138,7 +145,8 @@ def _get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
 
 def _get_model(model_full_name: str = None, num_labels: str = None):
     """
-    Downloads the model by calling the appropriate provider handling function.\n
+    Downloads the model by calling the appropriate provider handling function.
+
     To date only from Hugging Face.
     """
     return get_model_hf(model_full_name, num_labels)
@@ -151,7 +159,8 @@ def _get_tokenized_dataset(
     cols_to_remove: list[str],
 ) -> DatasetDict:
     """
-    Returns the sanitized tokenized dataset stripped of columns not needed.\n
+    Returns the sanitized tokenized dataset stripped of columns not needed.
+
     TODO save a local copy of the tokenized dataset to avoid overhead
     """
 

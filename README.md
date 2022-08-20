@@ -243,6 +243,9 @@ TODO [↑](#app-k8s-hf-wnb)
   * Env `APP_DEBUG_IS_ON` checked by modules and written to `global debug_on_global`
 * [x] Use `omegaconf` to load configs instead of own helper implementation
   * This package manages loading of configs from json or yaml
+* [x] Align to [PEP 257 – Docstring Conventions](https://peps.python.org/pep-0257/)
+  * Multi-line docstrings
+* [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `typing` and `dataclasses` only annotat for hinting
   * `pydantic` build for parsing and checking types at runtime
