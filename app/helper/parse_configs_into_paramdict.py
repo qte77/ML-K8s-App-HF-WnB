@@ -37,7 +37,8 @@ class ParamDict:
 def get_param_dict() -> ParamDict:
     """
     Returns parameter dict with values filled with
-    `helper.load_configs.get_config_content(<config>)`
+    `helper.load_configs.get_config_content(<config>)`.
+
     Not Implemented yet: WANDB_NOTES, WANDB_TAGS, WANDB_MODE
     """
 

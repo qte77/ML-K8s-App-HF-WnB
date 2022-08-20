@@ -25,11 +25,12 @@ APP_MODES: Final = ["train", "infer"]
 def main(mode: APP_MODES = "train") -> None:
     """
     Create pipeline object parametrised with parameter object and execute task.
-    The task performed depends on the input of the
-    `APP_MODES: Final = ["train", "infer"]`.\n
-    Gets dateset and model from Hugging Face if not locally cached.\n
-    Downloads the Metrics Builder Scripts from HF and returns their objects.\n
-    Sets the environment variables the sweep provider needs.
+
+    - Gets dateset and model from Hugging Face if not locally cached
+    - Downloads the Metrics Builder Scripts from HF and returns their objects
+    - Sets the environment variables the sweep provider needs
+    - The task performed depends on the input of the
+    `APP_MODES: Final = ["train", "infer"]`.
     """
 
     # TODO remove mode check with pydantic

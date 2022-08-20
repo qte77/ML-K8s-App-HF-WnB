@@ -12,11 +12,17 @@ def configure_logger(
     config_path: str = "config",
 ) -> Logger:
     """
-    Load [logger_name] from 'root/[config_path]/[config_fn]'
-    Configure the logger or exit if not existing or error occurs
-    The path to the config is constructed from app/package root
-    https://docs.python.org/3/library/logging.html
-    https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig
+    Loads a logger from app/package root.
+
+    - Configures the logger or exits if logger is not existing or error occurs
+    - The logger with [logger_name] is loaded from the provided config file
+    - The path to the config is constructed from 'root/[config_path]/[config_fn]'
+
+    See Python documenatation for [logging](\
+https://docs.python.org/3/library/logging.html\
+) and [logging.config.fileConfig](\
+https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig\
+).
     """
 
     abs_path = split(dirname(abspath(__file__)))[0]

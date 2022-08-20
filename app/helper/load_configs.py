@@ -75,7 +75,11 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
 def _load_config(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
 ) -> dict:
-    """Loads and returns a config. Only accepts yml."""
+    """
+    Loads and returns a config.
+
+    TODO Only accepts .yml extension right now. Account for .yaml too.
+    """
 
     if debug_on_global:
         debug(f"Loading {cfg_filename_ex_ext=}")

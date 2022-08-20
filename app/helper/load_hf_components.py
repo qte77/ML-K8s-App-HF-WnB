@@ -26,7 +26,8 @@ def get_dataset_hf(
     dataset_name: str, configuration: str = None, save_dir: str = None
 ) -> DatasetDict:
     """
-    Load and save vanilla dataset from Hugging Face
+    Loads a vanilla Hugging Face dataset from a local path if present if present
+    or downloads and saves it to a local path.
 
     See Hugging Face documentation for\
     [loading datasets](\
@@ -76,7 +77,8 @@ def get_tokenizer_hf(
     model_name: str = None, save_dir: str = None
 ) -> AutoTokenizer:  # TODO check return type
     """
-    Downloads tokenizer for the specified model.
+    Loads a Hugging Face for the specified model tokenizer from a local path
+    if present or downloads and saves it to local path.
 
     A tokenizer converts the input tokens to vocabulary indices and pads the data.
     See [AutoTokenizer Documentation](\
@@ -120,7 +122,7 @@ model_doc/auto#transformers.AutoTokenizer\
 def get_model_hf(
     model_full_name: str, num_labels: int
 ) -> AutoModel:  # TODO check return type
-    """Downloads specified model"""
+    """Downloads the specified model from Hugging Face"""
 
     # check_and_create_path(f"{save_dir}/Models/{modelname}")
     # try:
