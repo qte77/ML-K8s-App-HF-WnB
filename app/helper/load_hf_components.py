@@ -13,7 +13,7 @@ from typing import Final
 
 from datasets import load_dataset, load_metric
 from datasets.dataset_dict import DatasetDict
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
@@ -119,7 +119,7 @@ def get_tokenizer_hf(
 
 def get_model_hf(
     model_full_name: str, num_labels: int
-) -> AutoModelForSequenceClassification:  # TODO check return type
+) -> AutoModel:  # TODO check return type
     """Downloads specified model"""
 
     # _check_and_create_path(f"{save_dir}/Models/{modelname}")
@@ -157,9 +157,7 @@ def get_model_hf(
     if debug_on_global:
         debug(f"Downloading {model_full_name=} with {num_labels=}")
 
-    return AutoModelForSequenceClassification.from_pretrained(
-        model_full_name, num_labels=num_labels
-    )
+    return AutoModel.from_pretrained(model_full_name, num_labels=num_labels)
 
 
 def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:

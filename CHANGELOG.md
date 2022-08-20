@@ -13,14 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Decorator for `get_dataset_hf()` and `get_tokenizer_hf()`
 - Save and load local models and Metric Builder Scripts
-- Dataclass `prepare_ml_input:Pipeline_Output` for passing artifacts through pipeline
-- Dataclass `prepare_ml_input:Paramobj` for parametrization of the pipeline
+- Dataclass `prepare_ml_input:PipelineOutput` for passing artifacts through pipeline
+- Dataclass `prepare_ml_input:ParamDict` for parametrization of the pipeline
 
 ### Changed
 
 - Refactored output of `prepare_ml_input:prepare_pipeline()` to dict for `train` and `infer`
 - Added parameters to dataclasses in `prepare_ml_input`
-- `README.md`
+- Moved `ParamDict` from `prepare_ml_input` to `parse_configs_into_paramdict`
+- Updated TODO in `README.md`
 
 [2.0.0] - 2022-08-15
 ---

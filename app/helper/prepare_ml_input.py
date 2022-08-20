@@ -6,10 +6,10 @@ Components could be models, datasets, tokenizers, metrics etc.
 
 from dataclasses import dataclass
 from os import environ as env
-from typing import Final, Union
+from typing import Final
 
 from datasets.dataset_dict import DatasetDict
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from transformers import AutoModel, AutoTokenizer
 
 if "APP_DEBUG_IS_ON" in env:
     from logging import debug
@@ -24,63 +24,58 @@ from .load_hf_components import (
     get_model_hf,
     get_tokenizer_hf,
 )
-
-
-# TODO dataclass as code smell ?
-# TODO dataclass and FP ?
-@dataclass(repr=False, eq=False)
-class Paramobj:
-    paramobj: dict[str, Union[str, list, dict]]
+from .parse_configs_into_paramdict import ParamDict
 
 
 @dataclass(repr=False, eq=False)  # slots only >=3.10
-class Pipeline_Output:
-    paramobj: Paramobj
+class PipelineOutput:
+    paramdict: ParamDict
     tokenizer: AutoTokenizer
     dataset_tokenized: DatasetDict
-    model: AutoModelForSequenceClassification
+    model: AutoModel
     metrics_loaded: list[dict]
 
 
-def prepare_pipeline(paramobj: Paramobj) -> Pipeline_Output:
+def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
     """TODO"""
 
-    provider = paramobj["sweep"]["provider"]
-    _set_provider_env(provider, paramobj[provider])
+    provider = paramdict["sweep"]["provider"]
+    _set_provider_env(provider, paramdict[provider])
 
     dataset_plain = get_dataset_hf(
-        paramobj["dataset"]["dataset"],
-        paramobj["dataset"]["configuration"],
-        paramobj["save_dir"],
+        paramdict["dataset"]["dataset"],
+        paramdict["dataset"]["configuration"],
+        paramdict["save_dir"],
     )
     num_labels = len(
-        dataset_plain["train"].unique(paramobj["dataset"]["col_to_rename"])
+        dataset_plain["train"].unique(paramdict["dataset"]["col_to_rename"])
     )
-    paramobj["dataset"]["num_labels"] = num_labels
+    paramdict["dataset"]["num_labels"] = num_labels
     if debug_on_global:
         debug(f"The number of unique labels is {num_labels}")
 
     tokenizer = get_tokenizer_hf(
-        paramobj["model_full_name"],
-        paramobj["save_dir"],
+        paramdict["model_full_name"],
+        paramdict["save_dir"],
     )
 
     dataset_tokenized = _get_tokenized_dataset(
         dataset_plain,
         tokenizer,
-        paramobj["dataset"]["cols_to_tokenize"],
-        paramobj["dataset"]["cols_to_remove"],
+        paramdict["dataset"]["cols_to_tokenize"],
+        paramdict["dataset"]["cols_to_remove"],
     )
 
-    # model = _get_model(paramobj["model_full_name"], paramobj["dataset"]["num_labels"])
+    # model = _get_model(paramdict["model_full_name"],
+    #   paramdict["dataset"]["num_labels"])
     model = ""
 
     metrics_loaded = _get_metrics_to_load_objects(
-        paramobj["metrics"]["metrics_to_load"]
+        paramdict["metrics"]["metrics_to_load"]
     )
 
-    return Pipeline_Output(
-        paramobj, tokenizer, dataset_tokenized, model, metrics_loaded
+    return PipelineOutput(
+        paramdict, tokenizer, dataset_tokenized, model, metrics_loaded
     )
 
 

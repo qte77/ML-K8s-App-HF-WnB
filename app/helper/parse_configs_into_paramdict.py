@@ -3,7 +3,10 @@
 # TODO rename 'defaults' more specific and descriptive
 # TODO generalize provider parametrisation
 # TODO refactor Pipeline-object out into function only?
+# TODO dataclass as code smell ?
+# TODO dataclass and FP ?
 
+from dataclasses import dataclass
 from json import dump
 from logging import error
 from os import environ as env
@@ -19,61 +22,67 @@ if "APP_DEBUG_IS_ON" in env:
     debug_on_global: Final = True
 
 from .load_configs import get_config_content, get_defaults, load_defaults
-from .prepare_ml_input import Paramobj
 
 
-def get_param_dict() -> Paramobj:
+@dataclass(repr=False, eq=False)
+class ParamDict:
+    paramdict: dict[str, Union[str, list, dict]]
+
+
+def get_param_dict() -> ParamDict:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`
     Not Implemented yet: WANDB_NOTES, WANDB_TAGS, WANDB_MODE
     """
 
+    # TODO alters data and behavior of other class, no FP ?
     load_defaults()
+
     hf_params: dict = get_config_content("huggingface")
     task: dict = get_config_content("task")
     task_model: dict = hf_params["models"][task["model"]]
 
-    paramobj = {}
-    paramobj["save_dir"] = get_defaults()
-    paramobj["metrics"] = {}
-    # paramobj["savedir"] =
-    paramobj["sweep"]: dict = _parse_sweep_config(get_config_content("sweep"))
-    paramobj["device"]: str = str(_get_device())
-    paramobj["dataset"]: dict = _parse_dataset_config(
+    paramdict = {}
+    paramdict["save_dir"] = get_defaults()
+    paramdict["metrics"] = {}
+    # paramdict["savedir"] =
+    paramdict["sweep"]: dict = _parse_sweep_config(get_config_content("sweep"))
+    paramdict["device"]: str = str(_get_device())
+    paramdict["dataset"]: dict = _parse_dataset_config(
         hf_params["datasets"], task["dataset"]
     )
-    paramobj["project_name"]: str = _create_project_name(
+    paramdict["project_name"]: str = _create_project_name(
         task["model"],
-        paramobj["dataset"]["dataset"],
-        paramobj["device"],
-        paramobj["sweep"]["is_sweep"],
+        paramdict["dataset"]["dataset"],
+        paramdict["device"],
+        paramdict["sweep"]["is_sweep"],
     )
 
     try:
-        paramobj["model_name"] = task_model["name"]
-        paramobj["model_full_name"] = task_model["full_name"]
+        paramdict["model_name"] = task_model["name"]
+        paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
         error(e)
 
-    paramobj["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
+    paramdict["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    paramobj["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
+    paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
         task["metrics_to_load"], hf_params["metrics_secondary_possible"]
     )
 
-    if paramobj["sweep"]["provider"] == "wandb":
-        paramobj["wandb"] = get_config_content("wandb")
-        paramobj["wandb"]["WANDB_PROJECT"] = paramobj["project_name"]
+    if paramdict["sweep"]["provider"] == "wandb":
+        paramdict["wandb"] = get_config_content("wandb")
+        paramdict["wandb"]["WANDB_PROJECT"] = paramdict["project_name"]
 
     if debug_on_global:
-        paramobj_file = "./paramobj.json"
-        debug(f"Printing paramobj to '{paramobj_file}'")
-        with open(paramobj_file, "w") as outfile:
-            dump(paramobj, outfile, indent=2)
+        paramdict_file = "./paramdict.json"
+        debug(f"Printing paramdict to '{paramdict_file}'")
+        with open(paramdict_file, "w") as outfile:
+            dump(paramdict, outfile, indent=2)
 
-    return paramobj
+    return paramdict
 
 
 def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
