@@ -31,45 +31,33 @@ def get_dataset_hf(
     https://huggingface.co/docs/datasets/loading#local-and-remote-files
     """
 
-    dataset = DatasetDict
-    msg_download = f"{configuration=} from " if configuration else ""
     save_path, path_exists = check_and_create_path(
         f"{save_dir}/Datasets/{dataset_name}/{configuration}"
     )
+    ds_load_params = {
+        "path": dataset_name if path_exists else "",
+        "name": configuration if configuration else "",
+        "data_dir": save_path if path_exists else "",
+    }
 
-    if path_exists:
-        try:
-            if debug_on_global:
-                debug(f"Loading local copy of dataset from {save_path}")
-            dataset = (
-                load_dataset(
-                    path=dataset_name,
-                    name=configuration,
-                    data_dir=save_path,
-                )
-                if configuration
-                else load_dataset(path=dataset_name, data_dir=save_path)
-            )
-        except Exception as e:
-            return e
-    else:
-        try:
-            if debug_on_global:
-                debug(f"Downloading {msg_download}dataset {dataset_name=}")
-            dataset = (
-                load_dataset(dataset_name, configuration)
-                if configuration
-                else load_dataset(dataset_name)
-            )
-            if debug_on_global:
-                debug(f"Saving to {save_path=}")
+    if debug_on_global:
+        msg_download = f"{configuration=} from " if configuration else ""
+        if path_exists:
+            debug(f"Loading local copy of dataset from {save_path}")
+        else:
+            debug(f"Downloading {msg_download}dataset {dataset_name=}")
+
+    try:
+        dataset = load_dataset(**ds_load_params)
+        if not path_exists:
             dataset.save_to_disk(save_path)
-        except Exception as e:
-            return e
+    except Exception as e:
+        error(e)
+        return e
 
     if debug_on_global:
         ds_train_slice = dataset["train"][0]
-        print(f"{ds_train_slice=}")
+        debug(f"{ds_train_slice=}")
 
     return dataset
 

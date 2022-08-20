@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved `check_and_create_path()` to from `load_hf_components` to `check_sanitize_path`
+- Refactored `helper/load_hf_components:get_dataset_hf`
 
 [2.1.0] - 2022-08-20
 ---
