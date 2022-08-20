@@ -14,7 +14,11 @@ from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
 if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
+    from logging import Logger
+
+    from .configure_logger import configure_logger
+
+    logger: Logger = configure_logger()
 
     global debug_on_global
     debug_on_global: Final = True
@@ -52,15 +56,15 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
         msg_config = f"{configuration=} from " if configuration else ""
         msg_ds_full = f"{msg_config}{dataset_name=}"
         if path_exists:
-            debug(f"Loading local copy of {msg_ds_full} from {save_path=}")
+            logger.debug(f"Loading local copy of {msg_ds_full} from {save_path=}")
         else:
-            debug(f"Downloading {msg_ds_full}")
+            logger.debug(f"Downloading {msg_ds_full}")
 
     try:
         dataset = load_dataset(**ds_load_params)
         if not path_exists:
             if debug_on_global:
-                debug(f"Saving dataset to {save_path=}")
+                logger.debug(f"Saving dataset to {save_path=}")
             dataset.save_to_disk(save_path)
     except Exception as e:
         error(e)
@@ -68,7 +72,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
 
     if debug_on_global:
         ds_train_slice = dataset["train"][0]
-        debug(f"{ds_train_slice=}")
+        logger.debug(f"{ds_train_slice=}")
 
     return dataset
 
@@ -96,15 +100,15 @@ model_doc/auto#transformers.AutoTokenizer\
     if debug_on_global:
         msg_tok = f"tokenizer for {model_name=}"
         if path_exists:
-            debug(f"Loading local copy of {msg_tok} from {save_path=}")
+            logger.debug(f"Loading local copy of {msg_tok} from {save_path=}")
         else:
-            debug(f"Downloading {msg_tok}")
+            logger.debug(f"Downloading {msg_tok}")
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
         if not path_exists:
             if debug_on_global:
-                debug(f"Saving tokenizer to {save_path=}")
+                logger.debug(f"Saving tokenizer to {save_path=}")
             tokenizer.save_pretrained(save_path)
     except Exception as e:
         error(e)
@@ -113,7 +117,7 @@ model_doc/auto#transformers.AutoTokenizer\
     if debug_on_global:
         tok_msg = "This is a test sentence for the loaded tokenizer."
         tok_res = tokenizer.encode(tok_msg)
-        debug(f"Tokenizing '{tok_msg}': {tok_res}")
+        logger.debug(f"Tokenizing '{tok_msg}': {tok_res}")
 
     return tokenizer
 
@@ -155,7 +159,7 @@ def get_model_hf(model_full_name: str, num_labels: int) -> AutoModel:
     #     print(red, e)
 
     if debug_on_global:
-        debug(f"Downloading {model_full_name=} with {num_labels=}")
+        logger.debug(f"Downloading {model_full_name=} with {num_labels=}")
 
     return AutoModel.from_pretrained(model_full_name, num_labels=num_labels)
 
@@ -167,14 +171,14 @@ def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:
     # TODO error handling, what about empty metrics?
 
     if debug_on_global:
-        debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
+        logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
 
     metrics_loaded = []
 
     for met in metrics_to_load:
 
         if debug_on_global:
-            debug(f"Trying to load {met!r}")
+            logger.debug(f"Trying to load {met!r}")
 
         try:
             metrics_loaded.append(load_metric(met))

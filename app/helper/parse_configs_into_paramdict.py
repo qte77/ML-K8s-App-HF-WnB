@@ -16,7 +16,11 @@ from torch import device
 from torch.cuda import is_available
 
 if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
+    from logging import Logger
+
+    from .configure_logger import configure_logger
+
+    logger: Logger = configure_logger()
 
     global debug_on_global
     debug_on_global: Final = True
@@ -84,7 +88,7 @@ def get_param_dict() -> ParamDict:
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
-        debug(f"Printing paramdict to '{paramdict_file}'")
+        logger.debug(f"Printing paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
             dump(paramdict, outfile, indent=2)
 

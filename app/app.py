@@ -5,10 +5,12 @@ from os import environ as env
 from typing import Final
 
 if "APP_DEBUG_IS_ON" in env:
-    from logging import Logger, debug
+    from logging import Logger
 
     from .helper.configure_logger import configure_logger
     from .helper.get_system_info import get_system_info
+
+    logger: Logger = configure_logger()
 
     global debug_on_global
     debug_on_global: Final = True
@@ -38,12 +40,11 @@ def main(mode: APP_MODES = "train") -> None:
         mode = "train"
 
     if debug_on_global:
-        logger: Logger = configure_logger()
-        debug(f"App is running in {mode=}")
-        debug(f"Debug is set to {logger=}")
+        logger.debug(f"App is running in {mode=}")
+        logger.debug(f"Debug is set to {logger=}")
         if "APP_SHOW_SYSINFO" in env:
             for item in get_system_info():
-                debug(item)
+                logger.debug(item)
 
     # pipeline_objects: Pipeline_Output = prepare_pipeline(get_param_dict())
     _: PipelineOutput = prepare_pipeline(get_param_dict())

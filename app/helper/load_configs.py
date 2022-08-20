@@ -8,7 +8,11 @@ from typing import Final, Literal, Optional, Union
 from omegaconf import OmegaConf
 
 if "APP_DEBUG_IS_ON" in env:
-    from logging import debug
+    from logging import Logger
+
+    from .configure_logger import configure_logger
+
+    logger: Logger = configure_logger()
 
     global debug_on_global
     debug_on_global: Final = True
@@ -28,7 +32,7 @@ def load_defaults(
     default_configs = _load_config(cfg_defaults_fn, cfg_path)
 
     if debug_on_global:
-        debug(f"{default_configs=}")
+        logger.debug(f"{default_configs=}")
 
 
 def get_defaults(key_to_search_and_return: str = "save_dir") -> str:
@@ -47,9 +51,9 @@ def get_config_content(
     if debug_on_global:
         defaults_dbg_msg = f"'{cfg_filename_ex_ext}' found in defaults."
         if _check_or_get_default("config_fn", cfg_filename_ex_ext):
-            debug(defaults_dbg_msg)
+            logger.debug(defaults_dbg_msg)
         else:
-            debug(f"No {defaults_dbg_msg} Trying to find the file anyway.")
+            logger.debug(f"No {defaults_dbg_msg} Trying to find the file anyway.")
 
     return _load_config(cfg_filename_ex_ext, cfg_path)
 
@@ -64,7 +68,7 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
         keyfile = sanitize_path(keyfiles[provider])
 
         if debug_on_global:
-            debug(f"{keyfile=}")
+            logger.debug(f"{keyfile=}")
 
         # TODO refactor to less convoluted call
         return _load_config(keyfile["base"], keyfile["dir"])
@@ -82,7 +86,7 @@ def _load_config(
     """
 
     if debug_on_global:
-        debug(f"Loading {cfg_filename_ex_ext=}")
+        logger.debug(f"Loading {cfg_filename_ex_ext=}")
     try:
         # TODO sanitization of yml extension.
         config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))

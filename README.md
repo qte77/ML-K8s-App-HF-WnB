@@ -126,9 +126,9 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ kubernetes/
 │  ├─ base/
 │  └─ overlay/
+├─ tests/
 ├─ CHANGELOG.md
 ├─ Dockerfile
-├─ LICENSE
 ├─ make.bat
 ├─ Makefile
 ├─ Pipfile
@@ -159,14 +159,14 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
 │  ├─ helper/
+│  │  ├─ check_sanitize_path.py
 │  │  ├─ configure_logger.py
 │  │  ├─ get_system_info
 │  │  ├─ load_configs.py
 │  │  ├─ load_hf_components.py
 │  │  ├─ parse_configs_into_paramdict.py
 │  │  ├─ prepare_ml_input.py
-│  │  ├─ prepare_sweep.py
-│  │  └─ sanitize_path.py
+│  │  └─ prepare_sweep.py
 │  ├─ model/
 │  │  ├─ infer_model.py
 │  │  └─ train_model.py
@@ -190,6 +190,8 @@ App Structure [↑](#app-k8s-hf-wnb)
 │        ├─ ingress.yml
 │        ├─ kustomization.yml
 │        └─ namespace.yml
+├─ tests/
+│  └─ test_load_hf_components.py
 ├─ .bumpversion.cfg
 ├─ .flake8
 ├─ .gitattributes
