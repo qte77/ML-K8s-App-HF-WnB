@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Local saving and loading of Hugging Face models and Metric Builder Scripts
+- Missing docstrings to functions
 
 ### Changed
 
 - Moved `check_and_create_path()` to from `load_hf_components` to `check_sanitize_path`
-- Refactored `helper/load_hf_components:get_dataset_hf`
+- Refactored `get_dataset_hf` and `get_tokenizer_hf` from `helper/load_hf_components`
+- Refactored `prepare_pipeline` from `helper/prepare_ml_input`
 
 [2.1.0] - 2022-08-20
 ---

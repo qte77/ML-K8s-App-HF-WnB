@@ -26,6 +26,11 @@ from .load_configs import get_config_content, get_defaults, load_defaults
 
 @dataclass(repr=False, eq=False)
 class ParamDict:
+    """
+    Holds structured mutable data in the form of
+    - `paramdict` as `dict[str, Union[str, list, dict]]`
+    """
+
     paramdict: dict[str, Union[str, list, dict]]
 
 

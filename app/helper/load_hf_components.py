@@ -3,7 +3,7 @@
 Load components from Hugging Face or local if already present
 Hugging Face caches components into '~/.cache/huggingface'
 """
-# TODO load and save locally, use save path from defaults.yml
+# TODO decorator for get_dataset_hf and get_tokenizer_hf
 
 from logging import error
 from os import environ as env
@@ -41,15 +41,18 @@ def get_dataset_hf(
     }
 
     if debug_on_global:
-        msg_download = f"{configuration=} from " if configuration else ""
+        msg_config = f"{configuration=} from " if configuration else ""
+        msg_ds_full = f"{msg_config}{dataset_name=}"
         if path_exists:
-            debug(f"Loading local copy of dataset from {save_path}")
+            debug(f"Loading local copy of {msg_ds_full} from {save_path=}")
         else:
-            debug(f"Downloading {msg_download}dataset {dataset_name=}")
+            debug(f"Downloading {msg_ds_full}")
 
     try:
         dataset = load_dataset(**ds_load_params)
         if not path_exists:
+            if debug_on_global:
+                debug(f"Saving dataset to {save_path=}")
             dataset.save_to_disk(save_path)
     except Exception as e:
         error(e)
@@ -71,19 +74,20 @@ def get_tokenizer_hf(
     """
 
     save_path, path_exists = check_and_create_path(f"{save_dir}/Tokenizer/{model_name}")
-    tokenizer_download_params_bool = True if not path_exists else ""
+    tokenizer_download_args_bool = True if not path_exists else ""
     tokenizer_load_params = {
         "pretrained_model_name_or_path": save_path if path_exists else model_name,
-        "use_fast": tokenizer_download_params_bool,
-        "truncation": tokenizer_download_params_bool,
-        "padding": tokenizer_download_params_bool,
+        "use_fast": tokenizer_download_args_bool,
+        "truncation": tokenizer_download_args_bool,
+        "padding": tokenizer_download_args_bool,
     }
 
     if debug_on_global:
+        msg_tok = f"tokenizer for {model_name=}"
         if path_exists:
-            debug(f"Loading local copy of tokenizer for {model_name=} from {save_path}")
+            debug(f"Loading local copy of {msg_tok} from {save_path=}")
         else:
-            debug(f"Downloading tokenizer for {model_name=}")
+            debug(f"Downloading {msg_tok}")
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
@@ -92,6 +96,7 @@ def get_tokenizer_hf(
                 debug(f"Saving tokenizer to {save_path=}")
             tokenizer.save_pretrained(save_path)
     except Exception as e:
+        error(e)
         return e
 
     if debug_on_global:
