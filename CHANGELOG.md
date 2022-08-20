@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+### Added
+
+- Local saving and loading of Hugging Face models and Metric Builder Scripts
+
+### Changed
+
+- Moved `check_and_create_path()` to from `load_hf_components` to `check_sanitize_path`
+
 [2.1.0] - 2022-08-20
 ---
 
@@ -31,7 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Local saving and loading of Hugging Face componenents, except Metric Builder Scripts
+- Local saving and loading of Hugging Face datasets and tokenizers
 
 ### Changed
 

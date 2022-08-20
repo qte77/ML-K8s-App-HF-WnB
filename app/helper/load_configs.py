@@ -13,7 +13,7 @@ if "APP_DEBUG_IS_ON" in env:
     global debug_on_global
     debug_on_global: Final = True
 
-from .sanitize_path import sanitize_path
+from .check_sanitize_path import sanitize_path
 
 
 def load_defaults(

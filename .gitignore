@@ -3,6 +3,7 @@
 *__secret__*
 *.key.json
 *.key
+paramdict.json
 paramobj.json
 
 # editors
