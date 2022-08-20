@@ -21,7 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored `get_dataset_hf` and `get_tokenizer_hf` from `helper/load_hf_components`
 - Refactored `prepare_pipeline` from `helper/prepare_ml_input`
 - Docstrings aligned according to [PEP 257 – Docstring Conventions](https://peps.python.org/pep-0257/)
-- From logger `root` to `simpleExample` from `/helper/configure_logger.py`
+- Setting logger in `main` instead of `app`
+- Using logger `simpleExample` from `/helper/configure_logger.py` instead of `root`
 
 [2.1.0] - 2022-08-20
 ---

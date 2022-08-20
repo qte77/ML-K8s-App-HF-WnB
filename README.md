@@ -241,6 +241,7 @@ TODO [↑](#app-k8s-hf-wnb)
 * [x] Factor out `Pipeline.py` to prepare for functional only
   * Sole purpose of `Pipeline.py` is to represent the gathered configs
   * Replaced by dataclasses
+  * Switch to recursion instead of for-loops for FP
 * [x] Propagate debug state through app
   * Env `APP_DEBUG_IS_ON` checked by modules and written to `global debug_on_global`
 * [x] Use `omegaconf` to load configs instead of own helper implementation

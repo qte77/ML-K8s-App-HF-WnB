@@ -8,23 +8,13 @@
 
 from dataclasses import dataclass
 from json import dump
-from logging import error
 from os import environ as env
-from typing import Final, Union
+from typing import Union
 
 from torch import device
 from torch.cuda import is_available
 
-if "APP_DEBUG_IS_ON" in env:
-    from logging import Logger
-
-    from .configure_logger import configure_logger
-
-    logger: Logger = configure_logger()
-
-    global debug_on_global
-    debug_on_global: Final = True
-
+from .configure_logger import debug_on_global, logger_global
 from .load_configs import get_config_content, get_defaults, load_defaults
 
 
@@ -73,7 +63,7 @@ def get_param_dict() -> ParamDict:
         paramdict["model_name"] = task_model["name"]
         paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
-        error(e)
+        logger_global.error(e)
 
     paramdict["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
@@ -88,7 +78,7 @@ def get_param_dict() -> ParamDict:
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
-        logger.debug(f"Printing paramdict to '{paramdict_file}'")
+        logger_global.debug(f"Printing paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
             dump(paramdict, outfile, indent=2)
 

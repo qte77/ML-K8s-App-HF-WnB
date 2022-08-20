@@ -3,18 +3,8 @@
 Train model
 """
 # from wandb import agent, login, sweep
-from os import environ as env
-from typing import Final
 
-if "APP_DEBUG_IS_ON" in env:
-    from logging import Logger
-
-    from .configure_logger import configure_logger
-
-    logger: Logger = configure_logger()
-
-    global debug_on_global
-    debug_on_global: Final = True
+# from .configure_logger import debug_on_global, logger_global
 
 
 def _login_to_provider(provider: str) -> None:

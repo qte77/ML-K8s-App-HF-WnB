@@ -8,12 +8,14 @@ from datasets import Metric  # , load_metric
 from transformers import Trainer  # , TrainingArguments
 
 # from ..helper.prepare_sweep import start_sweep
-from ..helper.prepare_ml_input import Pipeline_Output
+from ..helper.prepare_ml_input import PipelineOutput
+
+# from ..helper.configure_logger import debug_on_global, logger_global
 
 # from wandb import log
 
 
-def train_model(pipe_out: Pipeline_Output = None) -> None:
+def train_model(pipe_out: PipelineOutput = None) -> None:
     """Fine-tune the model on down-stream task"""
 
     # start_sweep(provider)
