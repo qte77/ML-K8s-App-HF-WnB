@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+[2.1.0] - 2022-08-20
+---
+
 ### Added
 
 - Decorator for `get_dataset_hf()` and `get_tokenizer_hf()`
