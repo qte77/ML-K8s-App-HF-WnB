@@ -26,12 +26,14 @@ from .load_hf_components import (
 )
 
 
-@dataclass
+# TODO dataclass as code smell ?
+# TODO dataclass and FP ?
+@dataclass(repr=False, eq=False)
 class Paramobj:
     paramobj: dict[str, Union[str, list, dict]]
 
 
-@dataclass
+@dataclass(repr=False, eq=False)  # slots only >=3.10
 class Pipeline_Output:
     paramobj: Paramobj
     tokenizer: AutoTokenizer
