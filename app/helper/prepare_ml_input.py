@@ -191,8 +191,9 @@ def _get_raw_tokenized_dataset(
 ) -> DatasetDict:
     """Returns the raw tokenized dataset with all columns"""
 
-    def _tokenize(ds):
-        cols = [ds[col] for col in cols_to_tok]
+    def _tokenize(dataset):
+        """Tokenizes the columns of `dataset` selected by `cols_to_tok`"""
+        cols = [dataset[col] for col in cols_to_tok]
         return tokenizer(*cols, truncation=True)
 
     return dataset_plain.map(_tokenize, batched=True)

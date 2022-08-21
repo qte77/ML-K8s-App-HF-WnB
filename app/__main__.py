@@ -35,7 +35,7 @@ def _parse_args() -> tuple[str, bool, bool]:
 
 
 def _set_global_state(show_debug: bool = False, show_sysinfo: bool = False):
-    """TODO"""
+    """Sets the global state of logging and showing system information"""
 
     try:
         toggle_global_debug_state(show_debug)

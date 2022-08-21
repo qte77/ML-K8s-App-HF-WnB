@@ -23,6 +23,14 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 #    "slow: mark a test that takes a long time to run.",
 # ]
 
+# https://pypi.org/project/interrogate/
+[tool.interrogate]
+fail-under = 95
+exclude = ["setup.py", "docs", "build"]
+# ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+# possible values: 0 (minimal output), 1 (-v), 2 (-vv)
+verbose = 0
+
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
 # https://mypy.readthedocs.io/en/stable/config_file.html#example-pyproject-toml
 [tool.mypy]

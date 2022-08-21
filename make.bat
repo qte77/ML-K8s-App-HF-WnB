@@ -62,6 +62,7 @@ goto:eof
     echo isort && %perun% isort .
     echo black && %perun% black .
     echo flake8 && %perun% flake8
+    echo interrogate && %perun% interrogate
     @REM echo mypy && %perun% mypy .
     set skip=mypy
 	echo pre-commit && %perun% pre-commit run --all-files

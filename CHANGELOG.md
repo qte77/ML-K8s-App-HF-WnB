@@ -18,6 +18,12 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- Tool `interrogate` for coverage of docstrings
+  - `pyproject.toml`, `make.bat` and `.pre-commit-config.yaml`
+  - Preparation for docgen with `sphinx`
+
 ### Changed
 
 - Format of system info output to raw output deliverd by `subprocess:check_output()`
