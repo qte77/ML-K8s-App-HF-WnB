@@ -23,6 +23,7 @@ Types of changes:
 - Tool `interrogate` for coverage of docstrings
   - `pyproject.toml`, `make.bat` and `.pre-commit-config.yaml`
   - Preparation for docgen with `sphinx`
+- `tuna` to Pipfile and `make.bat` for visualization of `python -X importtime -m app`
 
 ### Changed
 

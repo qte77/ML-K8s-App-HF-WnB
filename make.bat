@@ -13,6 +13,7 @@ if _%1_ == _local_test_ goto:run
 if _%1_ == _local_static_checks_ goto:run
 if _%1_ == _local_commit_ goto:run
 if _%1_ == _local_bump_part_ goto:run
+if _%1_ == _local_import_perf_ goto:run
 if _%1_ == _cleanup_ goto:run
 
 :help
@@ -29,6 +30,7 @@ if _%1_ == _cleanup_ goto:run
     echo - local_static_checks -
     echo - local_commit - %%2 taken as git msg, !!! use with "git msg" !!!
     echo - local_bump_part -
+    echo - local_import_perf -
 	echo - cleanup -
 endlocal
 exit /b %err_help_called%
@@ -87,6 +89,16 @@ goto:eof
         echo Parameter for 'part' is empty. Exiting.
         exit /b %err_b2v_part_empty%
 	)
+goto:eof
+
+:local_import_perf
+    set "outdir=importtime"
+    set "dt=" && set dt=%date:/=-%
+    set "tm=" && set tm=%time::=-% && set tm=%tm:~0,8%
+    set "ln=%outdir%\%dt%_%tm%_importtime.log"
+    if not exist "%outdir%" mkdir "%outdir%"
+    %perun% python -X importtime -m app 2>"%ln%"
+    %perun% tuna "%ln%"
 goto:eof
 
 :cleanup

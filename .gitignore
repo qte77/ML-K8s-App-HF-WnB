@@ -79,3 +79,6 @@ target/
 
 # pyenv python configuration file
 .python-version
+
+# python importtime and tuna visualizer
+importtime/
