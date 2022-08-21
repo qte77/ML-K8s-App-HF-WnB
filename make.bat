@@ -71,8 +71,8 @@ goto:eof
 goto:eof
 
 :local_test
-	echo %msg_not_impl%
 	rem https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+    %perun% python -m pytest
 goto:eof
 
 :local_static_checks:

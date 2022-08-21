@@ -1,29 +1,43 @@
 #!/usr/bin/env python
 """Test the load_hf_components"""
 
+from pytest import mark
+from transformers import BertModel, DistilBertModel, ElectraModel
+from transformers.data.datasets.glue import GlueDataset
 
-# from os import environ as env
-from transformers import AutoModel
+if True:
+    from app.helper.get_and_configure_logger import (
+        get_and_configure_logger,
+        toggle_global_debug_state,
+    )
 
-from app.helper.load_hf_components import get_model_hf
+    toggle_global_debug_state(False)
+    logger = get_and_configure_logger()
 
-# from pytest import mark
-
-
-# if "APP_DEBUG_IS_ON" in env:
-#     from app.helper.configure_logger import configure_logger, debug_on_global
-
-#     logger = configure_logger()
+    # delayed loading to set get_and_configure_logger:debug_on_global
+    from app.helper.load_hf_components import get_model_hf
 
 
-def test_get_model_hf():
+@mark.parametrize(
+    "model_full_name, num_labels, type_expected",
+    list(
+        zip(
+            [
+                "bert-base-uncased",
+                "distilbert-base-uncased",
+                "google/electra-small-discriminator",
+            ],
+            [2, 2, 2],
+            [BertModel, DistilBertModel, ElectraModel],
+        )
+    ),
+)
+def test_get_model_hf(model_full_name, num_labels, type_expected):
     """TODO"""
-
-    # Arrange
-    params = {"model_full_name": "ber_base_uncased", "num_labels": 2}
-
     # Act
-    model = get_model_hf(**params)
-
+    model = get_model_hf(model_full_name, num_labels)
+    logger.debug(f"\n{type(model)=}")
     # Assert
-    assert type(model) == AutoModel
+    assert type(model) == type_expected
+
+    GlueDataset.get_labels()

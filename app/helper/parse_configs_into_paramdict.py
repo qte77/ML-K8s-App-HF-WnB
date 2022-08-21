@@ -53,46 +53,44 @@ def get_param_dict() -> ParamDict:
     task = get_config_content("task")
     task_model = hf_params["models"][task["model"]]
 
-    pd = ParamDict
-    pd.paramdict["save_dir"] = get_defaults()
-    pd.paramdict["metrics"] = {}
+    paramdict = {}
+    paramdict["save_dir"] = get_defaults()
+    paramdict["metrics"] = {}
     # paramdict["savedir"] =
-    pd.paramdict["sweep"] = _parse_sweep_config(get_config_content("sweep"))
-    pd.paramdict["device"] = str(_get_device())
-    pd.paramdict["dataset"] = _parse_dataset_config(
-        hf_params["datasets"], task["dataset"]
-    )
-    pd.paramdict["project_name"] = _create_project_name(
+    paramdict["sweep"] = _parse_sweep_config(get_config_content("sweep"))
+    paramdict["device"] = str(_get_device())
+    paramdict["dataset"] = _parse_dataset_config(hf_params["datasets"], task["dataset"])
+    paramdict["project_name"] = _create_project_name(
         task["model"],
-        pd.paramdict["dataset"]["dataset"],
-        pd.paramdict["device"],
-        pd.paramdict["sweep"]["is_sweep"],
+        paramdict["dataset"]["dataset"],
+        paramdict["device"],
+        paramdict["sweep"]["is_sweep"],
     )
 
     try:
-        pd.paramdict["model_name"] = task_model["name"]
-        pd.paramdict["model_full_name"] = task_model["full_name"]
+        paramdict["model_name"] = task_model["name"]
+        paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
         logger.error(e) if debug_on_global else error(e)
 
-    pd.paramdict["metrics"]["metric_to_optimize"] = _parse_metric_to_optimize_config(
+    paramdict["metrics"]["metric_to_optimize"] = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    pd.paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
+    paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
         hf_params["metrics_secondary_possible"], task["metrics_to_load"]
     )
 
-    if pd.paramdict["sweep"]["provider"] == "wandb":
-        pd.paramdict["wandb"] = get_config_content("wandb")
-        pd.paramdict["wandb"]["WANDB_PROJECT"] = pd.paramdict["project_name"]
+    if paramdict["sweep"]["provider"] == "wandb":
+        paramdict["wandb"] = get_config_content("wandb")
+        paramdict["wandb"]["WANDB_PROJECT"] = paramdict["project_name"]
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
         logger.debug(f"Saving paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
-            dump(pd.paramdict, outfile, indent=2)
+            dump(paramdict, outfile, indent=2)
 
-    return pd
+    return ParamDict(paramdict)
 
 
 def _parse_dataset_config(datasets: dict, dataset: str) -> dict:

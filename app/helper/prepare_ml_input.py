@@ -59,8 +59,8 @@ def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
     Expects a populated `ParamDict` and returns a `PipelineOutput`.
     """
 
-    provider = paramdict["sweep"]["provider"]
-    _set_provider_env(provider, paramdict[provider])
+    provider = paramdict.paramdict["sweep"]["provider"]
+    _set_provider_env(provider, paramdict.paramdict[provider])
 
     return _get_large_components(paramdict)
 
