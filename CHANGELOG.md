@@ -18,6 +18,20 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- `pdoc` for conversion of docstrings to `Pipfile` and `make.bat`
+  - Test not successful because of resolving issues
+  - E.g. attempted relative import w/o parent package
+- Build skeletton
+  - Empty `setup.py` to allow for editable build
+  - `build-system`, `project` and `setuptools` to `pyproject.toml`
+  - Editable installation and build wheel skeleton in `make.bat`
+
+### Changed
+
+- From `pandoc` to `pdoc` because `pandoc` could not be found
+
 [2.3.0] - 2022-08-21
 ---
 

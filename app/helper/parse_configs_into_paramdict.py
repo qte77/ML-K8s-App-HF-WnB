@@ -86,7 +86,7 @@ def get_param_dict() -> ParamDict:
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
-        logger.debug(f"Printing paramdict to '{paramdict_file}'")
+        logger.debug(f"Saving paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
             dump(paramdict, outfile, indent=2)
 

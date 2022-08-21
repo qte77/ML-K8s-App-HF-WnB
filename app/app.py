@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Entrypoint for the app"""
 
+from sys import path
 from typing import Literal
 
 from .helper.get_and_configure_logger import debug_on_global, get_and_configure_logger
@@ -29,6 +30,7 @@ def main(mode: Literal["train", "infer"] = "train") -> None:
     """
 
     if debug_on_global:
+        logger.debug(f"{path[0]=}, {__package__=}")
         logger.debug(f"{mode=}, {debug_on_global=}, {show_sysinfo_global=}")
 
     if show_sysinfo_global:

@@ -9,6 +9,8 @@ call:commands
 
 if _%1_ == _local_install_dev_ goto:run
 if _%1_ == _local_update_dev_ goto:run
+if _%1_ == _local_install_editable_dev_ goto:run
+if _%1_ == _local_wheel_dev_ goto:run
 if _%1_ == _local_test_ goto:run
 if _%1_ == _local_static_checks_ goto:run
 if _%1_ == _local_commit_ goto:run
@@ -24,14 +26,16 @@ if _%1_ == _cleanup_ goto:run
     )
     echo This file for Windows CMD replaces the Makefile for make
     echo Python needs to be callable and available labels for %%1 are
-    echo - local_install_dev -
-    echo - local_update_dev -
-    echo - local_test -
-    echo - local_static_checks -
+    echo - local_install_dev - Installs packages from Pipfile into venv
+    echo - local_update_dev - Updates and cleans Pipenv and pre-commit
+    echo - local_install_editable_dev - %msg_not_impl%
+    echo - local_wheel_dev - %msg_not_impl%
+    echo - local_test - %msg_not_impl%
+    echo - local_static_checks - Runs static tests against codebase
     echo - local_commit - %%2 taken as git msg, !!! use with "git msg" !!!
-    echo - local_bump_part -
-    echo - local_import_perf -
-	echo - cleanup -
+    echo - local_bump_part - Bumps the version at "part"
+    echo - local_import_perf - Invokes Python import time and tuna
+	echo - cleanup - %msg_not_impl%
 endlocal
 exit /b %err_help_called%
 
@@ -49,8 +53,20 @@ exit /b
 	%perun% mypy --install-types --non-interactive
 goto:eof
 
+@REM Installs editable dev [--dev -e .]
+@REM :local_build_dev
+@REM    pipenv install --dev -e .
+@REM 	%perun% pre-commit install
+@REM 	%perun% mypy --install-types --non-interactive
+@REM goto:eof
+
+@REM Builds wheel into ./wheel
+@REM :local_wheel_dev
+@REM     %perun% pip wheel . -w wheel
+@REM goto:eof
+
 :local_update_dev
-	pipenv update
+	pipenv lock && pipenv clean && pipenv sync
 	%perun% pre-commit autoupdate
 goto:eof
 
@@ -100,6 +116,18 @@ goto:eof
     %perun% python -X importtime -m app 2>"%ln%"
     %perun% tuna "%ln%"
 goto:eof
+
+:local_create_docs
+        %perun% python -m pandoc write README.md
+        @REM docs/header-includes.yaml the_annotated_transformer.md \
+        @REM --katex=/usr/local/lib/node_modules/katex/dist/ \
+        @REM --output=docs/index.html --to=html5 \
+        @REM --css=docs/github.min.css \
+        @REM --css=docs/tufte.css \
+        @REM --no-highlight --self-contained \
+        @REM --metadata pagetitle="The Annotated Transformer" \
+        @REM --resource-path=/home/srush/Projects/annotated-transformer/ \
+        @REM --indented-code-classes=nohighlight
 
 :cleanup
 	echo %msg_not_impl%

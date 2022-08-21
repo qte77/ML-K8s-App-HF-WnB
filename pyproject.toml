@@ -1,3 +1,55 @@
+[build-system]
+requires = ["setuptools>=45.0", "wheel", "setuptools_scm[toml]>=6.3.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "App_K8s_HF_WnB"
+description = "TODO"
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["App"]
+license = {text = "BSD 3-Clause License"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "requests",
+    'importlib-metadata' #; python_version<"3.8"',
+]
+dynamic = ["version"] # , "authors"]
+
+# [project.optional-dependencies]
+# pdf = ["ReportLab>=1.2", "RXP"]
+# rest = ["docutils>=0.3", "pack ==1.1, ==1.3"]
+
+# [project.scripts]
+# my-script = "my_package.module:function"
+
+[tool.setuptools.package-data]
+# https://peps.python.org/pep-0561/#packaging-type-information
+# Type Hints https://peps.python.org/pep-0484/
+# https://peps.python.org/pep-0561/#packaging-type-information
+# pyi stubs: https://www.python.org/dev/peps/pep-0484/#stub-files
+# https://mypy.readthedocs.io/en/stable/installed_packages.html#making-pep-561-compatible-packages
+App_K8s_HF_WnB = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "__version__.__version__"}
+# authors = {attr = "__version__.__authors__"}
+
+# https://setuptools.pypa.io/en/latest/userguide/package_discovery.html#custom-discovery
+# auto-discovery
+# [tool.setuptools.packages]
+# find = {}
+
+[tool.setuptools.packages.find]
+where = ["app"]
+include = ["*"]
+# exclude = ["additional*"]
+
 [tool.isort]
 profile = "black"
 src_paths = ["app", "tests"]

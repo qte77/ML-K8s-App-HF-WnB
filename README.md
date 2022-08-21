@@ -220,13 +220,14 @@ App Details [↑](#app-k8s-hf-wnb)
 
 ### Import performance
 
-The the import performance of the app can be measured with `python -X importtime -m app` and visualized with [tuna](https://github.com/nschloe/tuna). From root it can be invoked by:
+The import performance of the app can be measured with `python -X importtime -m app` and visualized with [tuna](https://github.com/nschloe/tuna). From root this flow can be invoked by:
 
 ```sh
 make local_import_perf
 ```
 
-An example of the visualized import time would like like
+An example how the visualized import time could look like
+
 [![importtime](./assets/tuna_importtime.PNG)](./assets/tuna_importtime.PNG)
 
 TODO [↑](#app-k8s-hf-wnb)

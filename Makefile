@@ -26,6 +26,25 @@ KUBE_TEST := $(KUBE)/test
 # git commit -m ""
 # bump2version <part>
 
+# create_docs: nb_to_md
+# 	pandoc docs/header-includes.yaml the_annotated_transformer.md \
+# 		--katex=/usr/local/lib/node_modules/katex/dist/ \
+# 		--output=docs/index.html --to=html5 \
+# 		--css=docs/github.min.css \
+# 		--css=docs/tufte.css \
+# 		--no-highlight --self-contained \
+# 		--metadata pagetitle="The Annotated Transformer" \
+# 		--resource-path=/home/srush/Projects/annotated-transformer/ \
+# 		--indented-code-classes=nohighlight
+
+# docs: ## generate Sphinx HTML documentation, including API docs
+# 	rm -f docs/pytest_workshop.rst
+# 	rm -f docs/modules.rst
+# 	sphinx-apidoc -o docs/ pytest_workshop
+# 	$(MAKE) -C docs clean
+# 	$(MAKE) -C docs html
+# 	$(BROWSER) docs/_build/html/index.html
+
 python: $(APP_PIPFILE)
 	echo Installing Pipfile
 	/usr/bin/env python3 -m ensurepip
