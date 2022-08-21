@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-Train model
-"""
+"""Prepare sweep"""
 # from wandb import agent, login, sweep
 
 

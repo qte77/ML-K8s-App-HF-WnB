@@ -15,15 +15,8 @@ def toggle_global_debug_state(debug_on: bool = False):
     debug_on_global = debug_on
 
 
-def toggle_global_sysinfo(show_sysinfo: bool = False):
-    """Toggle `global debug_on_global` to `debug_on`"""
-
-    global show_sysinfo_global
-    show_sysinfo_global = show_sysinfo
-
-
 def get_and_configure_logger(
-    logger_name: str = "APP",
+    logger_name: str = "app",
     config_fn: str = "logging.conf",
     config_path: str = "config",
 ) -> Logger:

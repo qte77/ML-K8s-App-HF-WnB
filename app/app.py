@@ -3,15 +3,8 @@
 
 from typing import Literal
 
-from .helper.get_and_configure_logger import (
-    debug_on_global,
-    get_and_configure_logger,
-    show_sysinfo_global,
-)
-
-if show_sysinfo_global:
-    from .helper.get_system_info import debug_system_info
-
+from .helper.get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .helper.get_and_configure_system_info import debug_system_info, show_sysinfo_global
 from .helper.parse_configs_into_paramdict import get_param_dict
 from .helper.prepare_ml_input import PipelineOutput, prepare_pipeline
 

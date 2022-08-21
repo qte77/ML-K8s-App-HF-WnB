@@ -18,6 +18,11 @@ Types of changes:
 [Unreleased]
 ---
 
+### Changed
+
+- Format of system info output to raw output deliverd by `subprocess:check_output()`
+- Moved `toggle_global_sysinfo()` to `get_and_configure_system_info`
+
 ### Fixed
 
 - Logger instances configured in `logging.conf`in submodules used

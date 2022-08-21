@@ -53,8 +53,8 @@ if __name__ == "__main__":
     from .helper.get_and_configure_logger import (
         get_and_configure_logger,
         toggle_global_debug_state,
-        toggle_global_sysinfo,
     )
+    from .helper.get_and_configure_system_info import toggle_global_sysinfo
 
     app_mode, show_debug, show_sysinfo = _parse_args()
     _set_global_state(show_debug, show_sysinfo)

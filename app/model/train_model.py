@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-"""
-Train model
-"""
+"""Model training"""
 from datasets import Metric  # , load_metric
 
 # from numpy import argmax
