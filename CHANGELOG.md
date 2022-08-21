@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.4.0] - 2022-08-21
+---
+
 ### Added
 
 - `pdoc` for conversion of docstrings to `Pipfile` and `make.bat`
