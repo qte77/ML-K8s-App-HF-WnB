@@ -14,7 +14,7 @@ from os import environ as env
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .configure_logger import debug_on_global, logger_global
+from .get_and_configure_logger import debug_on_global, get_and_configure_logger
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
@@ -23,6 +23,11 @@ from .load_hf_components import (
     get_tokenizer_hf,
 )
 from .parse_configs_into_paramdict import ParamDict
+
+if debug_on_global:
+    logger = get_and_configure_logger(__name__)
+else:
+    from logging import error
 
 
 @dataclass(repr=False, eq=False)  # slots only >=3.10
@@ -73,7 +78,7 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     # )
     # paramdict["dataset"]["num_labels"] = num_labels
     # if debug_on_global:
-    #     logger_global.debug(f"The number of unique labels is {num_labels}")
+    #     logger.debug(f"The number of unique labels is {num_labels}")
 
     # tokenizer = _get_tokenizer(
     #     paramdict["model_full_name"],
@@ -159,7 +164,7 @@ def _get_tokenized_dataset(
     """
 
     if debug_on_global:
-        logger_global.debug(
+        logger.debug(
             f"Tokenizing dataset with {len(cols_to_tokenize)} columns to tokenize\
             and \n Removing {cols_to_tokenize=} and {cols_to_remove=} from tokenized\
             dataset"
@@ -174,9 +179,10 @@ def _get_tokenized_dataset(
         )
         if debug_on_global:
             ds_tokenized_train_slice = ds_tokenized["train"][0]
-            logger_global.debug(f"{ds_tokenized_train_slice=}")
+            logger.debug(f"{ds_tokenized_train_slice=}")
         return ds_tokenized
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -200,11 +206,12 @@ def _set_provider_env(provider: str, provider_param: dict) -> None:
             env[k] = v
         env["WANDB_API_KEY"] = get_keyfile_content("wandb")["WANDB_API_KEY"]
         if debug_on_global:
-            logger_global.debug(f"Environment set for {provider=}")
+            logger.debug(f"Environment set for {provider=}")
             for s in env:
                 if "WANDB_" in s:
-                    logger_global.debug(
-                        f"{s}=***"
-                    ) if "API_KEY" in s else logger_global.debug(f"{s}={env[s]}")
+                    logger.debug(f"{s}=***") if "API_KEY" in s else logger.debug(
+                        f"{s}={env[s]}"
+                    )
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e

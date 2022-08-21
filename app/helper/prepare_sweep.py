@@ -4,8 +4,6 @@ Train model
 """
 # from wandb import agent, login, sweep
 
-# from .configure_logger import debug_on_global, logger_global
-
 
 def _login_to_provider(provider: str) -> None:
     """Trys to login to provider with API key"""

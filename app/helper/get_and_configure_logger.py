@@ -1,54 +1,28 @@
 #!/usr/bin/env python
 """"Load [logger_name] from [root]/[config_path]/[config_fn]"""
 
+# TODO test whether error() gets thrown by root
+
 from logging import Logger, getLogger, root
 from logging.config import fileConfig
 from os.path import abspath, dirname, exists, join, split
 
 
-def set_global_debug_state_and_logger(
-    show_debug: bool = False, show_sysinfo: bool = False
-):
-    """Toggle global debug state and set global logger"""
-
-    _toggle_global_debug_state(show_debug)
-
-    root.debug("HHHII")
-
-    try:
-        _set_global_logger(show_debug or show_sysinfo)
-    except Exception as e:
-        root.error(e)
-        return e
-
-
-def _toggle_global_debug_state(debug_on: bool = False):
+def toggle_global_debug_state(debug_on: bool = False):
     """Toggle `global debug_on_global` to `debug_on`"""
 
     global debug_on_global
     debug_on_global = debug_on
 
 
-def _set_global_logger(debug_on: bool = False):
-    """
-    Set `global logger_global` relative to `debug_on`.
+def toggle_global_sysinfo(show_sysinfo: bool = False):
+    """Toggle `global debug_on_global` to `debug_on`"""
 
-    Returns
-    - `False` or `Exception`: `None`
-    - `True`: `Logger`
-    """
-
-    global logger_global
-
-    try:
-        logger_global = _configure_and_get_logger() if debug_on else None
-    except Exception as e:
-        logger_global = None
-        root.error(e)
-        return e
+    global show_sysinfo_global
+    show_sysinfo_global = show_sysinfo
 
 
-def _configure_and_get_logger(
+def get_and_configure_logger(
     logger_name: str = "APP",
     config_fn: str = "logging.conf",
     config_path: str = "config",
@@ -60,11 +34,12 @@ def _configure_and_get_logger(
     - The logger with [logger_name] is loaded from the provided config file
     - The path to the config is constructed from 'root/[config_path]/[config_fn]'
 
-    See Python documenatation for [logging](\
+    See Python documentation for [logging](\
 https://docs.python.org/3/library/logging.html\
 ) and [logging.config.fileConfig](\
 https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig\
-).
+) as well as the [Logging HOWTO](https://docs.python.org/3/howto/logging.html) and \
+the [Logging Cookbook](https://docs.python.org/3/howto/logging-cookbook.html).
     """
 
     abs_path = split(dirname(abspath(__file__)))[0]
@@ -74,7 +49,6 @@ https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig\
         root.error("Can not find config. Exiting.")
         return FileNotFoundError
 
-    # TODO simpleExample not loaded from logging.conf
     try:
         fileConfig(abs_path)
         return getLogger(logger_name)

@@ -14,8 +14,13 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .configure_logger import debug_on_global, logger_global
+from .get_and_configure_logger import debug_on_global, get_and_configure_logger
 from .load_configs import get_config_content, get_defaults, load_defaults
+
+if debug_on_global:
+    logger = get_and_configure_logger(__name__)
+else:
+    from logging import error
 
 
 @dataclass(repr=False, eq=False)
@@ -35,6 +40,9 @@ def get_param_dict() -> ParamDict:
 
     Not Implemented yet: WANDB_NOTES, WANDB_TAGS, WANDB_MODE
     """
+
+    if debug_on_global:
+        logger.debug("constructing parameter dictionary")
 
     # TODO alters data and behavior of other class, no FP ?
     load_defaults()
@@ -63,7 +71,7 @@ def get_param_dict() -> ParamDict:
         paramdict["model_name"] = task_model["name"]
         paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
-        logger_global.error(e)
+        logger.error(e) if debug_on_global else error(e)
 
     paramdict["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
@@ -78,7 +86,7 @@ def get_param_dict() -> ParamDict:
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
-        logger_global.debug(f"Printing paramdict to '{paramdict_file}'")
+        logger.debug(f"Printing paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
             dump(paramdict, outfile, indent=2)
 
@@ -91,6 +99,7 @@ def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
     try:
         return datasets[dataset.lower()]
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -110,6 +119,7 @@ def _parse_metric_to_optimize_config(
         ]
         return metricsobj
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -136,6 +146,7 @@ def _parse_metrics_to_load(
     try:
         return [met for met in metrics_to_load if met in metrics_secondary_possible]
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -145,6 +156,7 @@ def _create_model_full_name(models: dict, model: str) -> str:
     try:
         return models.get(model.lower(), ["Invalid model", ""])["full_name"]
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -157,6 +169,7 @@ def _create_project_name(
     try:
         return f"{model}-{dataset_name}-{device}{suffix}".upper()
     except Exception as e:
+        logger.error(e) if debug_on_global else error(e)
         return e
 
 
@@ -170,4 +183,5 @@ def _get_device() -> str:
         try:
             return device("cuda" if is_available() else "cpu")
         except Exception as e:
+            logger.error(e) if debug_on_global else error(e)
             return e

@@ -250,6 +250,9 @@ TODO [↑](#app-k8s-hf-wnb)
   * Multi-line docstrings
 * [x] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
   * Fetch user or command input
+* [ ] Refactor logging
+  * [ ] Conditional debug logging into function
+  * [ ] Exception logging with case logger/print into function
 * [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `typing` and `dataclasses` only annotat for hinting

@@ -2,7 +2,7 @@
 """Redirects to entrypoint of the app"""
 
 
-def _parse_args() -> tuple[str, tuple[bool]]:
+def _parse_args() -> tuple[str, bool, bool]:
     """
     Parses argv and returns the inputs.
 
@@ -31,33 +31,35 @@ def _parse_args() -> tuple[str, tuple[bool]]:
     )
     args = parser.parse_args()
 
-    return (args.mode, (args.debug, args.sysinfo))
+    return (args.mode, args.debug, args.sysinfo)
 
 
 def _set_global_state(show_debug: bool = False, show_sysinfo: bool = False):
     """TODO"""
 
-    if show_sysinfo:
-        env["APP_SHOW_SYSINFO"] = str(show_sysinfo)
-
     try:
-        set_global_debug_state_and_logger(show_debug, show_sysinfo)
+        toggle_global_debug_state(show_debug)
+        toggle_global_sysinfo(show_sysinfo)
     except Exception as e:
+        get_and_configure_logger(__name__).error(e)
         return e
 
 
 if __name__ == "__main__":
 
     from argparse import ArgumentParser
-    from os import environ as env
     from sys import exit
 
-    from .helper.configure_logger import set_global_debug_state_and_logger
+    from .helper.get_and_configure_logger import (
+        get_and_configure_logger,
+        toggle_global_debug_state,
+        toggle_global_sysinfo,
+    )
 
-    app_mode, app_debug = _parse_args()
-    _set_global_state(*app_debug)
+    app_mode, show_debug, show_sysinfo = _parse_args()
+    _set_global_state(show_debug, show_sysinfo)
 
-    # late import to account for gloab vars set by configure_logger
+    # delayed import to account for logger set to be first
     from .app import main
 
     exit(main(app_mode))

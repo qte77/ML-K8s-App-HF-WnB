@@ -1,24 +1,28 @@
 #!/usr/bin/env python
 """Entrypoint for the app"""
 
-from os import environ as env
-from typing import Final, Literal
+from typing import Literal
 
-from .helper.configure_logger import debug_on_global, logger_global
+from .helper.get_and_configure_logger import (
+    debug_on_global,
+    get_and_configure_logger,
+    show_sysinfo_global,
+)
 
-if "APP_SHOW_SYSINFO" in env:
-    from .helper.get_system_info import get_system_info
+if show_sysinfo_global:
+    from .helper.get_system_info import debug_system_info
 
 from .helper.parse_configs_into_paramdict import get_param_dict
 from .helper.prepare_ml_input import PipelineOutput, prepare_pipeline
 
+if debug_on_global or show_sysinfo_global:
+    logger = get_and_configure_logger(__name__)
+
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
 
-APP_MODES: Final = Literal["train", "infer"]
 
-
-def main(mode: APP_MODES = "train") -> None:
+def main(mode: Literal["train", "infer"] = "train") -> None:
     """
     Create pipeline object parametrised with parameter object and execute task.
 
@@ -31,19 +35,11 @@ def main(mode: APP_MODES = "train") -> None:
     - `mode` as `Literal["train", "infer"]`
     """
 
-    # TODO remove mode check with pydantic
-    if mode not in APP_MODES.__args__:
-        mode = "train"
-
     if debug_on_global:
+        logger.debug(f"{mode=}, {debug_on_global=}, {show_sysinfo_global=}")
 
-        logger_global.debug(f"App is running in {mode=}")
-        logger_global.debug(f"DEBUG is set to {logger_global=}")
-        logger_global.error(f"ERROR is set to {logger_global=}")
-
-    if "APP_SHOW_SYSINFO" in env:
-        for item in get_system_info():
-            logger_global.debug(item)
+    if show_sysinfo_global:
+        debug_system_info()
 
     # pipeline_objects: Pipeline_Output = prepare_pipeline(get_param_dict())
     _: PipelineOutput = prepare_pipeline(get_param_dict())
