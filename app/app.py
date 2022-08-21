@@ -2,7 +2,7 @@
 """Entrypoint for the app"""
 
 from os import environ as env
-from typing import Final
+from typing import Final, Literal
 
 from .helper.configure_logger import debug_on_global, logger_global
 
@@ -15,7 +15,7 @@ from .helper.prepare_ml_input import PipelineOutput, prepare_pipeline
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
 
-APP_MODES: Final = ["train", "infer"]
+APP_MODES: Final = Literal["train", "infer"]
 
 
 def main(mode: APP_MODES = "train") -> None:
@@ -26,17 +26,18 @@ def main(mode: APP_MODES = "train") -> None:
     - Downloads the Metrics Builder Scripts from HF and returns their objects
     - Sets the environment variables the sweep provider needs
     - The task performed depends on the input of the
-    `APP_MODES: Final = ["train", "infer"]`.
+    `APP_MODES: Final = Literal["train", "infer"]`.
     """
 
     # TODO remove mode check with pydantic
-    if mode not in APP_MODES:
+    if mode not in APP_MODES.__args__:
         mode = "train"
 
     if debug_on_global:
 
         logger_global.debug(f"App is running in {mode=}")
-        logger_global.debug(f"Debug is set to {logger_global=}")
+        logger_global.debug(f"DEBUG is set to {logger_global=}")
+        logger_global.error(f"ERROR is set to {logger_global=}")
 
         if "APP_SHOW_SYSINFO" in env:
             for item in get_system_info():
