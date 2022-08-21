@@ -28,6 +28,8 @@ Types of changes:
 
 - Format of system info output to raw output deliverd by `subprocess:check_output()`
 - Moved `toggle_global_sysinfo()` to `get_and_configure_system_info`
+- Moved `parse_args()` from `__main__` into `helper/parse_args.py`
+- Refactored `__main__`
 
 ### Fixed
 

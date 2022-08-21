@@ -29,7 +29,7 @@ pyupgrade = "*"
 "pytest-cov" = "*"
 pytest = "*"
 interrogate = "*"
-# sphinx = "*"
+sphinx = "*"
 # tox = "*"
 # watchdog = "==2.1.9"
 
