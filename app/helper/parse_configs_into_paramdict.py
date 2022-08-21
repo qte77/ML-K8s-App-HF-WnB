@@ -30,7 +30,9 @@ class ParamDict:
     - `paramdict` as `dict[str, Union[str, list, dict]]`
     """
 
-    paramdict: dict[str, Union[str, list, dict]]
+    paramdict: dict[
+        str, Union[str, list[Union[str, list, dict]], dict[Union[str, list, dict]]]
+    ]
 
 
 def get_param_dict() -> ParamDict:
@@ -47,50 +49,50 @@ def get_param_dict() -> ParamDict:
     # TODO alters data and behavior of other class, no FP ?
     load_defaults()
 
-    hf_params: dict = get_config_content("huggingface")
-    task: dict = get_config_content("task")
-    task_model: dict = hf_params["models"][task["model"]]
+    hf_params = get_config_content("huggingface")
+    task = get_config_content("task")
+    task_model = hf_params["models"][task["model"]]
 
-    paramdict = {}
-    paramdict["save_dir"] = get_defaults()
-    paramdict["metrics"] = {}
+    pd = ParamDict
+    pd.paramdict["save_dir"] = get_defaults()
+    pd.paramdict["metrics"] = {}
     # paramdict["savedir"] =
-    paramdict["sweep"]: dict = _parse_sweep_config(get_config_content("sweep"))
-    paramdict["device"]: str = str(_get_device())
-    paramdict["dataset"]: dict = _parse_dataset_config(
+    pd.paramdict["sweep"] = _parse_sweep_config(get_config_content("sweep"))
+    pd.paramdict["device"] = str(_get_device())
+    pd.paramdict["dataset"] = _parse_dataset_config(
         hf_params["datasets"], task["dataset"]
     )
-    paramdict["project_name"]: str = _create_project_name(
+    pd.paramdict["project_name"] = _create_project_name(
         task["model"],
-        paramdict["dataset"]["dataset"],
-        paramdict["device"],
-        paramdict["sweep"]["is_sweep"],
+        pd.paramdict["dataset"]["dataset"],
+        pd.paramdict["device"],
+        pd.paramdict["sweep"]["is_sweep"],
     )
 
     try:
-        paramdict["model_name"] = task_model["name"]
-        paramdict["model_full_name"] = task_model["full_name"]
+        pd.paramdict["model_name"] = task_model["name"]
+        pd.paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
         logger.error(e) if debug_on_global else error(e)
 
-    paramdict["metrics"]["metric_to_optimize"]: dict = _parse_metric_to_optimize_config(
+    pd.paramdict["metrics"]["metric_to_optimize"] = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
-        task["metrics_to_load"], hf_params["metrics_secondary_possible"]
+    pd.paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
+        hf_params["metrics_secondary_possible"], task["metrics_to_load"]
     )
 
-    if paramdict["sweep"]["provider"] == "wandb":
-        paramdict["wandb"] = get_config_content("wandb")
-        paramdict["wandb"]["WANDB_PROJECT"] = paramdict["project_name"]
+    if pd.paramdict["sweep"]["provider"] == "wandb":
+        pd.paramdict["wandb"] = get_config_content("wandb")
+        pd.paramdict["wandb"]["WANDB_PROJECT"] = pd.paramdict["project_name"]
 
     if debug_on_global:
         paramdict_file = "./paramdict.json"
         logger.debug(f"Saving paramdict to '{paramdict_file}'")
         with open(paramdict_file, "w") as outfile:
-            dump(paramdict, outfile, indent=2)
+            dump(pd.paramdict, outfile, indent=2)
 
-    return paramdict
+    return pd
 
 
 def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
@@ -139,7 +141,7 @@ def _parse_sweep_config(sweep: dict) -> dict:
 
 
 def _parse_metrics_to_load(
-    metrics_to_load: list[str], metrics_secondary_possible: list[str]
+    metrics_secondary_possible: list[str], metrics_to_load: list[str]
 ) -> list:
     """Loads secondary metrices"""
 

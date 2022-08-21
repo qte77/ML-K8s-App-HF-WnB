@@ -5,11 +5,13 @@ Hugging Face caches components into '~/.cache/huggingface'
 """
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
-from datasets import load_dataset, load_metric
-from datasets.dataset_dict import DatasetDict
+from typing import Any, Union
+
+from datasets import IterableDataset, Metric, load_dataset, load_metric
+from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .check_sanitize_path import check_and_create_path
+from .check_and_sanitize_path import check_and_create_path
 from .get_and_configure_logger import debug_on_global, get_and_configure_logger
 
 if debug_on_global:
@@ -20,7 +22,7 @@ else:
 
 def get_dataset_hf(
     dataset_name: str, configuration: str = None, save_dir: str = None
-) -> DatasetDict:
+) -> Union[Exception, DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
     """
     Loads a vanilla Hugging Face dataset from a local path if present
     or downloads and saves it to a local path.
@@ -63,14 +65,14 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
         return e
 
     if debug_on_global:
-        ds_train_slice = dataset["train"][0]
+        ds_train_slice = dataset["train"][:1]
         logger.debug(f"{ds_train_slice=}")
 
     return dataset
 
 
 # TODO check return type
-def get_tokenizer_hf(model_name: str = None, save_dir: str = None) -> AutoTokenizer:
+def get_tokenizer_hf(model_name: str = None, save_dir: str = None) -> Any:
     """
     Loads a Hugging Face for the specified model tokenizer from a local path
     if present or downloads and saves it to local path.
@@ -115,7 +117,7 @@ model_doc/auto#transformers.AutoTokenizer\
 
 
 # TODO check return type
-def get_model_hf(model_full_name: str, num_labels: int) -> AutoModel:
+def get_model_hf(model_full_name: str, num_labels: int) -> Any:
     """Downloads the specified model from Hugging Face"""
 
     # check_and_create_path(f"{save_dir}/Models/{modelname}")
@@ -156,7 +158,7 @@ def get_model_hf(model_full_name: str, num_labels: int) -> AutoModel:
     return AutoModel.from_pretrained(model_full_name, num_labels=num_labels)
 
 
-def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[dict]:
+def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[Metric]:
     """Downloads Hugging Face Metrics Builder Scripts"""
 
     # TODO metrics save and load locally possible ?

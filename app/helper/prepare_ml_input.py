@@ -10,8 +10,10 @@ Components could be models, datasets, tokenizers, metrics etc.
 
 from dataclasses import dataclass
 from os import environ as env
+from typing import Any, Union
 
-from datasets.dataset_dict import DatasetDict
+from datasets import IterableDataset, Metric
+from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
 from .get_and_configure_logger import debug_on_global, get_and_configure_logger
@@ -46,7 +48,7 @@ class PipelineOutput:
     tokenizer: AutoTokenizer
     dataset_tokenized: DatasetDict
     model: AutoModel
-    metrics_loaded: list[dict]
+    metrics_loaded: list[Metric]
 
 
 def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
@@ -115,7 +117,7 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
 
 def _get_dataset(
     name: str, configuration: str = None, save_dir: str = None
-) -> DatasetDict:
+) -> Union[Exception, DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
     """
     Downloads the dataset by calling the appropriate provider handling function.
 
@@ -124,7 +126,7 @@ def _get_dataset(
     return get_dataset_hf(name, configuration, save_dir)
 
 
-def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
+def _get_tokenizer(model_full_name: str, save_dir: str = None) -> Any:
     """
     Downloads the tokenizer by calling the appropriate provider handling function.
 
@@ -133,7 +135,7 @@ def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
     return get_tokenizer_hf(model_full_name, save_dir)
 
 
-def _get_metrics_to_load_objects(metrics_to_load: list) -> list[dict]:
+def _get_metrics_to_load_objects(metrics_to_load: list) -> list[Metric]:
     """
     Downloads metrics objects by calling the appropriate provider handling function.
 

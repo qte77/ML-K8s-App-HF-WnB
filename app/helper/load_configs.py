@@ -6,7 +6,7 @@ from typing import Literal, Optional, Union
 
 from omegaconf import OmegaConf
 
-from .check_sanitize_path import sanitize_path
+from .check_and_sanitize_path import sanitize_path
 from .get_and_configure_logger import debug_on_global, get_and_configure_logger
 
 if debug_on_global:
