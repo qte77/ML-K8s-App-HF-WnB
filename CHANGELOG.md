@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ---
 
+[2.2.0] - 2022-08-21
+---
+
 ### Added
 
 - Local saving and loading of Hugging Face models and Metric Builder Scripts
