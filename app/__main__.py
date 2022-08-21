@@ -1,20 +1,63 @@
 #!/usr/bin/env python
 """Redirects to entrypoint of the app"""
 
-from os import environ as env
-from sys import argv, exit
 
-if True:
-    from .helper.configure_logger import set_global_debug_state_and_logger
+def _parse_args() -> tuple[str, tuple[bool]]:
+    """
+    Parses argv and returns the inputs.
 
-    set_logger = True if argv[1:2] and (argv[1:2])[0].lower() == "true" else False
-    env["APP_DEBUGGER_ON"] = str(set_logger)
-    set_global_debug_state_and_logger(set_logger)
+    Returns tuple of
+    - String of app mode out of `["train", "infer"]`
+    - Tuple of bools to output debug and/or sysinfo
+    """
 
-    if argv[2:3] and (argv[2:3])[0].lower() == "true":
-        env["APP_SHOW_SYSINFO"] = "set_this_to_None_if_not_needed"
+    desc = "Create pipeline object parametrised with parameter object and execute task."
+    modes = ["train", "infer"]
 
-from .app import main
+    parser = ArgumentParser(prog="app", description=desc)
+    parser.add_argument(
+        "-m",
+        "--mode",
+        type=str,
+        default=modes[0],
+        choices=modes,
+        help="change app mode",
+    )
+    parser.add_argument(
+        "-d", "--debug", action="store_true", help="show debug messages"
+    )
+    parser.add_argument(
+        "-i", "--sysinfo", action="store_true", help="show system information"
+    )
+    args = parser.parse_args()
+
+    return (args.mode, (args.debug, args.sysinfo))
+
+
+def _set_global_state(show_debug: bool = False, show_sysinfo: bool = False):
+    """TODO"""
+
+    if show_sysinfo:
+        env["APP_SHOW_SYSINFO"] = str(show_sysinfo)
+
+    try:
+        set_global_debug_state_and_logger(show_debug, show_sysinfo)
+    except Exception as e:
+        return e
+
 
 if __name__ == "__main__":
-    exit(main())
+
+    from argparse import ArgumentParser
+    from os import environ as env
+    from sys import exit
+
+    from .helper.configure_logger import set_global_debug_state_and_logger
+
+    app_mode, app_debug = _parse_args()
+    _set_global_state(*app_debug)
+
+    # late import to account for gloab vars set by configure_logger
+    from .app import main
+
+    exit(main(app_mode))

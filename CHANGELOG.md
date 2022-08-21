@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local saving and loading of Hugging Face models and Metric Builder Scripts
 - Missing docstrings to functions
 - `/tests` for prospective TDD with pytest
+- `argparse` to `__main__.py`
 
 ### Changed
 

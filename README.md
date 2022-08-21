@@ -248,6 +248,8 @@ TODO [↑](#app-k8s-hf-wnb)
   * This package manages loading of configs from json or yaml
 * [x] Align to [PEP 257 – Docstring Conventions](https://peps.python.org/pep-0257/)
   * Multi-line docstrings
+* [x] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
+  * Fetch user or command input
 * [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `typing` and `dataclasses` only annotat for hinting
@@ -258,7 +260,6 @@ TODO [↑](#app-k8s-hf-wnb)
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
   * Difference between Abstraction vs Decoupling
   * Difference between Cohesion and Coupling
-* [ ] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
 * [ ] Check `dataclasses` whether
   * it is suitable for functional programming

@@ -26,7 +26,9 @@ def main(mode: APP_MODES = "train") -> None:
     - Downloads the Metrics Builder Scripts from HF and returns their objects
     - Sets the environment variables the sweep provider needs
     - The task performed depends on the input of the
-    `APP_MODES: Final = Literal["train", "infer"]`.
+
+    Expects
+    - `mode` as `Literal["train", "infer"]`
     """
 
     # TODO remove mode check with pydantic
@@ -39,9 +41,9 @@ def main(mode: APP_MODES = "train") -> None:
         logger_global.debug(f"DEBUG is set to {logger_global=}")
         logger_global.error(f"ERROR is set to {logger_global=}")
 
-        if "APP_SHOW_SYSINFO" in env:
-            for item in get_system_info():
-                logger_global.debug(item)
+    if "APP_SHOW_SYSINFO" in env:
+        for item in get_system_info():
+            logger_global.debug(item)
 
     # pipeline_objects: Pipeline_Output = prepare_pipeline(get_param_dict())
     _: PipelineOutput = prepare_pipeline(get_param_dict())

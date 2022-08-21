@@ -1,21 +1,25 @@
 #!/usr/bin/env python
 """"Load [logger_name] from [root]/[config_path]/[config_fn]"""
 
-from logging import Logger, debug, error, getLogger
+from logging import Logger, getLogger, root
 from logging.config import fileConfig
 from os.path import abspath, dirname, exists, join, split
 
 
-def set_global_debug_state_and_logger(debug_on: bool = False):
+def set_global_debug_state_and_logger(
+    show_debug: bool = False, show_sysinfo: bool = False
+):
     """Toggle global debug state and set global logger"""
 
-    if debug_on is not True:
-        debug_on = False
+    _toggle_global_debug_state(show_debug)
 
-    debug(f"{debug_on=}")
+    root.debug("HHHII")
 
-    _toggle_global_debug_state(debug_on)
-    _set_global_logger(debug_on)
+    try:
+        _set_global_logger(show_debug or show_sysinfo)
+    except Exception as e:
+        root.error(e)
+        return e
 
 
 def _toggle_global_debug_state(debug_on: bool = False):
@@ -29,12 +33,19 @@ def _set_global_logger(debug_on: bool = False):
     """
     Set `global logger_global` relative to `debug_on`.
 
-    - `False`: `None`
+    Returns
+    - `False` or `Exception`: `None`
     - `True`: `Logger`
     """
 
     global logger_global
-    logger_global = _configure_and_get_logger() if debug_on else None
+
+    try:
+        logger_global = _configure_and_get_logger() if debug_on else None
+    except Exception as e:
+        logger_global = None
+        root.error(e)
+        return e
 
 
 def _configure_and_get_logger(
@@ -60,7 +71,7 @@ https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig\
     abs_path = join(abs_path, config_path, config_fn)
 
     if not exists(abs_path):
-        error("Can not find config. Exiting.")
+        root.error("Can not find config. Exiting.")
         return FileNotFoundError
 
     # TODO simpleExample not loaded from logging.conf
@@ -68,5 +79,5 @@ https://docs.python.org/3/library/logging.config.html#logging.config.fileConfig\
         fileConfig(abs_path)
         return getLogger(logger_name)
     except Exception as e:
-        error(e)
+        root.error(e)
         return e
