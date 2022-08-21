@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.3.0] - 2022-08-21
+---
+
 ### Added
 
 - Tool `interrogate` for coverage of docstrings
