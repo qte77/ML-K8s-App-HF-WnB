@@ -2,8 +2,7 @@
 """Test the load_hf_components"""
 
 from pytest import mark
-from transformers import BertModel, DistilBertModel, ElectraModel
-from transformers.data.datasets.glue import GlueDataset
+from transformers import BertModel, DebertaModel, DistilBertModel, ElectraModel
 
 if True:
     from app.helper.get_and_configure_logger import (
@@ -26,9 +25,10 @@ if True:
                 "bert-base-uncased",
                 "distilbert-base-uncased",
                 "google/electra-small-discriminator",
+                "microsoft/deberta-base",
             ],
-            [2, 2, 2],
-            [BertModel, DistilBertModel, ElectraModel],
+            [2, 2, 2, 2],
+            [BertModel, DistilBertModel, ElectraModel, DebertaModel],
         )
     ),
 )
@@ -36,8 +36,7 @@ def test_get_model_hf(model_full_name, num_labels, type_expected):
     """TODO"""
     # Act
     model = get_model_hf(model_full_name, num_labels)
-    logger.debug(f"\n{type(model)=}")
+    logger.debug("")
+    logger.debug(f"{type(model)=}")
     # Assert
     assert type(model) == type_expected
-
-    GlueDataset.get_labels()

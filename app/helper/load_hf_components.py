@@ -84,6 +84,10 @@ model_doc/auto#transformers.AutoTokenizer\
 ).
     """
 
+    if not model_name and not save_dir:
+        logger.error(f"{ValueError}. One arg needs to be provided.")
+        return ValueError
+
     save_path, path_exists = check_and_create_path(f"{save_dir}/Tokenizer/{model_name}")
     tokenizer_load_params = {
         "pretrained_model_name_or_path": save_path if path_exists else model_name,
@@ -117,8 +121,12 @@ model_doc/auto#transformers.AutoTokenizer\
 
 
 # TODO check return type
-def get_model_hf(model_full_name: str, num_labels: int) -> Any:
-    """Downloads the specified model from Hugging Face"""
+def get_model_hf(model_full_name: str, num_labels: int, save_dir: str) -> Any:
+    """
+    Downloads the specified model from Hugging Face.
+
+    The models get downloaded to ~/.cache/huggingface first, then saved to {save_dir}
+    """
 
     # check_and_create_path(f"{save_dir}/Models/{modelname}")
     # try:
