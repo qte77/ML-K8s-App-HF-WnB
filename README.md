@@ -228,7 +228,7 @@ make local_import_perf
 
 An example how the visualized import time could look like
 
-[<img src="./assets/tuna_importtime_light.PNG" alt="python importtime tuna visualized" width="90%" height="90%" />](./assets/tuna_importtime_dark.PNG#gh-light-mode-only)
+[<img src="./assets/tuna_importtime_light.PNG" alt="python importtime tuna visualized" width="90%" height="90%" />](./assets/tuna_importtime_light.PNG#gh-light-mode-only)
 [<img src="./assets/tuna_importtime_dark.PNG" alt="python importtime tuna visualized" width="90%" height="90%" />](./assets/tuna_importtime_dark.PNG#gh-dark-mode-only)
 
 TODO [↑](#app-k8s-hf-wnb)
