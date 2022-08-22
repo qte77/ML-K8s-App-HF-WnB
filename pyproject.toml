@@ -78,7 +78,7 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 # https://pypi.org/project/interrogate/
 [tool.interrogate]
 fail-under = 95
-exclude = ["setup.py", "docs", "build"]
+exclude = ["setup.py", "docs", "build", "tests"]
 # ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
 # possible values: 0 (minimal output), 1 (-v), 2 (-vv)
 verbose = 0

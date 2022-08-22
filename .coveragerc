@@ -1,0 +1,8 @@
+# https://coverage.readthedocs.io/en/coverage-5.5/config.html
+[run]
+source=app
+omit =
+    */__main__.py
+
+[report]
+show_missing=True

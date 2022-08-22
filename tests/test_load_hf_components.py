@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Test the load_hf_components"""
 
-from pytest import mark
+from pytest import fixture, mark
 from transformers import BertModel, DebertaModel, DistilBertModel, ElectraModel
 
 if True:
@@ -40,3 +40,18 @@ def test_get_model_hf(model_full_name, num_labels, type_expected):
     logger.debug(f"{type(model)=}")
     # Assert
     assert type(model) == type_expected
+
+
+class TimeLine:
+    def __init__(self, instances=[0, 0, 0]):
+        self.instances = instances
+
+
+@fixture(params=[[-2, 2, 30], [2, 4, 0], [6, 8, 10]])
+def timeline(request):
+    return TimeLine(request.param)
+
+
+def test_timeline(timeline):
+    for instance in timeline.instances:
+        assert instance % 2 == 0

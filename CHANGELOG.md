@@ -21,10 +21,12 @@ Types of changes:
 ### Added
 
 - `test_load_hf_components:test_get_model_hf()` to assert model type
+- `coverage` for reporting of functions covered with `pytest`
 
 ### Changed
 
 - `README.md`
+- `make.bat`
 
 [2.4.0] - 2022-08-21
 ---

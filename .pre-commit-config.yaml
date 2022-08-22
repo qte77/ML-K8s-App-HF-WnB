@@ -88,6 +88,7 @@ repos:
   hooks:
   - id: pyupgrade
     args: [--py37-plus]
+
 # use on pre-commit-hooks?
 #
 # - id: hadolint-docker

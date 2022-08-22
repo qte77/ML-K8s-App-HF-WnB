@@ -121,7 +121,7 @@ model_doc/auto#transformers.AutoTokenizer\
 
 
 # TODO check return type
-def get_model_hf(model_full_name: str, num_labels: int, save_dir: str) -> Any:
+def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) -> Any:
     """
     Downloads the specified model from Hugging Face.
 
