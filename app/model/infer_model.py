@@ -6,9 +6,9 @@
 # from torch import cuda, no_grad
 
 
-from ..helper.prepare_ml_input import PipelineOutput
+from ..utils.prepare_ml_input import PipelineOutput
 
-# from ..helper.configure_logger import debug_on_global, logger_global
+# from ..utils.configure_logger import debug_on_global, logger_global
 
 
 def infer_model(pipe_out: PipelineOutput = None) -> str:  # TODO ret type

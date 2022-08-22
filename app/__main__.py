@@ -10,12 +10,12 @@ The state of the app is comprised of
 
 from sys import exit
 
-from .helper.get_and_configure_logger import (
+from .utils.get_and_configure_logger import (
     get_and_configure_logger,
     toggle_global_debug_state,
 )
-from .helper.get_and_configure_system_info import toggle_global_sysinfo
-from .helper.parse_args import parse_args
+from .utils.get_and_configure_system_info import toggle_global_sysinfo
+from .utils.parse_args import parse_args
 
 if __name__ == "__main__":
 

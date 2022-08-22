@@ -5,10 +5,10 @@ from datasets import Metric  # , load_metric
 # from numpy import argmax
 from transformers import Trainer  # , TrainingArguments
 
-# from ..helper.prepare_sweep import start_sweep
-from ..helper.prepare_ml_input import PipelineOutput
+# from ..utils.prepare_sweep import start_sweep
+from ..utils.prepare_ml_input import PipelineOutput
 
-# from ..helper.configure_logger import debug_on_global, logger_global
+# from ..utils.configure_logger import debug_on_global, logger_global
 
 # from wandb import log
 

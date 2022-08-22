@@ -25,6 +25,7 @@ Types of changes:
 
 ### Changed
 
+- Renamed `app/helper`to `app/utils`
 - `README.md`
 - `make.bat`
 

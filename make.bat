@@ -77,6 +77,7 @@ goto:eof
     echo black && %perun% black .
     echo flake8 && %perun% flake8
     echo interrogate && %perun% interrogate
+    echo mypy will be skipped
     @REM echo mypy && %perun% mypy .
     setlocal
     set skip=mypy,interrogate
