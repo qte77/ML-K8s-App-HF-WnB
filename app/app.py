@@ -4,19 +4,21 @@
 from sys import path
 from typing import Literal
 
-from .utils.get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .utils.get_and_configure_logger import debug_on_global
 from .utils.get_and_configure_system_info import debug_system_info, show_sysinfo_global
 from .utils.parse_configs_into_paramdict import get_param_dict
 from .utils.prepare_ml_input import PipelineOutput, prepare_pipeline
 
-if debug_on_global or show_sysinfo_global:
-    logger = get_and_configure_logger(__name__)
+if debug_on_global:
+    from logging import getLogger
+
+    logger = getLogger(__name__)
 
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
 
 
-def main(mode: Literal["train", "infer"] = "train") -> None:
+def main(mode: Literal["train", "infer"] = "train"):
     """
     Create pipeline object parametrised with parameter object and execute task.
 

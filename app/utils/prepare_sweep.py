@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """Prepare sweep"""
 # from wandb import agent, login, sweep
+# from .get_and_configure_logger import debug_on_global
+
+# from logging import getLogger
+#
+# logger = getLogger(__name__)
 
 
 def _login_to_provider(provider: str) -> None:

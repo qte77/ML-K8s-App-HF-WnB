@@ -1,19 +1,22 @@
 @echo off
 rem For Windows to replace Makefile
-setlocal enabledelayedexpansion
+setlocal EnableDelayedExpansion EnableExtensions
 set LF=^
 
 
 set "prep=errorcodes!LF!messages!LF!commands"
 set options=install update editable wheel test check commit
 set options=%options% bump importtime create cleanup
+set arg=%1
 
 for /f %%p in ("!prep!") do call:%%p
+@REM not defined skips the first command, using echo as first
+if not defined %arg% echo goto:help >nul 2>&1
 echo %options% | findstr /i "\<%1\>" >nul && goto:run %1
 
 :help
     echo.
-    if defined %msg_warning% (
+    if defined !msg_warning! (
         echo %msg_warning%
         echo.
     )
@@ -81,8 +84,10 @@ goto:eof
     @REM echo mypy && %perun% mypy .
     setlocal
     set skip=mypy,interrogate
-    echo %skip% will be skipped
-	echo pre-commit && %perun% pre-commit run --all-files
+    @REM not defined skips the first command, using echo as first
+    if not defined %skip% echo set skip=Nothing >nul 2>&1
+    echo pre-commit: %skip% will be skipped
+	%perun% pre-commit run --all-files
     endlocal
 goto:eof
 

@@ -5,6 +5,7 @@ Hugging Face caches components into '~/.cache/huggingface'
 """
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
+from logging import getLogger
 from typing import Any, Union
 
 from datasets import IterableDataset, Metric, load_dataset, load_metric
@@ -12,12 +13,9 @@ from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
 from .check_and_sanitize_path import check_and_create_path
-from .get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .get_and_configure_logger import debug_on_global
 
-if debug_on_global:
-    logger = get_and_configure_logger(__name__)
-else:
-    from logging import error
+logger = getLogger(__name__)
 
 
 def get_dataset_hf(
@@ -61,7 +59,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
                 logger.debug(f"Saving dataset to {save_path=}")
             dataset.save_to_disk(save_path)
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
     if debug_on_global:

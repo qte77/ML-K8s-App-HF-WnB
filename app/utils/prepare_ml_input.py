@@ -16,7 +16,7 @@ from datasets import IterableDataset, Metric
 from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .get_and_configure_logger import debug_on_global
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
@@ -27,7 +27,9 @@ from .load_hf_components import (
 from .parse_configs_into_paramdict import ParamDict
 
 if debug_on_global:
-    logger = get_and_configure_logger(__name__)
+    from logging import getLogger
+
+    logger = getLogger(__name__)
 else:
     from logging import error
 

@@ -8,19 +8,17 @@
 
 from dataclasses import dataclass
 from json import dump
+from logging import getLogger
 from os import environ as env
 from typing import Union
 
 from torch import device
 from torch.cuda import is_available
 
-from .get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .get_and_configure_logger import debug_on_global
 from .load_configs import get_config_content, get_defaults, load_defaults
 
-if debug_on_global:
-    logger = get_and_configure_logger(__name__)
-else:
-    from logging import error
+logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)
@@ -71,7 +69,7 @@ def get_param_dict() -> ParamDict:
         paramdict["model_name"] = task_model["name"]
         paramdict["model_full_name"] = task_model["full_name"]
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
 
     paramdict["metrics"]["metric_to_optimize"] = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
@@ -99,7 +97,7 @@ def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
     try:
         return datasets[dataset.lower()]
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -119,7 +117,7 @@ def _parse_metric_to_optimize_config(
         ]
         return metricsobj
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -146,7 +144,7 @@ def _parse_metrics_to_load(
     try:
         return [met for met in metrics_to_load if met in metrics_secondary_possible]
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -156,7 +154,7 @@ def _create_model_full_name(models: dict, model: str) -> str:
     try:
         return models.get(model.lower(), ["Invalid model", ""])["full_name"]
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -169,7 +167,7 @@ def _create_project_name(
     try:
         return f"{model}-{dataset_name}-{device}{suffix}".upper()
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -183,5 +181,5 @@ def _get_device() -> str:
         try:
             return device("cuda" if is_available() else "cpu")
         except Exception as e:
-            logger.error(e) if debug_on_global else error(e)
+            logger.error(e)
             return e

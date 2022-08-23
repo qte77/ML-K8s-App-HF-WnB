@@ -1,20 +1,20 @@
 #!/usr/bin/env python
 """Test the load_hf_components"""
 
+from logging import getLogger
+
 from pytest import fixture, mark
 from transformers import BertModel, DebertaModel, DistilBertModel, ElectraModel
 
+from app.utils.get_and_configure_logger import toggle_global_debug_state
+
 if True:
-    from app.helper.get_and_configure_logger import (
-        get_and_configure_logger,
-        toggle_global_debug_state,
-    )
-
     toggle_global_debug_state(False)
-    logger = get_and_configure_logger()
 
-    # delayed loading to set get_and_configure_logger:debug_on_global
-    from app.helper.load_hf_components import get_model_hf
+# delayed loading to set get_and_configure_logger:debug_on_global
+from app.utils.load_hf_components import get_model_hf
+
+logger = getLogger(__name__)
 
 
 @mark.parametrize(

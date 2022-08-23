@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 """Load configuration files"""
 
+from logging import getLogger
 from os.path import join
 from typing import Literal, Optional, Union
 
 from omegaconf import OmegaConf
 
 from .check_and_sanitize_path import sanitize_path
-from .get_and_configure_logger import debug_on_global, get_and_configure_logger
+from .get_and_configure_logger import debug_on_global
 
-if debug_on_global:
-    logger = get_and_configure_logger(__name__)
-else:
-    from logging import error
+logger = getLogger(__name__)
 
 
 def load_defaults(
@@ -68,7 +66,7 @@ def get_keyfile_content(provider: str = "wandb") -> dict:
         # TODO refactor to less convoluted call
         return _load_config(keyfile["base"], keyfile["dir"])
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -88,7 +86,7 @@ def _load_config(
         config = OmegaConf.load(join(cfg_path, f"{cfg_filename_ex_ext}.yml"))
         return OmegaConf.to_object(config)
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 

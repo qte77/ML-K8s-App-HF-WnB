@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 """Returns information regarding the system the app is running on"""
 
+from logging import getLogger
 from subprocess import check_output
 
-from .get_and_configure_logger import get_and_configure_logger
-
-logger = get_and_configure_logger(__name__)
+logger = getLogger(__name__)
 
 
 def toggle_global_sysinfo(show_sysinfo: bool = False):

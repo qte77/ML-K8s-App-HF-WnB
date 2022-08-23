@@ -3,30 +3,27 @@
 
 # TODO test whether error() gets thrown by root
 
-from logging import Logger, getLogger, root
+from logging import getLogger
 from logging.config import fileConfig
 from os.path import abspath, dirname, exists, join, split
 
+logger = getLogger(__name__)
 
-def toggle_global_debug_state(debug_on: bool = False):
+
+def toggle_global_debug_state(show_debug: bool = False):
     """Toggle `global debug_on_global` to `debug_on`"""
 
+    if show_debug:
+        logger.debug(f"{__package__=}")
+
     global debug_on_global
-    debug_on_global = debug_on
+    debug_on_global = show_debug
 
 
-def get_and_configure_logger(
-    logger_name: str = "app",
-    config_fn: str = "logging.conf",
-    config_path: str = "config",
-) -> Logger:
-    """
-    Loads a logger from app/package root.
+def configure_logger(config_fn: str = "logging.conf", config_path: str = "config"):
+    """Loads o logger configuration from the provided config file.
 
-    - Configures the logger or exits if logger is not existing or error occurs
-    - The logger with [logger_name] is loaded from the provided config file
-    - The path to the config is constructed from 'root/[config_path]/[config_fn]'
-
+    The path to the config is constructed from 'root/[config_path]/[config_fn]'.
     See Python documentation for [logging](\
 https://docs.python.org/3/library/logging.html\
 ) and [logging.config.fileConfig](\
@@ -39,12 +36,11 @@ the [Logging Cookbook](https://docs.python.org/3/howto/logging-cookbook.html).
     abs_path = join(abs_path, config_path, config_fn)
 
     if not exists(abs_path):
-        root.error("Can not find config. Exiting.")
+        logger.error("Can not find config. Exiting.")
         return FileNotFoundError
 
     try:
         fileConfig(abs_path)
-        return getLogger(logger_name)
     except Exception as e:
-        root.error(e)
+        logger.error(e)
         return e
