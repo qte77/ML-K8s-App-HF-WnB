@@ -11,7 +11,7 @@ The state of the app is comprised of
 from logging import getLogger
 from sys import exit
 
-from .utils.get_and_configure_logger import configure_logger, toggle_global_debug_state
+from .utils.configure_logging import configure_logger, toggle_global_debug_state
 from .utils.get_and_configure_system_info import toggle_global_sysinfo
 from .utils.parse_args import parse_args
 

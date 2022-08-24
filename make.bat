@@ -6,7 +6,7 @@ set LF=^
 
 set "prep=errorcodes!LF!messages!LF!commands"
 set options=install update editable wheel test check commit
-set options=%options% bump importtime create cleanup
+set options=%options% push bump importtime create cleanup
 set arg=%1
 
 for /f %%p in ("!prep!") do call:%%p
@@ -31,6 +31,7 @@ echo %options% | findstr /i "\<%1\>" >nul && goto:run
     echo qual %TAB% test   %TAB% Runs pytest and coverage report
     echo %TAB% check  %TAB% Runs static tests against codebase
     echo scm %TAB% commit %TAB% %%2 taken as git msg, !!! use with "git msg" !!!
+    echo %TAB% push   %TAB% Adds, commits and pushes if checks and tests passed
     echo %TAB% bump   %TAB% Bumps the version at "part"
     echo doc %TAB% create %TAB% Creates docu from docstrings
     echo misc %TAB% importtime %TAB% Invokes Python import time and tuna
@@ -108,6 +109,15 @@ goto:eof
             echo Error in pipeline. Nothing commited.
         )
         endlocal
+    )
+goto:eof
+
+:push
+    call:commit %1
+    git push && (
+        echo Push successfull.
+    ) || (
+        Error occured while pushing. Nothing pushed.
     )
 goto:eof
 
