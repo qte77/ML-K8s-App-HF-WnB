@@ -6,7 +6,7 @@
 # TODO dataclass as code smell ?
 # TODO dataclass and FP ?
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from json import dump
 from logging import getLogger
 from os import environ as env
@@ -16,21 +16,32 @@ from torch import device
 from torch.cuda import is_available
 
 from .configure_logging import debug_on_global
-from .load_configs import get_config_content, get_defaults, load_defaults
+from .load_configs import (
+    get_config_content,
+    get_defaults,
+    load_defaults_into_load_configs_module,
+)
 
 logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)
 class ParamDict:
-    """
-    Holds structured mutable data in the form of
-    - `paramdict` as `dict[str, Union[str, list, dict]]`
-    """
+    """Holds structured parameter data."""
 
-    paramdict: dict[
-        str, Union[str, list[Union[str, list, dict]], dict[Union[str, list, dict]]]
-    ]
+    dataset: dict[str, Union[str, list]]
+    device: str
+    metrics: dict[str, Union[dict[str, str], list]]
+    model_name: str
+    model_full_name: str
+    project_name: str
+    provider_env: dict[str, dict[str, str]]
+    save_dir: str
+    sweep: dict[str, Union[str, int, bool, dict]]
+
+    # paramdict: dict[
+    #     str, Union[str, list[Union[str, list, dict]], dict[Union[str, list, dict]]]
+    # ]
 
 
 def get_param_dict() -> ParamDict:
@@ -42,53 +53,50 @@ def get_param_dict() -> ParamDict:
     """
 
     if debug_on_global:
-        logger.debug("constructing parameter dictionary")
+        logger.debug("Constructing parameter object as Type ParamDict")
 
     # TODO alters data and behavior of other class, no FP ?
-    load_defaults()
+    load_defaults_into_load_configs_module()
 
     hf_params = get_config_content("huggingface")
     task = get_config_content("task")
     task_model = hf_params["models"][task["model"]]
 
-    paramdict = {}
-    paramdict["save_dir"] = get_defaults()
-    paramdict["metrics"] = {}
-    # paramdict["savedir"] =
-    paramdict["sweep"] = _parse_sweep_config(get_config_content("sweep"))
-    paramdict["device"] = str(_get_device())
-    paramdict["dataset"] = _parse_dataset_config(hf_params["datasets"], task["dataset"])
-    paramdict["project_name"] = _create_project_name(
-        task["model"],
-        paramdict["dataset"]["dataset"],
-        paramdict["device"],
-        paramdict["sweep"]["is_sweep"],
+    paramdict = ParamDict(
+        save_dir=get_defaults("save_dir"),
+        sweep=_parse_sweep_config(get_config_content("sweep")),
+        device=str(_get_device()),
+        dataset=_parse_dataset_config(hf_params["datasets"], task["dataset"]),
+        project_name="",
+        model_name=task_model["name"],
+        model_full_name=task_model["full_name"],
+        metrics={},
+        provider_env={},
     )
 
-    try:
-        paramdict["model_name"] = task_model["name"]
-        paramdict["model_full_name"] = task_model["full_name"]
-    except Exception as e:
-        logger.error(e)
+    paramdict.project_name = _create_project_name(
+        task["model"],
+        paramdict.dataset["dataset"],
+        paramdict.device,
+        paramdict.sweep["is_sweep"],
+    )
 
-    paramdict["metrics"]["metric_to_optimize"] = _parse_metric_to_optimize_config(
+    paramdict.metrics["metric_to_optimize"] = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    paramdict["metrics"]["metrics_to_load"] = _parse_metrics_to_load(
+    paramdict.metrics["metrics_to_load"] = _parse_metrics_to_load(
         hf_params["metrics_secondary_possible"], task["metrics_to_load"]
     )
 
-    if paramdict["sweep"]["provider"] == "wandb":
-        paramdict["wandb"] = get_config_content("wandb")
-        paramdict["wandb"]["WANDB_PROJECT"] = paramdict["project_name"]
+    if paramdict.sweep["provider"] == "wandb":
+        paramdict.provider_env = {}
+        paramdict.provider_env["wandb"] = get_config_content("wandb")
+        paramdict.provider_env["wandb"]["WANDB_PROJECT"] = paramdict.project_name
 
     if debug_on_global:
-        paramdict_file = "./paramdict.json"
-        logger.debug(f"Saving paramdict to '{paramdict_file}'")
-        with open(paramdict_file, "w") as outfile:
-            dump(paramdict, outfile, indent=2)
+        _save_dict_to_file(asdict(paramdict))
 
-    return ParamDict(paramdict)
+    return paramdict
 
 
 def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
@@ -183,3 +191,11 @@ def _get_device() -> str:
         except Exception as e:
             logger.error(e)
             return e
+
+
+def _save_dict_to_file(object_to_save: object, save_file: str = "./paramdict.json"):
+    """Saves <paramdict>: ParamDict to [paramdict_file]: str"""
+
+    logger.debug(f"Saving to '{save_file}' from {object_to_save=}")
+    with open(save_file, "w") as outfile:
+        dump(object_to_save, outfile, indent=2)

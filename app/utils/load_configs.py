@@ -13,9 +13,9 @@ from .configure_logging import debug_on_global
 logger = getLogger(__name__)
 
 
-def load_defaults(
+def load_defaults_into_load_configs_module(
     cfg_defaults_fn: str = "defaults", cfg_path: str = "app/config"
-) -> None:
+):
     """
     Load the defaults from '<cfg_defaults_fn>' and creates
     a global copy inside the module
@@ -28,7 +28,7 @@ def load_defaults(
         logger.debug(f"{default_configs=}")
 
 
-def get_defaults(key_to_search_and_return: str = "save_dir") -> str:
+def get_defaults(key_to_search_and_return: str) -> str:
     """
     Searches for '<key_to_search_and_return>' inside 'defaults.yml'
     and returns its value if found
@@ -38,7 +38,7 @@ def get_defaults(key_to_search_and_return: str = "save_dir") -> str:
 
 def get_config_content(
     cfg_filename_ex_ext: str = "defaults", cfg_path: str = "app/config"
-) -> dict:
+) -> dict[str, str]:
     """Returns config objects"""
 
     if debug_on_global:
@@ -52,18 +52,20 @@ def get_config_content(
 
 
 def get_keyfile_content(provider: str = "wandb") -> dict:
-    """Returns keyfile objects"""
+    """Returns keyfile objects. Only WandB implemented !"""
+
+    if not provider.casefold() == "wandb":
+        msg = "Provider not implemented."
+        logger.error(msg)
+        return msg
 
     try:
         # TODO handle multiple keyfiles
         keyfile_default = "~/wandb.key.yml" if provider == "wandb" else "~/key.yml"
         keyfiles = default_configs.get("keyfiles", keyfile_default)
         keyfile = sanitize_path(keyfiles[provider])
-
         if debug_on_global:
             logger.debug(f"{keyfile=}")
-
-        # TODO refactor to less convoluted call
         return _load_config(keyfile["base"], keyfile["dir"])
     except Exception as e:
         logger.error(e)

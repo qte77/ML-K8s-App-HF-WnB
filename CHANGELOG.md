@@ -27,6 +27,7 @@ Types of changes:
 
 - Renamed `app/helper`to `app/utils`
 - Renamed `utils/configure_logging.py`
+- Dataclass `ParamDict` with fields and type annotations
 - `README.md`
 - `make.bat`
 

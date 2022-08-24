@@ -115,7 +115,7 @@ goto:eof
 :push
     call:commit %1
     git push && (
-        echo Push successfull.
+        echo Push successful.
     ) || (
         Error occured while pushing. Nothing pushed.
     )

@@ -9,6 +9,7 @@ Components could be models, datasets, tokenizers, metrics etc.
 # e.g. load_hf_components
 
 from dataclasses import dataclass
+from logging import getLogger
 from os import environ as env
 from typing import Any, Union
 
@@ -16,7 +17,7 @@ from datasets import IterableDataset, Metric
 from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .get_and_configure_logger import debug_on_global
+from .configure_logging import debug_on_global
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
@@ -26,12 +27,7 @@ from .load_hf_components import (
 )
 from .parse_configs_into_paramdict import ParamDict
 
-if debug_on_global:
-    from logging import getLogger
-
-    logger = getLogger(__name__)
-else:
-    from logging import error
+logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)  # slots only >=3.10
@@ -61,9 +57,7 @@ def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
     Expects a populated `ParamDict` and returns a `PipelineOutput`.
     """
 
-    provider = paramdict.paramdict["sweep"]["provider"]
-    _set_provider_env(provider, paramdict.paramdict[provider])
-
+    _set_provider_env(paramdict.sweep["provider"], paramdict.provider_env)
     return _get_large_components(paramdict)
 
 
@@ -186,7 +180,7 @@ def _get_tokenized_dataset(
             logger.debug(f"{ds_tokenized_train_slice=}")
         return ds_tokenized
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
 
 
@@ -203,20 +197,24 @@ def _get_raw_tokenized_dataset(
     return dataset_plain.map(_tokenize, batched=True)
 
 
-def _set_provider_env(provider: str, provider_param: dict) -> None:
-    """Set the environment parameters for the sweep provider"""
+def _set_provider_env(provider: str, provider_env: dict) -> None:
+    """Set the environment parameters for the sweep provider including API keys"""
+
+    provider_label = provider.upper()
 
     try:
-        for k, v in provider_param.items():
+        env[f"{provider_label}_API_KEY"] = get_keyfile_content(provider)[
+            f"{provider_label}_API_KEY"
+        ]
+        for k, v in provider_env[provider].items():
             env[k] = v
-        env["WANDB_API_KEY"] = get_keyfile_content("wandb")["WANDB_API_KEY"]
         if debug_on_global:
-            logger.debug(f"Environment set for {provider=}")
+            logger.debug(f"Environment set for {provider_label}")
             for s in env:
-                if "WANDB_" in s:
+                if f"{provider_label}_" in s:
                     logger.debug(f"{s}=***") if "API_KEY" in s else logger.debug(
                         f"{s}={env[s]}"
                     )
     except Exception as e:
-        logger.error(e) if debug_on_global else error(e)
+        logger.error(e)
         return e
