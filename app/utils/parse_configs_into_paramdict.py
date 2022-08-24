@@ -39,10 +39,6 @@ class ParamDict:
     save_dir: str
     sweep: dict[str, Union[str, int, bool, dict]]
 
-    # paramdict: dict[
-    #     str, Union[str, list[Union[str, list, dict]], dict[Union[str, list, dict]]]
-    # ]
-
 
 def get_param_dict() -> ParamDict:
     """

@@ -102,13 +102,13 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     # )
     metrics_loaded = ""
 
-    return {
-        "paramdict": paramdict,
-        "tokenizer": tokenizer,
-        "dataset_tokenized": dataset_tokenized,
-        "model": model,
-        "metrics_loaded": metrics_loaded,
-    }
+    return PipelineOutput(
+        paramdict=paramdict,
+        tokenizer=tokenizer,
+        dataset_tokenized=dataset_tokenized,
+        model=model,
+        metrics_loaded=metrics_loaded,
+    )
 
 
 def _get_dataset(
