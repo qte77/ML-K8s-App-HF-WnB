@@ -8,7 +8,7 @@ from typing import Literal, Optional, Union
 from omegaconf import OmegaConf
 
 from .check_and_sanitize_path import sanitize_path
-from .get_and_configure_logger import debug_on_global
+from .configure_logging import debug_on_global
 
 logger = getLogger(__name__)
 

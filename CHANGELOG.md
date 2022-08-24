@@ -26,6 +26,7 @@ Types of changes:
 ### Changed
 
 - Renamed `app/helper`to `app/utils`
+- Renamed `utils/configure_logging.py`
 - `README.md`
 - `make.bat`
 

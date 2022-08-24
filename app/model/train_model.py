@@ -8,7 +8,7 @@ from transformers import Trainer  # , TrainingArguments
 # from ..utils.prepare_sweep import start_sweep
 from ..utils.prepare_ml_input import PipelineOutput
 
-# from ..utils.configure_logger import debug_on_global, logger_global
+# from ..utils.configure_logging import debug_on_global
 
 # from wandb import log
 

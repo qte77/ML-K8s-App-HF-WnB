@@ -8,7 +8,7 @@
 
 from ..utils.prepare_ml_input import PipelineOutput
 
-# from ..utils.configure_logger import debug_on_global, get_logger
+# from ..utils.configure_logging import debug_on_global
 
 
 def infer_model(pipe_out: PipelineOutput = None) -> str:  # TODO ret type

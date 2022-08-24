@@ -15,7 +15,7 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .get_and_configure_logger import debug_on_global
+from .configure_logging import debug_on_global
 from .load_configs import get_config_content, get_defaults, load_defaults
 
 logger = getLogger(__name__)

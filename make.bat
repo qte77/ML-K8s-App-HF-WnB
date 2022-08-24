@@ -12,7 +12,7 @@ set arg=%1
 for /f %%p in ("!prep!") do call:%%p
 @REM not defined skips the first command, using echo as first
 if not defined %arg% echo goto:help >nul 2>&1
-echo %options% | findstr /i "\<%1\>" >nul && goto:run %1
+echo %options% | findstr /i "\<%1\>" >nul && goto:run
 
 :help
     echo.
@@ -101,7 +101,12 @@ goto:eof
     ) else (
         setlocal
         set skip=mypy,interrogate
-        %perun% git commit -m %1 || echo "%msg_test_fail%"
+        call:test
+        if ERRORLEVEL 0 (
+            %perun% git commit -m %1 || echo "%msg_test_fail%"
+        ) else (
+            echo Error in pipeline. Nothing commited.
+        )
         endlocal
     )
 goto:eof

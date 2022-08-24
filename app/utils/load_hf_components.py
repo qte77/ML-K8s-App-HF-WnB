@@ -13,7 +13,7 @@ from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
 from transformers import AutoModel, AutoTokenizer
 
 from .check_and_sanitize_path import check_and_create_path
-from .get_and_configure_logger import debug_on_global
+from .configure_logging import debug_on_global
 
 logger = getLogger(__name__)
 

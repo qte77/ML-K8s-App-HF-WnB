@@ -6,7 +6,7 @@ from logging import getLogger
 from pytest import fixture, mark
 from transformers import BertModel, DebertaModel, DistilBertModel, ElectraModel
 
-from app.utils.get_and_configure_logger import toggle_global_debug_state
+from app.utils.configure_logging import toggle_global_debug_state
 
 if True:
     toggle_global_debug_state(False)

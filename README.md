@@ -158,23 +158,27 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ task.yml
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
-│  ├─ helper/
-│  │  ├─ check_sanitize_path.py
-│  │  ├─ configure_logger.py
-│  │  ├─ get_system_info
-│  │  ├─ load_configs.py
-│  │  ├─ load_hf_components.py
-│  │  ├─ parse_configs_into_paramdict.py
-│  │  ├─ prepare_ml_input.py
-│  │  └─ prepare_sweep.py
 │  ├─ model/
 │  │  ├─ infer_model.py
 │  │  └─ train_model.py
+│  ├─ utils/
+│  │  ├─ check_and_sanitize_path.py
+│  │  ├─ configure_logging.py
+│  │  ├─ get_and_configure_system_info.py
+│  │  ├─ load_configs.py
+│  │  ├─ load_hf_components.py
+│  │  ├─ parse_args.py
+│  │  ├─ parse_configs_into_paramdict.py
+│  │  ├─ prepare_ml_input.py
+│  │  └─ prepare_sweep.py
 │  ├─ __main__.py
 │  ├─ __version__.py
 │  ├─ _version.py
 │  ├─ app.py
 │  └─ py.typed
+├─ assets
+│  ├─ tuna_importtime_dark.PNG
+│  └─ tuna_importtime_light.PNG
 ├─ kubernetes/
 │  ├─ base/
 │  │  ├─ deployment.yml
@@ -193,6 +197,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ tests/
 │  └─ test_load_hf_components.py
 ├─ .bumpversion.cfg
+├─ .coveragerc
 ├─ .flake8
 ├─ .gitattributes
 ├─ .gitignore
@@ -207,7 +212,8 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ Pipfile
 ├─ Pipfile.lock
 ├─ pyproject.toml
-└─ README.md
+├─ README.md
+└─ setup.py
 </pre>
 </details>
 

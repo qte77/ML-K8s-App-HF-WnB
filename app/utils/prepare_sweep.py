@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Prepare sweep"""
 # from wandb import agent, login, sweep
-# from .get_and_configure_logger import debug_on_global
+# from .configure_logging import debug_on_global
 
 # from logging import getLogger
 #
