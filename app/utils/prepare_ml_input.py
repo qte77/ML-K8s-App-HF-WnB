@@ -11,7 +11,7 @@ Components could be models, datasets, tokenizers, metrics etc.
 from dataclasses import dataclass
 from logging import getLogger
 from os import environ as env
-from typing import Any, Union
+from typing import Union
 
 from datasets import Metric
 from datasets.dataset_dict import DatasetDict
@@ -38,7 +38,7 @@ class PipelineOutput:
     - `paramdict` as `ParamDict`
     - `tokenizer` as `AutoTokenizer`
     - `dataset_tokenized` as `DatasetDict`
-    - `model`as `AutoModel`
+    - `model` as `AutoModel`
     - `metrics_loaded` as `list[dict]`
     """
 
@@ -123,7 +123,7 @@ def _get_dataset(
     return get_dataset_hf(name, configuration, save_dir)
 
 
-def _get_tokenizer(model_full_name: str, save_dir: str = None) -> Any:
+def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
     """
     Downloads the tokenizer by calling the appropriate provider handling function.
 
