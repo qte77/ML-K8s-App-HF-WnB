@@ -13,8 +13,8 @@ from logging import getLogger
 from os import environ as env
 from typing import Any, Union
 
-from datasets import IterableDataset, Metric
-from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
+from datasets import Metric
+from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
 from .configure_logging import debug_on_global
@@ -64,41 +64,40 @@ def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
 def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     """Loads components needed for the `PipelineOutput`"""
 
-    # TODO read num_labels from ds card
     # dataset_plain = _get_dataset(
-    #     paramdict["dataset"]["dataset"],
-    #     paramdict["dataset"]["configuration"],
-    #     paramdict["save_dir"],
+    #     paramdict.dataset["dataset"],
+    #     paramdict.dataset["configuration"],
+    #     paramdict.save_dir,
     # )
-
-    # num_labels = len(
-    #     dataset_plain["train"].unique(paramdict["dataset"]["col_to_rename"])
-    # )
-    # paramdict["dataset"]["num_labels"] = num_labels
-    # if debug_on_global:
-    #     logger.debug(f"The number of unique labels is {num_labels}")
 
     # tokenizer = _get_tokenizer(
-    #     paramdict["model_full_name"],
-    #     paramdict["save_dir"],
+    #     paramdict.model_full_name,
+    #     paramdict.save_dir,
     # )
     tokenizer = ""
 
-    # dataset_tokenized = _get_tokenized_dataset(
+    # dataset_tokenized = _get_sanitized_tokenized_dataset(
     #     dataset_plain,
     #     tokenizer,
-    #     paramdict["dataset"]["cols_to_tokenize"],
-    #     paramdict["dataset"]["cols_to_remove"],
+    #     paramdict.dataset["cols_to_tokenize"],
+    #     paramdict.dataset["cols_to_remove"],
     # )
     dataset_tokenized = ""
 
-    # paramdict["dataset"]["num_labels"] = 2
-    # model = _get_model(paramdict["model_full_name"],
-    #   paramdict["dataset"]["num_labels"])
-    model = ""
+    # num_labels = len(dataset_tokenized["train"].unique(
+    #   paramdict.dataset["col_to_rename"]
+    # ))
+    # paramdict.dataset["num_labels"] = num_labels
+    # if debug_on_global:
+    #     logger.debug(f"The number of unique labels is {num_labels}")
+
+    paramdict.dataset["num_labels"] = 2
+
+    model = _get_model(paramdict.model_full_name, paramdict.dataset["num_labels"])
+    # model = ""
 
     # metrics_loaded = _get_metrics_to_load_objects(
-    #     paramdict["metrics"]["metrics_to_load"]
+    #   paramdict.metrics["metrics_to_load"]
     # )
     metrics_loaded = ""
 
@@ -113,7 +112,7 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
 
 def _get_dataset(
     name: str, configuration: str = None, save_dir: str = None
-) -> Union[Exception, DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
+) -> Union[Exception, DatasetDict]:
     """
     Downloads the dataset by calling the appropriate provider handling function.
 
@@ -149,7 +148,7 @@ def _get_model(model_full_name: str = None, num_labels: str = None):
     return get_model_hf(model_full_name, num_labels)
 
 
-def _get_tokenized_dataset(
+def _get_sanitized_tokenized_dataset(
     dataset_plain: DatasetDict,
     tokenizer: AutoTokenizer,
     cols_to_tokenize: list[str],
