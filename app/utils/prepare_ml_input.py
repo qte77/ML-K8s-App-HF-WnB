@@ -93,7 +93,9 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
 
     paramdict.dataset["num_labels"] = 2
 
-    model = _get_model(paramdict.model_full_name, paramdict.dataset["num_labels"])
+    model = _get_model(
+        paramdict.model_full_name, paramdict.dataset["num_labels"], paramdict.save_dir
+    )
     # model = ""
 
     # metrics_loaded = _get_metrics_to_load_objects(
@@ -139,13 +141,15 @@ def _get_metrics_to_load_objects(metrics_to_load: list) -> list[Metric]:
     return get_metrics_to_load_objects_hf(metrics_to_load)
 
 
-def _get_model(model_full_name: str = None, num_labels: str = None):
+def _get_model(
+    model_full_name: str = None, num_labels: int = None, save_dir: str = None
+):
     """
     Downloads the model by calling the appropriate provider handling function.
 
     To date only from Hugging Face.
     """
-    return get_model_hf(model_full_name, num_labels)
+    return get_model_hf(model_full_name, num_labels, save_dir)
 
 
 def _get_sanitized_tokenized_dataset(

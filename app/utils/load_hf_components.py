@@ -126,42 +126,35 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     The models get downloaded to ~/.cache/huggingface first, then saved to {save_dir}
     """
 
-    # check_and_create_path(f"{save_dir}/Models/{modelname}")
-    # try:
-    # if not os.path.exists(model_dir):
-    #     print(green, f'Downloading and saving model to {model_dir}')
-    #     os.makedirs(model_dir)
-    #     modelobj = AutoModelForSequenceClassification.from_pretrained(
-    #       modelname, num_labels=num_labels)
-    #     modelobj.save_pretrained(model_dir)
-    # else:
-    #     print(green, f'Loading model from {model_dir}')
-    #     modelobj = AutoModelForSequenceClassification.from_pretrained(model_dir)
-    # except Exception as e:
-    # print(red, e)
+    if not model_full_name and not save_dir:
+        logger.error(f"{ValueError}. One arg needs to be provided.")
+        return ValueError
 
-    # model_dir = None; del model_dir
-
-    # colab
-    # try:
-    #     if not os.path.exists(model_dir):
-    #     print(green, f'Downloading and saving model to {model_dir}')
-    #     os.makedirs(model_dir)
-    #     modelobj = AutoModelForSequenceClassification.from_pretrained(
-    #         model_name,
-    #         num_labels = num_labels
-    #     )
-    #     modelobj.save_pretrained(model_dir)
-    #     else:
-    #     print(green, f'Loading model from {model_dir}')
-    #     modelobj = AutoModelForSequenceClassification.from_pretrained(model_dir)
-    # except Exception as e:
-    #     print(red, e)
+    save_path, path_exists = check_and_create_path(
+        f"{save_dir}/Models/{model_full_name}"
+    )
+    model_load_params = {
+        "pretrained_model_name_or_path": save_path if path_exists else model_full_name,
+        "num_labels": num_labels,
+    }
 
     if debug_on_global:
-        logger.debug(f"Downloading {model_full_name=} with {num_labels=}")
+        if path_exists:
+            logger.debug(f"Loading local copy of {model_full_name=} from {save_path=}")
+        else:
+            logger.debug(f"Downloading {model_full_name=}")
 
-    return AutoModel.from_pretrained(model_full_name, num_labels=num_labels)
+    try:
+        model = AutoModel.from_pretrained(**model_load_params)
+        if not path_exists:
+            if debug_on_global:
+                logger.debug(f"Saving model to {save_path=}")
+            model.save_pretrained(save_path)
+    except Exception as e:
+        logger.error(e)
+        return e
+
+    return model
 
 
 def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[Metric]:

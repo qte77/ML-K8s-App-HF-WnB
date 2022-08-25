@@ -17,6 +17,7 @@ from app.utils.load_hf_components import get_model_hf
 logger = getLogger(__name__)
 
 
+# @mark.usefixtures("save_dir_fixture")
 @mark.parametrize(
     "model_full_name, num_labels, type_expected",
     list(
@@ -32,12 +33,12 @@ logger = getLogger(__name__)
         )
     ),
 )
-def test_get_model_hf(model_full_name, num_labels, type_expected):
+def test_get_model_hf(model_full_name, num_labels, save_dir_fixture, type_expected):
     """TODO"""
     # Act
-    model = get_model_hf(model_full_name, num_labels)
-    logger.debug("")
-    logger.debug(f"{type(model)=}")
+    model = get_model_hf(model_full_name, num_labels, save_dir_fixture)
+    # logger.debug("")
+    # logger.debug(f"{type(model)=}")
     # Assert
     assert type(model) == type_expected
 
