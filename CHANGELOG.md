@@ -23,6 +23,7 @@ Types of changes:
 - `test_load_hf_components:test_get_model_hf()` to assert model type
 - `coverage` for reporting of functions covered with `pytest`
 - `tests/conftest.py` for pytest fixtures
+- Loading of local models in `load_hf_components:get_model_hf()`
 
 ### Changed
 
