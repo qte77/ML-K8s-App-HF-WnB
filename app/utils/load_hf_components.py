@@ -6,13 +6,16 @@ Hugging Face caches components into '~/.cache/huggingface'
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
 from logging import getLogger
+from os import walk
+from os.path import join
+from shutil import copyfile
 from typing import Any, Union
 
-from datasets import IterableDataset, Metric, load_dataset, load_metric
-from datasets.dataset_dict import Dataset, DatasetDict, IterableDatasetDict
+from datasets import Metric, load_dataset, load_metric
+from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .check_and_sanitize_path import check_and_create_path
+from .check_and_sanitize_path import check_and_create_path, sanitize_path
 from .configure_logging import debug_on_global
 
 logger = getLogger(__name__)
@@ -20,7 +23,7 @@ logger = getLogger(__name__)
 
 def get_dataset_hf(
     dataset_name: str, configuration: str = None, save_dir: str = None
-) -> Union[Exception, DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
+) -> Union[Exception, DatasetDict]:
     """
     Loads a vanilla Hugging Face dataset from a local path if present
     or downloads and saves it to a local path.
@@ -157,11 +160,16 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     return model
 
 
-def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[Metric]:
+def get_metrics_to_load_objects_hf(
+    metrics_to_load: list, save_dir: str = None
+) -> list[Metric]:
     """Downloads Hugging Face Metrics Builder Scripts"""
 
     # TODO metrics save and load locally possible ?
+    # e.g. datasets.metric.Metric
     # TODO logger.error( handling, what about empty metrics?
+
+    metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
 
     if debug_on_global:
         logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
@@ -171,12 +179,24 @@ def get_metrics_to_load_objects_hf(metrics_to_load: list) -> list[Metric]:
     for met in metrics_to_load:
 
         if debug_on_global:
-            logger.debug(f"Trying to load {met!r}")
+            logger.debug(f"Trying to load {met}")
 
         try:
-            metrics_loaded.append(load_metric(met))
+            save_path, path_exists = check_and_create_path(f"{save_dir}/Metrics/{met}")
+            if path_exists:
+                # TODO catch empty Metrics folder
+                path = save_path
+            else:
+                path = met
+                dir = sanitize_path(metrics_cache_dir)
+                for root, _, files in walk(join(dir["dir"], dir["base"])):
+                    if f"{met}.py" in files:
+                        for f in files:
+                            logger.debug(f"Copying '{f}' to {save_path=}")
+                            copyfile(join(root, f), join(save_path, f))
+            metrics_loaded.append(load_metric(path))
         except Exception as e:
-            # TODO handle logger.error( while loading metrics from HF
+            # TODO handle error while loading metrics from HF
             logger.error(e)
 
     return metrics_loaded

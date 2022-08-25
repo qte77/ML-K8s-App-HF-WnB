@@ -91,17 +91,17 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     # if debug_on_global:
     #     logger.debug(f"The number of unique labels is {num_labels}")
 
-    paramdict.dataset["num_labels"] = 2
+    # paramdict.dataset["num_labels"] = 2
 
-    model = _get_model(
-        paramdict.model_full_name, paramdict.dataset["num_labels"], paramdict.save_dir
-    )
-    # model = ""
-
-    # metrics_loaded = _get_metrics_to_load_objects(
-    #   paramdict.metrics["metrics_to_load"]
+    # model = _get_model(
+    #     paramdict.model_full_name, paramdict.dataset["num_labels"], paramdict.save_dir
     # )
-    metrics_loaded = ""
+    model = ""
+
+    metrics_loaded = _get_metrics_to_load_objects(
+        paramdict.metrics["metrics_to_load"], paramdict.save_dir
+    )
+    # metrics_loaded = ""
 
     return PipelineOutput(
         paramdict=paramdict,
@@ -132,13 +132,15 @@ def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
     return get_tokenizer_hf(model_full_name, save_dir)
 
 
-def _get_metrics_to_load_objects(metrics_to_load: list) -> list[Metric]:
+def _get_metrics_to_load_objects(
+    metrics_to_load: list, save_dir: str = None
+) -> list[Metric]:
     """
     Downloads metrics objects by calling the appropriate provider handling function.
 
     To date only from Hugging Face.
     """
-    return get_metrics_to_load_objects_hf(metrics_to_load)
+    return get_metrics_to_load_objects_hf(metrics_to_load, save_dir)
 
 
 def _get_model(
