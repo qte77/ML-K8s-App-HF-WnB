@@ -18,6 +18,12 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.6.0] - 2022-08-26
+---
+
+[2.5.0] - 2022-08-26
+---
+
 ### Added
 
 - `test_load_hf_components:test_get_model_hf()` to assert model type

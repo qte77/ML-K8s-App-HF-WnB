@@ -12,7 +12,7 @@ if True:
     toggle_global_debug_state(False)
 
 # delayed loading to set get_and_configure_logger:debug_on_global
-from app.utils.load_hf_components import get_metrics_to_load_objects_hf, get_model_hf
+from app.utils.load_hf_components import get_model_hf  # get_metrics_to_load_objects_hf,
 
 logger = getLogger(__name__)
 
@@ -43,18 +43,18 @@ def test_get_model_hf(model_full_name, num_labels, save_dir_fixture, type_expect
     assert type(model) == type_expected
 
 
-def test_get_metrics_to_load_objects_hf(
-    model_full_name, num_labels, save_dir_fixture, type_expected
-):
-    """TODO"""
-    # Act
-    model = get_metrics_to_load_objects_hf(
-        model_full_name, num_labels, save_dir_fixture
-    )
-    # logger.debug("")
-    # logger.debug(f"{type(model)=}")
-    # Assert
-    assert type(model) == type_expected
+# def test_get_metrics_to_load_objects_hf(
+#     model_full_name, num_labels, save_dir_fixture, type_expected
+# ):
+#     """TODO"""
+#     # Act
+#     # model = get_metrics_to_load_objects_hf(
+#     #     model_full_name, num_labels, save_dir_fixture
+#     # )
+#     # logger.debug("")
+#     # logger.debug(f"{type(model)=}")
+#     # Assert
+#     # assert type(model) == type_expected
 
 
 class TimeLine:
