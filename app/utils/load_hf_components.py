@@ -12,7 +12,7 @@ from logging import getLogger
 # from shutil import copyfile
 from typing import Any, Union
 
-from datasets import Metric, load_dataset  # , load_metric
+from datasets import Metric, load_dataset, load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
@@ -50,6 +50,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
     ds_load_params = {
         "path": dataset_name,  # data_dir_san if dir_exists else dataset_name,
         "name": configuration,  # "" if dir_exists else configuration,
+        # "data_dir": data_dir_san
     }
 
     if debug_on_global:
@@ -180,6 +181,7 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     return model
 
 
+# FIXME
 def get_metrics_to_load_objects_hf(
     metrics_to_load: list, save_dir: str = None
 ) -> list[Metric]:
@@ -187,9 +189,10 @@ def get_metrics_to_load_objects_hf(
 
     # TODO metrics save and load locally possible ?
     # e.g. datasets.metric.Metric
-    # TODO logger.error( handling, what about empty metrics?
+    # TODO logger.error() handling, what about empty metrics?
 
     # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
+    # or met.data_dir
 
     # if debug_on_global:
     #     logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
@@ -227,3 +230,37 @@ def get_metrics_to_load_objects_hf(
     # return metrics_loaded
 
     pass
+
+
+def load_single_metric(path: str) -> Union[Metric, Exception]:
+    """Loads a single Metric Builder Script from Hugging Face or local path"""
+    try:
+        return load_metric(path)
+    except Exception as e:
+        return e
+
+
+# TODO more generic save_dir, maybe in  defaults.yml?
+def get_metric_path_to_load(
+    metric_to_load: str, save_dir: str
+) -> Union[str, Exception, ValueError]:
+    """
+    Checks whether the local metrics folder exists.
+
+    Tests the path f"{save_dir}/Metrics/{metric_to_load}"
+
+    Returns
+    - {path} if it exists
+    - {metric_to_load}
+    """
+
+    if not metric_to_load and not save_dir:
+        logger.error(f"{ValueError}. One arg needs to be provided.")
+        return ValueError
+
+    dir = f"{save_dir}/Metrics/{metric_to_load}"
+
+    try:
+        return join_path(dir) if check_path(dir) else metric_to_load
+    except Exception as e:
+        return e
