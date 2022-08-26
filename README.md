@@ -71,7 +71,7 @@ python -m pipenv install --dev -e .
 or with `conda`
 
 ```sh
-$envname = 'TDD-Playground'
+$envname = 'App-K8s-HF-WnB'
 # create new conda venv with pipenv installed
 conda create -ym -n $envname pipenv
 conda activate $envname
@@ -110,7 +110,10 @@ Purpose [↑](#app-k8s-hf-wnb)
 Paradigms [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO
+* TDD
+* Mostly functional
+* Time-to-value
+* Light-weight
 
 App Structure [↑](#app-k8s-hf-wnb)
 ---
@@ -241,11 +244,14 @@ An example how the visualized import time could look like
 TODO [↑](#app-k8s-hf-wnb)
 ---
 
-### Coding
+### ML
 
 * [x] Get WandB sweep config
   * Implemented and functional
   * May be extended to other providers, but for MVP sufficient
+
+### Coding
+
 * [x] Basic exception handling
   * May be problematic with function returns
 * [x] Type hinting in function calls
@@ -270,23 +276,29 @@ TODO [↑](#app-k8s-hf-wnb)
   * Multi-line docstrings
 * [x] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
   * Fetch user or command input
-* [ ] Refactor logging
+* [x] Check `dataclasses` whether
+  * It is suitable for functional programming
+    * Low priority right now, design choice for a later stage
+  * It is a code smell because it does not provide behavior but only a structure
+    * Designed to hold data, may be comparable to `struct`and `enum`
+* [ ] Refactor logging according to Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
   * [ ] Conditional debug logging into function
   * [ ] Exception logging with case logger/print into function
 * [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
-  * `typing` and `dataclasses` only annotat for hinting
   * `pydantic` build for parsing and checking types at runtime
   * If the app uses data it produced itself, it may not be suitable
+  * `typing` and `dataclasses` only annotate for hinting
 * [ ] Use `hydra` to parametrize the app
   * Hydra supports importing of custom `dataclasses.dataclass`
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
   * Difference between Abstraction vs Decoupling
   * Difference between Cohesion and Coupling
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
-* [ ] Check `dataclasses` whether
-  * it is suitable for functional programming
-  * it is a code smell because it does not provide behavior but only a structure
+* [ ] Adopt TDD as described by Dave Farley [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
+  * Red: Write test
+  * Green: Write code passing test
+  * Blue Refactor code and test
 
 ### Dependency tracking and app sourcing
 
@@ -322,4 +334,5 @@ Inspirations [↑](#app-k8s-hf-wnb)
 Ressources [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO
+* Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
+* Dave Farley [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
