@@ -33,7 +33,7 @@ logger = getLogger(__name__)
 @dataclass(repr=False, eq=False)  # slots only >=3.10
 class PipelineOutput:
     """
-    Holds structured mutable data for the pipeline.
+    Holds structured data for the pipeline.
 
     - `paramdict` as `ParamDict`
     - `tokenizer` as `AutoTokenizer`

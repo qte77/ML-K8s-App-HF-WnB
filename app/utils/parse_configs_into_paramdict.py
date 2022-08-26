@@ -27,7 +27,7 @@ logger = getLogger(__name__)
 
 @dataclass(repr=False, eq=False)
 class ParamDict:
-    """Holds structured parameter data."""
+    """Holds structured parameter data"""
 
     dataset: dict[str, Union[str, list]]
     device: str
@@ -84,15 +84,31 @@ def get_param_dict() -> ParamDict:
         hf_params["metrics_secondary_possible"], task["metrics_to_load"]
     )
 
-    if paramdict.sweep["provider"] == "wandb":
-        paramdict.provider_env = {}
-        paramdict.provider_env["wandb"] = get_config_content("wandb")
-        paramdict.provider_env["wandb"]["WANDB_PROJECT"] = paramdict.project_name
+    paramdict.provider_env = _get_paramdict_provider_env(
+        paramdict.sweep["provider"], paramdict.project_name
+    )
 
     if debug_on_global:
         _save_dict_to_file(asdict(paramdict))
 
     return paramdict
+
+
+# TODO attr of dataclass possible as return type?
+def _get_paramdict_provider_env(
+    provider: str, project_name: str
+) -> dict[str, dict[str, str]]:  # ParamDict.provider_env:
+    """TODO"""
+
+    if provider == "wandb":
+        provider_env = {}
+        provider_env["wandb"] = get_config_content("wandb")
+        provider_env["wandb"]["WANDB_PROJECT"] = project_name
+        return provider_env
+    else:
+        if debug_on_global:
+            logger.debug(f"Env for '{provider=}' not implemented")
+        return NotImplementedError
 
 
 def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
