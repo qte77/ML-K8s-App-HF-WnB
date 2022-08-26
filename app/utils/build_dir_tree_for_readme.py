@@ -20,7 +20,7 @@ from logging import getLogger
 from os.path import abspath, join
 from pathlib import Path
 
-from check_and_sanitize_path import sanitize_path
+from handle_paths import sanitize_path
 
 logger = getLogger(__name__)
 
@@ -89,26 +89,24 @@ class _TreeGenerator:
         entries = sorted(entries, key=lambda entry: entry.is_file())
         entries_count = len(entries)
 
+        # TODO loop .gitignore
         for index, entry in enumerate(entries):
             print(f"{entry=}")
-            if entry not in self._gitignore:
+            if any(ignore in str(entry) for ignore in self._gitignore):
+                print(f"in .gitignore: {entry=}")
+            else:
                 connector = ELBOW if (index == entries_count - 1) else TEE
                 if entry.is_dir():
                     self._add_directory(entry, index, entries_count, prefix, connector)
                 else:
                     self._add_file(entry, prefix, connector)
-            else:
-                print(f"in .gitignore: {entry=}")
 
     def _add_directory(self, directory, index, entries_count, prefix, connector):
         """TODO"""
 
         self._tree.append(f"{prefix}{connector} {directory.name}{PATH_SEP}")
 
-        # if TOGGLE_PIPE:
         prefix += PIPE_PREFIX if (index != entries_count) else SPACE_PREFIX
-        # else:
-        # prefix += SPACE_PREFIX
 
         self._tree_body(
             directory=directory,

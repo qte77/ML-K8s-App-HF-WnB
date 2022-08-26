@@ -6,17 +6,18 @@ Hugging Face caches components into '~/.cache/huggingface'
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
 from logging import getLogger
-from os import walk
-from os.path import join
-from shutil import copyfile
+
+# from os import walk
+# from os.path import join
+# from shutil import copyfile
 from typing import Any, Union
 
-from datasets import Metric, load_dataset, load_metric
+from datasets import Metric, load_dataset  # , load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .check_and_sanitize_path import check_and_create_path, sanitize_path
 from .configure_logging import debug_on_global
+from .handle_paths import check_path, create_path, join_path
 
 logger = getLogger(__name__)
 
@@ -38,29 +39,36 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
 ).
     """
 
-    save_path, path_exists = check_and_create_path(
-        f"{save_dir}/Datasets/{dataset_name}/{configuration}"
-    )
+    dir = f"{save_dir}/Datasets/{dataset_name}/{configuration}"
+    dir_exists = check_path(dir)
+    data_dir_san = join_path(dir) if dir_exists else ""
+
+    if not dir_exists:
+        create_path(dir)
+
+    # TODO load from local dir
     ds_load_params = {
-        "path": dataset_name,
-        "name": configuration if configuration else "",
-        "data_dir": save_path if path_exists else "",
+        "path": dataset_name,  # data_dir_san if dir_exists else dataset_name,
+        "name": configuration,  # "" if dir_exists else configuration,
     }
 
     if debug_on_global:
         msg_config = f"{configuration=} from " if configuration else ""
         msg_ds_full = f"{msg_config}{dataset_name=}"
-        if path_exists:
-            logger.debug(f"Loading local copy of {msg_ds_full} from {save_path=}")
-        else:
-            logger.debug(f"Downloading {msg_ds_full}")
+        msg_logger = (
+            f"Loading local copy of {msg_ds_full} from {data_dir_san=}"
+            if dir_exists
+            else f"Downloading {msg_ds_full}"
+        )
+        logger.debug(f"{ds_load_params=}")
+        logger.debug(msg_logger)
 
     try:
         dataset = load_dataset(**ds_load_params)
-        if not path_exists:
+        if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving dataset to {save_path=}")
-            dataset.save_to_disk(save_path)
+                logger.debug(f"Saving dataset to {data_dir_san=}")
+            dataset.save_to_disk(data_dir_san)
     except Exception as e:
         logger.error(e)
         return e
@@ -89,26 +97,32 @@ model_doc/auto#transformers.AutoTokenizer\
         logger.error(f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
-    save_path, path_exists = check_and_create_path(f"{save_dir}/Tokenizer/{model_name}")
+    dir = f"{save_dir}/Tokenizer/{model_name}"
+    dir_exists = check_path(dir)
+    save_dir = join_path(dir) if dir_exists else ""
+
+    if not dir_exists:
+        create_path(dir)
+
     tokenizer_load_params = {
-        "pretrained_model_name_or_path": save_path if path_exists else model_name,
+        "pretrained_model_name_or_path": save_dir if dir_exists else model_name,
         "truncation": True,
         "padding": True,
     }
 
     if debug_on_global:
         msg_tok = f"tokenizer for {model_name=}"
-        if path_exists:
-            logger.debug(f"Loading local copy of {msg_tok} from {save_path=}")
+        if dir_exists:
+            logger.debug(f"Loading local copy of {msg_tok} from {save_dir=}")
         else:
             logger.debug(f"Downloading {msg_tok}")
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
-        if not path_exists:
+        if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving tokenizer to {save_path=}")
-            tokenizer.save_pretrained(save_path)
+                logger.debug(f"Saving tokenizer to {save_dir=}")
+            tokenizer.save_pretrained(save_dir)
     except Exception as e:
         logger.error(e)
         return e
@@ -133,28 +147,32 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
         logger.error(f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
-    save_path, path_exists = check_and_create_path(
-        f"{save_dir}/Models/{model_full_name}"
-    )
+    dir = f"{save_dir}/Models/{model_full_name}"
+    dir_exists = check_path(dir)
+    save_dir = join_path(dir) if dir_exists else ""
+
+    if not dir_exists:
+        create_path(dir)
+
     model_load_params = {
-        "pretrained_model_name_or_path": save_path if path_exists else model_full_name,
+        "pretrained_model_name_or_path": save_dir if dir_exists else model_full_name,
         "num_labels": num_labels,
     }
 
     if debug_on_global:
         msg = (
-            f"Loading local copy of {model_full_name=} from {save_path=}"
-            if path_exists
+            f"Loading local copy of {model_full_name=} from {save_dir=}"
+            if dir_exists
             else f"Downloading {model_full_name=}"
         )
         logger.debug(msg)
 
     try:
         model = AutoModel.from_pretrained(**model_load_params)
-        if not path_exists:
+        if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving model to {save_path=}")
-            model.save_pretrained(save_path)
+                logger.debug(f"Saving model to {save_dir=}")
+            model.save_pretrained(save_dir)
     except Exception as e:
         logger.error(e)
         return e
@@ -171,39 +189,41 @@ def get_metrics_to_load_objects_hf(
     # e.g. datasets.metric.Metric
     # TODO logger.error( handling, what about empty metrics?
 
-    metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
+    # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
 
-    if debug_on_global:
-        logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
+    # if debug_on_global:
+    #     logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
 
-    metrics_loaded = []
+    # metrics_loaded = []
 
-    for met in metrics_to_load:
+    # for met in metrics_to_load:
 
-        if debug_on_global:
-            logger.debug(f"Trying to load {met}")
+    #     if debug_on_global:
+    #         logger.debug(f"Trying to load {met}")
 
-        try:
-            save_path, path_exists = check_and_create_path(
-                save_dir=f"{save_dir}/Metrics/{met}"
-            )
-            if path_exists:
-                # TODO catch empty Metrics folder
-                path = save_path
-                # if debug_on_global:
-                #     logger.debug(f"Loading '{met}' from {save_path=}")
-            else:
-                path = met
-                dir = sanitize_path(metrics_cache_dir)
-                for root, _, files in walk(join(dir["dir"], dir["base"])):
-                    if f"{met}.py" in files:
-                        # if debug_on_global:
-                        #     logger.debug(f"Copying '{met}' to {save_path=}")
-                        for f in files:
-                            copyfile(join(root, f), join(save_path, f))
-            metrics_loaded.append(load_metric(path))
-        except Exception as e:
-            # TODO handle error while loading metrics from HF
-            logger.error(e)
+    #     try:
+    #         save_path, path_exists = check_and_create_path(
+    #             save_dir=f"{save_dir}/Metrics/{met}"
+    #         )
+    #         if path_exists:
+    #             # TODO catch empty Metrics folder
+    #             path = save_path
+    #             # if debug_on_global:
+    #             #     logger.debug(f"Loading '{met}' from {save_path=}")
+    #         else:
+    #             path = met
+    #             dir = sanitize_path(metrics_cache_dir)
+    #             for root, _, files in walk(join(dir["dir"], dir["base"])):
+    #                 if f"{met}.py" in files:
+    #                     # if debug_on_global:
+    #                     #     logger.debug(f"Copying '{met}' to {save_path=}")
+    #                     for f in files:
+    #                         copyfile(join(root, f), join(save_path, f))
+    #         metrics_loaded.append(load_metric(path))
+    #     except Exception as e:
+    #         # TODO handle error while loading metrics from HF
+    #         logger.error(e)
 
-    return metrics_loaded
+    # return metrics_loaded
+
+    pass

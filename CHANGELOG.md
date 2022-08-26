@@ -26,6 +26,10 @@ Types of changes:
 
 - Refactored `parse_configs_into_paramdict:get_param_dict`
 - Refactored `load_hf_components:get_metrics_to_load_objects_hf()`
+- `utils/handle_paths.py`
+  - Renamed from `check_and_sanitize_path.py`
+  - Separated `check_and_create_path()`
+- Refactored `utils/load_hf_components.py`
 
 [2.5.0] - 2022-08-26
 ---

@@ -3,6 +3,7 @@
 
 from logging import getLogger
 
+from datasets import Metric
 from pytest import fixture, mark
 from transformers import BertModel, DebertaModel, DistilBertModel, ElectraModel
 
@@ -12,7 +13,7 @@ if True:
     toggle_global_debug_state(False)
 
 # delayed loading to set get_and_configure_logger:debug_on_global
-from app.utils.load_hf_components import get_model_hf  # get_metrics_to_load_objects_hf,
+from app.utils.load_hf_components import get_metrics_to_load_objects_hf, get_model_hf
 
 logger = getLogger(__name__)
 
@@ -43,18 +44,21 @@ def test_get_model_hf(model_full_name, num_labels, save_dir_fixture, type_expect
     assert type(model) == type_expected
 
 
-# def test_get_metrics_to_load_objects_hf(
-#     model_full_name, num_labels, save_dir_fixture, type_expected
-# ):
-#     """TODO"""
-#     # Act
-#     # model = get_metrics_to_load_objects_hf(
-#     #     model_full_name, num_labels, save_dir_fixture
-#     # )
-#     # logger.debug("")
-#     # logger.debug(f"{type(model)=}")
-#     # Assert
-#     # assert type(model) == type_expected
+# Objectives metrics loading
+# load single metric (local or internet) with load_metric(path)
+# if not exists: from internet
+# if internet: move metric from local cache to save_dir
+# return list[Metric]
+
+
+def test_get_metrics_to_load_objects_hf(metrics_to_load, save_dir):
+    """TODO"""
+    # Act
+    model = get_metrics_to_load_objects_hf(metrics_to_load, save_dir)
+    logger.debug("")
+    logger.debug(f"{type(model)=}")
+    # Assert
+    assert type(model) == Metric
 
 
 class TimeLine:
