@@ -64,39 +64,37 @@ def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
 def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     """Loads components needed for the `PipelineOutput`"""
 
-    # dataset_plain = _get_dataset(
-    #     paramdict.dataset["dataset"],
-    #     paramdict.dataset["configuration"],
-    #     paramdict.save_dir,
-    # )
+    dataset_plain = _get_dataset(
+        paramdict.dataset["dataset"],
+        paramdict.dataset["configuration"],
+        paramdict.save_dir,
+    )
 
-    # tokenizer = _get_tokenizer(
-    #     paramdict.model_full_name,
-    #     paramdict.save_dir,
-    # )
-    tokenizer = ""
+    tokenizer = _get_tokenizer(
+        paramdict.model_full_name,
+        paramdict.save_dir,
+    )
+    # tokenizer = ""
 
-    # dataset_tokenized = _get_sanitized_tokenized_dataset(
-    #     dataset_plain,
-    #     tokenizer,
-    #     paramdict.dataset["cols_to_tokenize"],
-    #     paramdict.dataset["cols_to_remove"],
-    # )
-    dataset_tokenized = ""
+    dataset_tokenized = _get_sanitized_tokenized_dataset(
+        dataset_plain,
+        tokenizer,
+        paramdict.dataset["cols_to_tokenize"],
+        paramdict.dataset["cols_to_remove"],
+    )
+    # dataset_tokenized = ""
 
-    # num_labels = len(dataset_tokenized["train"].unique(
-    #   paramdict.dataset["col_to_rename"]
-    # ))
-    # paramdict.dataset["num_labels"] = num_labels
-    # if debug_on_global:
-    #     logger.debug(f"The number of unique labels is {num_labels}")
+    num_labels = len(
+        dataset_tokenized["train"].unique(paramdict.dataset["col_to_rename"])
+    )
+    paramdict.dataset["num_labels"] = num_labels
+    if debug_on_global:
+        logger.debug(f"The number of unique labels is {num_labels}")
 
     # paramdict.dataset["num_labels"] = 2
 
-    # model = _get_model(
-    #     paramdict.model_full_name, paramdict.dataset["num_labels"], paramdict.save_dir
-    # )
-    model = ""
+    model = _get_model(paramdict.model_full_name, num_labels, paramdict.save_dir)
+    # model = ""
 
     metrics_loaded = _get_metrics_to_load_objects(
         paramdict.metrics["metrics_to_load"], paramdict.save_dir

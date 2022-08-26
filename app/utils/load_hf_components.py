@@ -142,10 +142,12 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     }
 
     if debug_on_global:
-        if path_exists:
-            logger.debug(f"Loading local copy of {model_full_name=} from {save_path=}")
-        else:
-            logger.debug(f"Downloading {model_full_name=}")
+        msg = (
+            f"Loading local copy of {model_full_name=} from {save_path=}"
+            if path_exists
+            else f"Downloading {model_full_name=}"
+        )
+        logger.debug(msg)
 
     try:
         model = AutoModel.from_pretrained(**model_load_params)
@@ -172,7 +174,7 @@ def get_metrics_to_load_objects_hf(
     metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
 
     if debug_on_global:
-        logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load!r}")
+        logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
 
     metrics_loaded = []
 
@@ -182,17 +184,22 @@ def get_metrics_to_load_objects_hf(
             logger.debug(f"Trying to load {met}")
 
         try:
-            save_path, path_exists = check_and_create_path(f"{save_dir}/Metrics/{met}")
+            save_path, path_exists = check_and_create_path(
+                save_dir=f"{save_dir}/Metrics/{met}"
+            )
             if path_exists:
                 # TODO catch empty Metrics folder
                 path = save_path
+                # if debug_on_global:
+                #     logger.debug(f"Loading '{met}' from {save_path=}")
             else:
                 path = met
                 dir = sanitize_path(metrics_cache_dir)
                 for root, _, files in walk(join(dir["dir"], dir["base"])):
                     if f"{met}.py" in files:
+                        # if debug_on_global:
+                        #     logger.debug(f"Copying '{met}' to {save_path=}")
                         for f in files:
-                            logger.debug(f"Copying '{f}' to {save_path=}")
                             copyfile(join(root, f), join(save_path, f))
             metrics_loaded.append(load_metric(path))
         except Exception as e:
