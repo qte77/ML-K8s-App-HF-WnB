@@ -1,6 +1,7 @@
 App-K8s-HF-WnB
 ===
 
+[![CodeFactor](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB/badge)](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB)
 [![CodeQL](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml)
 [![Lint Code Base](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml)
 [![Links (Fail Fast)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml)

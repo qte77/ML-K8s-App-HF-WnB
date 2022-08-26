@@ -21,6 +21,7 @@ Types of changes:
 ### Added
 
 - Skeleton `utils/build_dir_tree_for_readme.py` for directory tree builder for  app structure inside `README.md`
+- CodeFactor badge to `README.md`
 - First full TDD functions to get metrics in `load_hf_components`
   - `test_load_single_metric`
   - `test_get_metric_path_to_load`
