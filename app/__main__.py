@@ -26,7 +26,7 @@ if __name__ == "__main__":
     except Exception as e:
         exit(getLogger(__name__).error(e))
 
-    # TODO delayed import to account for logger set to be first
+    # FIXME delayed import to account for logger set to be first
     from .app import main
 
     exit(main(app_mode))

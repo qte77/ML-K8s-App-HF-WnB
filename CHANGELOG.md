@@ -34,6 +34,10 @@ Types of changes:
   - Separated `check_and_create_path()`
 - Refactored `utils/load_hf_components.py`
 
+### Fixed
+
+- Wrong version numbers caused by too many uneccessary bumps
+
 [2.5.0] - 2022-08-26
 ---
 
