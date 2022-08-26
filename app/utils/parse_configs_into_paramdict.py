@@ -5,6 +5,7 @@
 # TODO refactor Pipeline-object out into function only?
 # TODO dataclass as code smell ?
 # TODO dataclass and FP ?
+# TODO decouple hard coded paths from functions
 
 from dataclasses import asdict, dataclass
 from json import dump

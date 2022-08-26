@@ -18,6 +18,15 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- Skeleton `utils/build_dir_tree_for_readme.py` for directory tree builder for  app structure inside `README.md`
+
+### Changed
+
+- Refactored `parse_configs_into_paramdict:get_param_dict`
+- Refactored `load_hf_components:get_metrics_to_load_objects_hf()`
+
 [2.5.0] - 2022-08-26
 ---
 
