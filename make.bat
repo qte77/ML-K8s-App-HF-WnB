@@ -77,6 +77,7 @@ goto:eof
 goto:eof
 
 :check:
+    echo hadolint && hadolint docker\Dockerfile
     echo isort && %perun% isort .
     echo black && %perun% black .
     echo flake8 && %perun% flake8

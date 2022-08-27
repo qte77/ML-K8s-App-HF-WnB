@@ -29,6 +29,7 @@ Types of changes:
   - Fixtures with params instead of `@mark.parametrize`
 - Domain probing for logging
   - `utils/configure_logging:logging_facility()` as skeleton for domain probing and tested within `app.py`
+- [hadolint](https://github.com/hadolint/hadolint#install) to `make.bat:check`
 
 ### Changed
 
