@@ -21,7 +21,7 @@ from .configure_logging import debug_on_global
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
-    get_metrics_to_load_objects_hf,
+    get_list_of_metrics_to_load,
     get_model_hf,
     get_tokenizer_hf,
 )
@@ -138,7 +138,7 @@ def _get_metrics_to_load_objects(
 
     To date only from Hugging Face.
     """
-    return get_metrics_to_load_objects_hf(metrics_to_load, save_dir)
+    return get_list_of_metrics_to_load(metrics_to_load, save_dir)
 
 
 def _get_model(

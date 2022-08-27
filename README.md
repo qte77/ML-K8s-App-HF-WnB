@@ -282,8 +282,10 @@ TODO [↑](#app-k8s-hf-wnb)
   * It is a code smell because it does not provide behavior but only a structure
     * Designed to hold data, may be comparable to `struct`and `enum`
 * [ ] Refactor logging according to Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
-  * [ ] Conditional debug logging into function
-  * [ ] Exception logging with case logger/print into function
+  * [ ] Domain Probing 'A Domain Probe[...] enables us to add observability to domain logic while still talking in the language of the domain'
+  * [ ] Logging into functions and module
+  * [ ] `logger`, `metrics`, `analytics`
+  * [ ] Testing the logging and observability
 * [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `pydantic` build for parsing and checking types at runtime

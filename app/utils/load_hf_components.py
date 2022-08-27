@@ -81,7 +81,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
     return dataset
 
 
-# TODO check return type
+# FIXME return type `Any`
 def get_tokenizer_hf(model_name: str = None, save_dir: str = None) -> Any:
     """
     Loads a Hugging Face for the specified model tokenizer from a local path
@@ -136,7 +136,7 @@ model_doc/auto#transformers.AutoTokenizer\
     return tokenizer
 
 
-# TODO check return type
+# FIXME return type `Any`
 def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) -> Any:
     """
     Downloads the specified model from Hugging Face.
@@ -181,7 +181,6 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     return model
 
 
-# FIXME
 def get_list_of_metrics_to_load(
     metrics_to_load: list, save_dir: str = None
 ) -> list[Metric]:
@@ -217,7 +216,7 @@ def load_single_metric(path: str) -> Union[Metric, Exception]:
         return e
 
 
-# TODO more generic save_dir, maybe in  defaults.yml?
+# FIXME more generic save_dir, maybe in  defaults.yml?
 def get_metric_path_or_name_to_load(
     metric_to_load: str, save_dir: str
 ) -> Union[str, Exception, ValueError]:
@@ -243,6 +242,7 @@ def get_metric_path_or_name_to_load(
         return e
 
 
+# TODO
 def save_metric_to_local_path():
     """TODO"""
 
@@ -259,11 +259,12 @@ def save_metric_to_local_path():
     pass
 
 
+# TODO
 def load_metric_from_local_path():
     """TODO"""
 
     # if path_exists:
-    #             # TODO catch empty Metrics folder
+    #             # FIXME catch empty Metrics folder
     #             path = save_path
     #             # if debug_on_global:
     #             #     logger.debug(f"Loading '{met}' from {save_path=}")

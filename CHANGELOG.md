@@ -26,6 +26,8 @@ Types of changes:
   - `test_load_single_metric`
   - `test_get_metric_path_to_load`
   - Fixtures with params instead of `@mark.parametrize`
+- Domain probing for logging
+  - `utils/configure_logging:logging_facility()` as skeleton for domain probing and tested withoin `app.py`
 
 ### Changed
 
