@@ -13,6 +13,8 @@ def get_system_info():
     """Returns information regarding the system the app is running on"""
 
     try:
+        # FIXME codefactor malus for rel path, use abs path
+        # win sysinfo, linux uname -a etc
         # TODO prettify debug output
         # .split(linesep) to output each line separate
         sysinfo_output = check_output(["systeminfo"]).decode("utf-8").split(linesep)

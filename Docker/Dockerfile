@@ -1,5 +1,6 @@
-ARG BASEIMAGE="docker.io/library/python:3.8-slim"
-ARG BASEIMAGE_USECASE="baseimage"
+# FIXME use multi-stage build
+ARG BASEIMAGE=docker.io/library/python:3.8-slim
+ARG BASEIMAGE_USECASE=baseimage
 
 # TODO --platform=x86_64
 FROM ${BASEIMAGE} as baseimage
@@ -14,7 +15,7 @@ ENV PYTHONUNBUFFERED=1
 
 RUN set -xe \
   && python -m ensurepip --upgrade \
-  && pip install --no-cache --upgrade setuptools wheel
+  && pip install --no-cache-dir --upgrade setuptools wheel
 RUN rm -rf /var/cache/apt/* /tmp/* \
   /usr/lib/python*/ensurepip
 
@@ -44,7 +45,7 @@ COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
 COPY --chown=${USER}:${USER} ${FILES_IN} ${FILES_OUT}
 
 RUN set -xe \
-  && pip install --no-cache --user \
+  && pip install --no-cache-dir --user \
     -r "${FILES_OUT}/requirements.txt"
 
 RUN chmod +x ${APP}
