@@ -44,6 +44,7 @@ Types of changes:
 ### Fixed
 
 - Wrong version numbers caused by too many uneccessary bumps
+- `Docekrfile` to remidiate CodeFactor.io issues
 
 [2.5.0] - 2022-08-26
 ---

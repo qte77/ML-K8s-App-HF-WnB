@@ -1,9 +1,9 @@
 # FIXME use multi-stage build
-ARG BASEIMAGE=docker.io/library/python:3.8-slim
-ARG BASEIMAGE_USECASE=baseimage
+# ARG BASEIMAGE=
+# ARG BASEIMAGE_USECASE=
 
-# TODO --platform=x86_64
-FROM ${BASEIMAGE} as baseimage
+# FIXME --platform=x86_64 ${BASEIMAGE}
+FROM docker.io/library/python:3.8-slim as baseimage
 
 LABEL site="https://qte77.github.io"
 LABEL author="qte77"
@@ -19,8 +19,8 @@ RUN set -xe \
 RUN rm -rf /var/cache/apt/* /tmp/* \
   /usr/lib/python*/ensurepip
 
-# TODO --platform=x86_64
-FROM ${BASEIMAGE_USECASE} as usecase
+# TODO --platform=x86_64 ${BASEIMAGE_USECASE}
+FROM baseimage as usecase
 
 # EXPOSE 8080
 
