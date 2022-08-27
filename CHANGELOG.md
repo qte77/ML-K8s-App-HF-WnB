@@ -25,6 +25,7 @@ Types of changes:
 - First full TDD functions to get metrics in `load_hf_components`
   - `test_load_single_metric`
   - `test_get_metric_path_to_load`
+  - Fixtures with params instead of `@mark.parametrize`
 
 ### Changed
 

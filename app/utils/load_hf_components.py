@@ -182,58 +182,35 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
 
 
 # FIXME
-def get_metrics_to_load_objects_hf(
+def get_list_of_metrics_to_load(
     metrics_to_load: list, save_dir: str = None
 ) -> list[Metric]:
-    """Downloads Hugging Face Metrics Builder Scripts"""
+    """Returns list of Metric-object created by Hugging Face Metrics Builder Scripts"""
 
     # TODO metrics save and load locally possible ?
     # e.g. datasets.metric.Metric
     # TODO logger.error() handling, what about empty metrics?
-
-    # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
     # or met.data_dir
 
-    # if debug_on_global:
-    #     logger.debug(f"Loading HF Metrics Builder Scripts for {metrics_to_load=}")
+    metrics_loaded = []
 
-    # metrics_loaded = []
+    for met in metrics_to_load:
+        if debug_on_global:
+            logger.debug(f"Trying to load HF Metrics Builder Script for {met=}")
+        try:
+            metric_path_or_name = get_metric_path_or_name_to_load(met, save_dir)
+            metric_loaded = load_single_metric(metric_path_or_name)
+            metrics_loaded.append(metric_loaded)
+        except Exception as e:
+            logger.error(e)
+            pass
 
-    # for met in metrics_to_load:
-
-    #     if debug_on_global:
-    #         logger.debug(f"Trying to load {met}")
-
-    #     try:
-    #         save_path, path_exists = check_and_create_path(
-    #             save_dir=f"{save_dir}/Metrics/{met}"
-    #         )
-    #         if path_exists:
-    #             # TODO catch empty Metrics folder
-    #             path = save_path
-    #             # if debug_on_global:
-    #             #     logger.debug(f"Loading '{met}' from {save_path=}")
-    #         else:
-    #             path = met
-    #             dir = sanitize_path(metrics_cache_dir)
-    #             for root, _, files in walk(join(dir["dir"], dir["base"])):
-    #                 if f"{met}.py" in files:
-    #                     # if debug_on_global:
-    #                     #     logger.debug(f"Copying '{met}' to {save_path=}")
-    #                     for f in files:
-    #                         copyfile(join(root, f), join(save_path, f))
-    #         metrics_loaded.append(load_metric(path))
-    #     except Exception as e:
-    #         # TODO handle error while loading metrics from HF
-    #         logger.error(e)
-
-    # return metrics_loaded
-
-    pass
+    return metrics_loaded
 
 
 def load_single_metric(path: str) -> Union[Metric, Exception]:
     """Loads a single Metric Builder Script from Hugging Face or local path"""
+
     try:
         return load_metric(path)
     except Exception as e:
@@ -241,7 +218,7 @@ def load_single_metric(path: str) -> Union[Metric, Exception]:
 
 
 # TODO more generic save_dir, maybe in  defaults.yml?
-def get_metric_path_to_load(
+def get_metric_path_or_name_to_load(
     metric_to_load: str, save_dir: str
 ) -> Union[str, Exception, ValueError]:
     """
@@ -264,3 +241,29 @@ def get_metric_path_to_load(
         return join_path(dir) if check_path(dir) else metric_to_load
     except Exception as e:
         return e
+
+
+def save_metric_to_local_path():
+    """TODO"""
+
+    # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
+
+    #             dir = sanitize_path(metrics_cache_dir)
+    #             for root, _, files in walk(join(dir["dir"], dir["base"])):
+    #                 if f"{met}.py" in files:
+    #                     # if debug_on_global:
+    #                     #     logger.debug(f"Copying '{met}' to {save_path=}")
+    #                     for f in files:
+    #                         copyfile(join(root, f), join(save_path, f))
+
+    pass
+
+
+def load_metric_from_local_path():
+    """TODO"""
+
+    # if path_exists:
+    #             # TODO catch empty Metrics folder
+    #             path = save_path
+    #             # if debug_on_global:
+    #             #     logger.debug(f"Loading '{met}' from {save_path=}")
