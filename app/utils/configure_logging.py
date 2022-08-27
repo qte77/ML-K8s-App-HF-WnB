@@ -108,8 +108,9 @@ def _log_by_name_and_type(logger_name: str, log_type: str, log_message: str):
 
     try:
         _check_log_type_is_valid(log_type)
-        logger = f"root.manager.loggerDict[{logger_name}]"
-        eval(f'{logger}.{logging_types[log_type]}("str({log_message})")')
+        logger = f'root.manager.loggerDict["{logger_name}"]'
+        logfun = f'{logging_types[log_type]}("str({log_message})")'
+        eval(f"{logger}.{logfun}")
     except Exception as e:
         logger_cfglog.exception(e)
         return e
