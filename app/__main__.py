@@ -20,16 +20,17 @@ from .utils.parse_args import parse_args
 
 configure_logger()
 
-if __name__ == "__main__":
 
-    mode, debug_on, sysinfo_on, sysinfoexit_on = parse_args().values()
+def _log_basic_info():
+    """TODO"""
 
-    if debug_on:
-        logging_facility("log", "Configuring app")
-        logging_facility("log", f"{path[0]=}, {__package__=}")
-        logging_facility(
-            "log", f"{mode=}, {debug_on=}, {sysinfo_on=}, {sysinfoexit_on=}"
-        )
+    logging_facility("log", "Configuring app")
+    logging_facility("log", f"{path[0]=}, {__package__=}")
+    logging_facility("log", f"{mode=}, {debug_on=}, {sysinfo_on=}, {sysinfoexit_on=}")
+
+
+def _toggle_global_debug(debug_on: bool):
+    """TODO"""
 
     try:
         toggle_global_debug_state(debug_on)
@@ -37,14 +38,27 @@ if __name__ == "__main__":
         debug_on = False
         logging_facility("exception", e)
 
+
+def _show_sysinfo():
+    """TODO"""
+
+    logging_facility("log", "Collecting system information")
+    try:
+        logging_facility("log", get_system_info())
+    except Exception as e:
+        logging_facility("exception", e)
+
+
+if __name__ == "__main__":
+
+    mode, debug_on, sysinfo_on, sysinfoexit_on = parse_args().values()
+
+    if debug_on:
+        _log_basic_info()
+    _toggle_global_debug(debug_on)
+
     if sysinfo_on or sysinfoexit_on:
-
-        logging_facility("log", "Collecting system information")
-        try:
-            logging_facility("log", get_system_info())
-        except Exception as e:
-            logging_facility("exception", e)
-
+        _show_sysinfo()
         if sysinfoexit_on:
             exit()
 
