@@ -324,6 +324,10 @@ TODO [↑](#app-k8s-hf-wnb)
   * Seems to be reasonable
 * [x] Implement basic CI/CD-Skeleton
   * Using `bump2version`, `pre-commit`, `black` etc
+  * Rationale:
+    * Get fast feedback
+    * Raise confidence in codebase
+    * Always keep codebase in releasable state
 * [x] Have a look at [PyTest](http://pytest.org/)
   * Explored in repo `TDD-Playground`
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)

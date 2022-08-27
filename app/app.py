@@ -26,5 +26,5 @@ def main(mode: Literal["train", "infer"] = "train"):
     if debug_on_global:
         logging_facility("log", "Starting app")
 
-    _ = prepare_pipeline(get_param_dict())
-    # train_model(pipeobj) if (mode == "train") else infer_model(pipeobj)
+    _ = prepare_pipeline(get_param_dict())  # pipedata
+    # train_model(pipedata) if (mode == "train") else infer_model(pipedata)

@@ -22,7 +22,9 @@ configure_logger()
 
 
 def _log_basic_info():
-    """TODO"""
+    """
+    TODO
+    """
 
     logging_facility("log", "Configuring app")
     logging_facility("log", f"{path[0]=}, {__package__=}")
@@ -30,23 +32,31 @@ def _log_basic_info():
 
 
 def _toggle_global_debug(debug_on: bool):
-    """TODO"""
+    """
+    TODO
+    """
 
     try:
         toggle_global_debug_state(debug_on)
     except Exception as e:
-        debug_on = False
         logging_facility("exception", e)
+        return e
 
 
 def _show_sysinfo():
-    """TODO"""
+    """
+    TODO
+    """
 
     logging_facility("log", "Collecting system information")
+
     try:
-        logging_facility("log", get_system_info())
+        sysinfo = get_system_info()
     except Exception as e:
         logging_facility("exception", e)
+        return e
+
+    logging_facility("log", sysinfo)
 
 
 if __name__ == "__main__":
