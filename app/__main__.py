@@ -8,29 +8,51 @@ The state of the app is comprised of
 - Showing system information
 """
 
-from logging import getLogger
-from sys import exit
+from sys import exit, path
 
-from .utils.configure_logging import configure_logger, toggle_global_debug_state
-from .utils.get_and_configure_system_info import toggle_global_sysinfo
+from .utils.configure_logging import (
+    configure_logger,
+    logging_facility,
+    toggle_global_debug_state,
+)
+from .utils.get_system_info import get_system_info
 from .utils.parse_args import parse_args
+
+configure_logger()
 
 if __name__ == "__main__":
 
-    app_mode, show_debug, show_sysinfo = parse_args()
+    mode, debug_on, sysinfo_on, sysinfoexit_on = parse_args().values()
+
+    if debug_on:
+        logging_facility("log", "Configuring app")
+        logging_facility("log", f"{path[0]=}, {__package__=}")
+        logging_facility(
+            "log", f"{mode=}, {debug_on=}, {sysinfo_on=}, {sysinfoexit_on=}"
+        )
 
     try:
-        configure_logger()
-        toggle_global_debug_state(show_debug)
-        toggle_global_sysinfo(show_sysinfo)
+        toggle_global_debug_state(debug_on)
     except Exception as e:
-        exit(getLogger(__name__).error(e))
+        debug_on = False
+        logging_facility("exception", e)
+
+    if sysinfo_on or sysinfoexit_on:
+
+        logging_facility("log", "Collecting system information")
+        try:
+            logging_facility("log", get_system_info())
+        except Exception as e:
+            logging_facility("exception", e)
+
+        if sysinfoexit_on:
+            exit()
 
     # FIXME delayed import to account for logger set to be first
     from .app import main
 
-    exit(main(app_mode))
+    exit(main(mode))
 
 else:
-    msg = "Not inside __main__. Exiting."
-    exit(getLogger(__name__).error(msg))
+
+    exit(logging_facility("error", "Not inside __main__. Exiting."))

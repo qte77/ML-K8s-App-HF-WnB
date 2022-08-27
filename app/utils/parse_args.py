@@ -2,9 +2,10 @@
 """Handles arguments to the app"""
 
 from argparse import ArgumentParser
+from typing import Union
 
 
-def parse_args() -> tuple[str, bool, bool]:
+def parse_args() -> dict[str, Union[str, bool]]:
     """
     Parses and evaluates argv and returns the results.
 
@@ -31,6 +32,11 @@ def parse_args() -> tuple[str, bool, bool]:
     parser.add_argument(
         "-i", "--sysinfo", action="store_true", help="show system information"
     )
-    args = parser.parse_args()
+    parser.add_argument(
+        "-e",
+        "--sysinfoexit",
+        action="store_true",
+        help="show system information and exit",
+    )
 
-    return (args.mode, args.debug, args.sysinfo)
+    return vars(parser.parse_args())

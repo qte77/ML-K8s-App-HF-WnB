@@ -37,6 +37,7 @@ Types of changes:
   - Renamed from `check_and_sanitize_path.py`
   - Separated `check_and_create_path()`
 - Refactored `utils/load_hf_components.py`
+- Mutal exclusive argparse group in `utils/parse_args:parse_args()`
 
 ### Fixed
 
