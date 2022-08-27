@@ -2,7 +2,7 @@
 # parametrized fixtures with metafunc
 # https://medium.com/opsops/deepdive-into-pytest-parametrization-cb21665c05b9
 # https://pytest.org/en/7.1.x/example/parametrize.html#deferring-the-setup-of-parametrized-resources
-# """Test the load_hf_components"""
+"""Test load_hf_components"""
 
 from logging import getLogger
 from os.path import join, sep

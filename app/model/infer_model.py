@@ -6,12 +6,12 @@
 # from torch import cuda, no_grad
 
 
-from ..utils.prepare_ml_input import PipelineOutput
+from ..utils.prepare_ml_input import Pipeline
 
 # from ..utils.configure_logging import debug_on_global
 
 
-def infer_model(pipe_out: PipelineOutput = None) -> str:  # TODO ret type
+def infer_model(pipe_out: Pipeline = None) -> str:  # TODO ret type
     """Infers result from model given input"""
 
     # TODO adopt to model and task

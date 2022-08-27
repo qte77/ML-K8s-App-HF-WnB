@@ -20,6 +20,7 @@ Types of changes:
 
 ### Added
 
+- Prepared testing and implementing model training
 - Skeleton `utils/build_dir_tree_for_readme.py` for directory tree builder for  app structure inside `README.md`
 - CodeFactor badge to `README.md`
 - First full TDD functions to get metrics in `load_hf_components`
@@ -27,7 +28,7 @@ Types of changes:
   - `test_get_metric_path_to_load`
   - Fixtures with params instead of `@mark.parametrize`
 - Domain probing for logging
-  - `utils/configure_logging:logging_facility()` as skeleton for domain probing and tested withoin `app.py`
+  - `utils/configure_logging:logging_facility()` as skeleton for domain probing and tested within `app.py`
 
 ### Changed
 

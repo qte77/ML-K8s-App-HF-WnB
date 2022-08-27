@@ -3,12 +3,11 @@
 
 from typing import Literal
 
-from .utils.configure_logging import debug_on_global, logging_facility
-from .utils.parse_configs_into_paramdict import get_param_dict
-from .utils.prepare_ml_input import PipelineOutput, prepare_pipeline
-
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
+from .utils.configure_logging import debug_on_global, logging_facility
+from .utils.parse_configs_into_paramdict import get_param_dict
+from .utils.prepare_ml_input import prepare_pipeline
 
 
 def main(mode: Literal["train", "infer"] = "train"):
@@ -27,11 +26,5 @@ def main(mode: Literal["train", "infer"] = "train"):
     if debug_on_global:
         logging_facility("log", "Starting app")
 
-    # pipeline_objects: Pipeline_Output = prepare_pipeline(get_param_dict())
-    _: PipelineOutput = prepare_pipeline(get_param_dict())
-
-    # _ = (
-    #     train_model(**pipeline_objects)
-    #     if (mode == "train")
-    #     else infer_model(**pipeline_objects)
-    # )
+    _ = prepare_pipeline(get_param_dict())
+    # train_model(pipeobj) if (mode == "train") else infer_model(pipeobj)

@@ -31,7 +31,7 @@ logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)  # slots only >=3.10
-class PipelineOutput:
+class Pipeline:
     """
     Holds structured data for the pipeline.
 
@@ -49,20 +49,20 @@ class PipelineOutput:
     metrics_loaded: list[Metric]
 
 
-def prepare_pipeline(paramdict: ParamDict) -> PipelineOutput:
+def prepare_pipeline(paramdict: ParamDict) -> Pipeline:
     """
     Prepares the pipeline by loading Dataset, Tokenizer, Model and Metrics as well
     as setting parameter for the used provider in the system environment.
 
-    Expects a populated `ParamDict` and returns a `PipelineOutput`.
+    Expects a populated `ParamDict` and returns a `Pipeline`.
     """
 
     _set_provider_env(paramdict.sweep["provider"], paramdict.provider_env)
     return _get_large_components(paramdict)
 
 
-def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
-    """Loads components needed for the `PipelineOutput`"""
+def _get_large_components(paramdict: ParamDict) -> Pipeline:
+    """Loads components needed for the `Pipeline`"""
 
     dataset_plain = _get_dataset(
         paramdict.dataset["dataset"],
@@ -101,7 +101,7 @@ def _get_large_components(paramdict: ParamDict) -> PipelineOutput:
     )
     # metrics_loaded = ""
 
-    return PipelineOutput(
+    return Pipeline(
         paramdict=paramdict,
         tokenizer=tokenizer,
         dataset_tokenized=dataset_tokenized,

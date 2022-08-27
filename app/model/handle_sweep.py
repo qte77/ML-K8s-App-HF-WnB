@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Prepare sweep"""
+"""Offers functions to handle sweeps"""
 # from wandb import agent, login, sweep
 # from .configure_logging import debug_on_global
 
