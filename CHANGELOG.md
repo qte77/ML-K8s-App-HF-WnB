@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.6.0] - 2022-08-28
+---
+
 ### Added
 
 - Prepared testing and implementing model training
