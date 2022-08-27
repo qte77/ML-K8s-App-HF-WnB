@@ -62,18 +62,15 @@ def logging_facility(log_type: str, log_message: str):
     TODO Description: Offers logging.
     """
 
-    try:
-        _check_log_type_is_valid(log_type)
-        caller = _getframe(1).f_globals["__name__"]
-
-        if caller not in root.manager.loggerDict.keys():
-            _create_logger_in_root_dict(caller)
-
-        _log_by_name_and_type(caller, log_type, log_message)
-
-    except Exception as e:
-        logger_cfglog.exception(e)
-        return e
+    if _check_log_type_is_valid(log_type):
+        try:
+            caller = _getframe(1).f_globals["__name__"]
+            if caller not in root.manager.loggerDict.keys():
+                _create_logger_in_root_dict(caller)
+            _log_by_name_and_type(caller, log_type, log_message)
+        except Exception as e:
+            logger_cfglog.exception(e)
+            return e
 
 
 def _check_log_type_is_valid(log_type) -> bool:
