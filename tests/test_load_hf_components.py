@@ -82,3 +82,8 @@ def test_get_list_of_metrics_to_load(metrics_to_test_for, save_dir_fixture):
     assert isinstance(metrics_returned, list)
     for met in metrics_returned:
         assert isinstance(met, Metric)
+
+
+# test tokenizer
+# from tokenizers import Tokenizer
+# assert isinstance(tokenizer._tokenizer, Tokenizer

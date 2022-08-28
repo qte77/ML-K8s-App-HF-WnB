@@ -51,15 +51,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
     }
 
     if debug_on_global:
-        msg_config = f"{configuration=} from " if configuration else ""
-        msg_ds_full = f"{msg_config}{dataset_name=}"
-        msg_logger = (
-            f"Loading local copy of {msg_ds_full} from {data_dir_san=}"
-            if dir_exists
-            else f"Downloading {msg_ds_full}"
-        )
-        logging_facility("log", f"{ds_load_params=}")
-        logging_facility("log", msg_logger)
+        _log_hf_start_get_dataset(dataset_name, configuration, data_dir_san, dir_exists)
 
     try:
         dataset = load_dataset(**ds_load_params)
@@ -72,12 +64,8 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
         return e
 
     if debug_on_global:
-        log_ds = "train"
-        logging_facility(
-            "log", f"Content of first key of tokenized datasets {log_ds} split"
-        )
-        for _, (k, v) in enumerate(dataset[log_ds][:1].items()):
-            logging_facility("log", f"{k}: {v}".replace('"', '\\"'))
+        log_ds_split = "train"
+        _log_hf_end_get_dataset(dataset[log_ds_split][:1].items(), log_ds_split)
 
     return dataset
 
@@ -113,13 +101,7 @@ model_doc/auto#transformers.AutoTokenizer\
     }
 
     if debug_on_global:
-        msg_tok = f"tokenizer for {model_name=}"
-        msg = (
-            f"Loading local copy of {msg_tok} from {save_dir=}"
-            if dir_exists
-            else f"Downloading {msg_tok}"
-        )
-        logging_facility("log", msg)
+        _log_hf_start_get_tokenizer(model_name, save_dir, dir_exists)
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
@@ -132,9 +114,7 @@ model_doc/auto#transformers.AutoTokenizer\
         return e
 
     if debug_on_global:
-        tok_msg = "This is a test sentence for the loaded tokenizer."
-        tok_res = tokenizer.encode(tok_msg)
-        logging_facility("log", f"Tokenizing '{tok_msg}': {tok_res}")
+        _log_hf_end_get_tokenizer(tokenizer)
 
     return tokenizer
 
@@ -164,12 +144,7 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     }
 
     if debug_on_global:
-        msg = (
-            f"Loading local copy of {model_full_name=} from {save_dir=}"
-            if dir_exists
-            else f"Downloading {model_full_name=}"
-        )
-        logging_facility("log", msg)
+        _log_hf_start_get_model(model_full_name, save_dir, dir_exists)
 
     try:
         model = AutoModel.from_pretrained(**model_load_params)
@@ -180,6 +155,9 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     except Exception as e:
         logging_facility("exception", e)
         return e
+
+    if debug_on_global:
+        _log_hf_end_get_model(model.__dict__["config"].architectures)
 
     return model
 
@@ -261,7 +239,7 @@ def save_metric_to_local_path():
     #                     for f in files:
     #                         copyfile(join(root, f), join(save_path, f))
 
-    pass
+    return NotImplementedError
 
 
 # TODO
@@ -273,3 +251,70 @@ def load_metric_from_local_path():
     #             path = save_path
     #             # if debug_on_global:
     #             #     logger.debug(f"Loading '{met}' from {save_path=}")
+
+    return NotImplementedError
+
+
+def _log_hf_start_get_dataset(
+    dataset_name: str,
+    configuration: str,
+    data_dir_san: str,
+    dir_exists,
+):
+    # TODO docstring
+
+    msg_config = f"{configuration=} from " if configuration else ""
+    msg_ds_full = f"{msg_config}{dataset_name=}"
+    msg_logger = (
+        f"Loading local copy of {msg_ds_full} from {data_dir_san=}"
+        if dir_exists
+        else f"Downloading {msg_ds_full}"
+    )
+    logging_facility("log", msg_logger)
+
+
+def _log_hf_end_get_dataset(dict_to_log: dict, log_ds_split: str):
+    # TODO docstrings
+
+    logging_facility(
+        "log", f"Content of first key of tokenized datasets {log_ds_split} split"
+    )
+    for _, (k, v) in enumerate(dict_to_log):
+        logging_facility("log", f"{k}: {v}".replace('"', '\\"'))
+
+
+def _log_hf_start_get_tokenizer(model_name: str, save_dir: str, dir_exists: bool):
+    # TODO docstrings
+
+    msg_tok = f"tokenizer for {model_name=}"
+    msg = (
+        f"Loading local copy of {msg_tok} from {save_dir=}"
+        if dir_exists
+        else f"Downloading {msg_tok}"
+    )
+    logging_facility("log", msg)
+
+
+def _log_hf_end_get_tokenizer(tokenizer: Any):
+    # TODO docstrings
+
+    tok_msg = "This is a test sentence for the loaded tokenizer."
+    tok_res = tokenizer.encode(tok_msg)
+    logging_facility("log", f"Tokenizing '{tok_msg}': {tok_res}")
+
+
+def _log_hf_start_get_model(model_full_name: str, save_dir: str, dir_exists: bool):
+    # TODO docstrings
+
+    msg = (
+        f"Loading local copy of {model_full_name=} from {save_dir=}"
+        if dir_exists
+        else f"Downloading {model_full_name=}"
+    )
+    logging_facility("log", msg)
+
+
+def _log_hf_end_get_model(model_architectures: list[str]):
+    # TODO docstrings
+
+    [logging_facility("log", f"{mod_arch=}") for mod_arch in model_architectures]
