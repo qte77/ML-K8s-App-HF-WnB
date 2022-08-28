@@ -88,7 +88,8 @@ def _check_log_type_is_valid(log_type) -> bool:
 def _get_log_caller():
     # TODO docstring
 
-    caller = _getframe(1).f_globals["__name__"]
+    # getframe of parent 2 because called by function
+    caller = _getframe(2).f_globals["__name__"]
     if caller not in root.manager.loggerDict.keys():
         _create_logger_in_root_dict(caller)
     return caller

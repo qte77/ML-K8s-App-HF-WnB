@@ -162,12 +162,11 @@ def _get_sanitized_tokenized_dataset(
     """
 
     if debug_on_global:
-        logging_facility(
-            "log",
-            f"Tokenizing dataset with {len(cols_to_tokenize)} columns to tokenize\
-            and \n Removing {cols_to_tokenize=} and {cols_to_remove=} from tokenized\
-            dataset",
-        )
+        for msg in [
+            f"Tokenizing dataset with {len(cols_to_tokenize)} columns to tokenize.",
+            f"Removing {cols_to_tokenize=} and {cols_to_remove=}.",
+        ]:
+            logging_facility("log", msg)
 
     try:
         # TODO save local copy of tokenized dataset

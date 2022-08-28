@@ -72,8 +72,12 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
         return e
 
     if debug_on_global:
-        ds_train_slice = dataset["train"][:1]
-        logging_facility("log", f"{ds_train_slice=}")
+        log_ds = "train"
+        logging_facility(
+            "log", f"Content of first key of tokenized datasets {log_ds} split"
+        )
+        for _, (k, v) in enumerate(dataset[log_ds][:1].items()):
+            logging_facility("log", f"{k}: {v}".replace('"', '\\"'))
 
     return dataset
 
@@ -110,10 +114,12 @@ model_doc/auto#transformers.AutoTokenizer\
 
     if debug_on_global:
         msg_tok = f"tokenizer for {model_name=}"
-        if dir_exists:
-            logging_facility("log", f"Loading local copy of {msg_tok} from {save_dir=}")
-        else:
-            logging_facility("log", f"Downloading {msg_tok}")
+        msg = (
+            f"Loading local copy of {msg_tok} from {save_dir=}"
+            if dir_exists
+            else f"Downloading {msg_tok}"
+        )
+        logging_facility("log", msg)
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
