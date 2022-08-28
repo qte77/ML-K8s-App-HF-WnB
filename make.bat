@@ -6,7 +6,7 @@ set LF=^
 
 set "prep=errorcodes!LF!messages!LF!commands"
 set options=install update editable wheel test check commit
-set options=%options% push bump importtime create cleanup
+set options=%options% push bump log importtime create cleanup
 set arg=%1
 
 for /f %%p in ("!prep!") do call:%%p
@@ -33,6 +33,7 @@ echo %options% | findstr /i "\<%1\>" >nul && goto:run
     echo scm %TAB% commit %TAB% %%2 taken as git msg, !!! use with "git msg" !!!
     echo %TAB% push   %TAB% Adds, commits and pushes if checks and tests passed
     echo %TAB% bump   %TAB% Bumps the version at "part"
+    echo %TAB% log    %TAB% Shows oneline git log
     echo doc %TAB% create %TAB% Creates docu from docstrings
     echo misc %TAB% importtime %TAB% Invokes Python import time and tuna
     echo.
@@ -129,6 +130,10 @@ goto:eof
         echo Parameter for 'part' is empty. Exiting.
         exit /b %err_b2v_part_empty%
 	)
+goto:eof
+
+:log
+    git log --oneline
 goto:eof
 
 :importtime

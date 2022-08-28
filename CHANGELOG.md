@@ -18,6 +18,19 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- Hadolint for docker images to pre-commit
+  - Commented out because warnings abort pre-commit
+
+### Changed
+
+- Refactored `utils/handle_logging.py` to separate concerns
+
+### Fixed
+
+- Issues with logging multi-line `EOL` and quote-escaping
+
 [2.7.0] - 2022-08-28
 ---
 
