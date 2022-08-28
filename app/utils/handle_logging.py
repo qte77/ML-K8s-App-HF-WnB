@@ -64,13 +64,12 @@ def logging_facility(log_type: str, log_message: str):
 
     if _check_log_type_is_valid(log_type):
         try:
-            caller = _getframe(1).f_globals["__name__"]
-            if caller not in root.manager.loggerDict.keys():
-                _create_logger_in_root_dict(caller)
-            _log_by_name_and_type(caller, log_type, log_message)
+            _log_by_name_and_type(_get_log_caller(), log_type, log_message)
         except Exception as e:
             logger_cfglog.exception(e)
             return e
+    else:
+        return ValueError
 
 
 def _check_log_type_is_valid(log_type) -> bool:
@@ -84,6 +83,19 @@ def _check_log_type_is_valid(log_type) -> bool:
         logger_cfglog.error("log_type not in logging_types.keys")
 
     return log_type_is_valid
+
+
+def _get_log_caller():
+    """
+    TODO
+    """
+
+    caller = _getframe(1).f_globals["__name__"]
+
+    if caller not in root.manager.loggerDict.keys():
+        _create_logger_in_root_dict(caller)
+
+    return caller
 
 
 def _create_logger_in_root_dict(logger_name: str):
