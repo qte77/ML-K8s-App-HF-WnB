@@ -78,10 +78,8 @@ def _check_log_type_is_valid(log_type) -> bool:
     """
 
     log_type_is_valid = log_type in logging_types.keys()
-
     if not log_type_is_valid and debug_on_global:
         logger_cfglog.error("log_type not in logging_types.keys")
-
     return log_type_is_valid
 
 
@@ -91,10 +89,8 @@ def _get_log_caller():
     """
 
     caller = _getframe(1).f_globals["__name__"]
-
     if caller not in root.manager.loggerDict.keys():
         _create_logger_in_root_dict(caller)
-
     return caller
 
 
@@ -102,8 +98,11 @@ def _create_logger_in_root_dict(logger_name: str):
     """
     TODO Description: Logs with dynamic logger and creates logger if not present
     """
-
-    getLogger(logger_name)
+    try:
+        getLogger(logger_name)
+    except Exception as e:
+        logger_cfglog.exception(e)
+        return e
 
 
 # FIXME use other way to dynamically call logger functions
