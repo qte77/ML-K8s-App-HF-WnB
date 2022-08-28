@@ -78,5 +78,5 @@ if __name__ == "__main__":
     exit(app(mode=mode))
 
 else:
-
+    # FIXME exit before functions are loaded ?
     exit(logging_facility("error", "Not inside __main__. Exiting."))

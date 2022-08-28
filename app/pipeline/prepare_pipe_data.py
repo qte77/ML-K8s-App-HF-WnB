@@ -32,74 +32,74 @@ class Pipeline:
     """
     Holds structured data for the pipeline.
 
-    - `paramdict` as `ParamDict`
+    - `parameters` as `Parameters`
     - `tokenizer` as `AutoTokenizer`
     - `dataset_tokenized` as `DatasetDict`
     - `model` as `AutoModel`
     - `metrics_loaded` as `list[dict]`
     """
 
-    paramdict: Parameters
+    parameters: Parameters
     tokenizer: AutoTokenizer
     dataset_tokenized: DatasetDict
     model: AutoModel
     metrics_loaded: list[Metric]
 
 
-def prepare_pipe_data(paramdict: Parameters) -> Pipeline:
+def prepare_pipe_data(parameters: Parameters) -> Pipeline:
     """
     Prepares the pipeline by loading Dataset, Tokenizer, Model and Metrics as well
     as setting parameter for the used provider in the system environment.
 
-    Expects a populated `ParamDict` and returns a `Pipeline`.
+    Expects populated `Parameters` and returns a `Pipeline`.
     """
 
-    _set_provider_env(paramdict.sweep["provider"], paramdict.provider_env)
-    return _get_large_components(paramdict)
+    _set_provider_env(parameters.sweep["provider"], parameters.provider_env)
+    return _get_large_components(parameters)
 
 
-def _get_large_components(paramdict: Parameters) -> Pipeline:
+def _get_large_components(parameters: Parameters) -> Pipeline:
     """Loads components needed for the `Pipeline`"""
 
     dataset_plain = _get_dataset(
-        paramdict.dataset["dataset"],
-        paramdict.dataset["configuration"],
-        paramdict.save_dir,
+        parameters.dataset["dataset"],
+        parameters.dataset["configuration"],
+        parameters.save_dir,
     )
 
     tokenizer = _get_tokenizer(
-        paramdict.model_full_name,
-        paramdict.save_dir,
+        parameters.model_full_name,
+        parameters.save_dir,
     )
     # tokenizer = ""
 
     dataset_tokenized = _get_sanitized_tokenized_dataset(
         dataset_plain,
         tokenizer,
-        paramdict.dataset["cols_to_tokenize"],
-        paramdict.dataset["cols_to_remove"],
+        parameters.dataset["cols_to_tokenize"],
+        parameters.dataset["cols_to_remove"],
     )
     # dataset_tokenized = ""
 
     num_labels = len(
-        dataset_tokenized["train"].unique(paramdict.dataset["col_to_rename"])
+        dataset_tokenized["train"].unique(parameters.dataset["col_to_rename"])
     )
-    paramdict.dataset["num_labels"] = num_labels
+    parameters.dataset["num_labels"] = num_labels
     if debug_on_global:
         logging_facility("log", f"The number of unique labels is {num_labels}")
 
     # paramdict.dataset["num_labels"] = 2
 
-    model = _get_model(paramdict.model_full_name, num_labels, paramdict.save_dir)
+    model = _get_model(parameters.model_full_name, num_labels, parameters.save_dir)
     # model = ""
 
     metrics_loaded = _get_metrics_to_load_objects(
-        paramdict.metrics["metrics_to_load"], paramdict.save_dir
+        parameters.metrics["metrics_to_load"], parameters.save_dir
     )
     # metrics_loaded = ""
 
     return Pipeline(
-        paramdict=paramdict,
+        paramdict=parameters,
         tokenizer=tokenizer,
         dataset_tokenized=dataset_tokenized,
         model=model,
