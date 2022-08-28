@@ -49,12 +49,16 @@ Types of changes:
   - Renamed from `check_and_sanitize_path.py`
   - Separated `check_and_create_path()`
 - Refactored `utils/load_hf_components.py`
-- Mutal exclusive argparse group in `utils/parse_args:parse_args()`
+- Renamed `app/model` to `app/payload`
 
 ### Fixed
 
 - Wrong version numbers caused by too many uneccessary bumps
 - `Docekrfile` to remidiate CodeFactor.io issues
+
+### Removed
+
+- Mutal exclusive argparse group in `utils/parse_args:parse_args()`
 
 [2.5.0] - 2022-08-26
 ---
