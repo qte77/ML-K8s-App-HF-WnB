@@ -1,0 +1,94 @@
+{
+  "dataset": {
+    "dataset": "glue",
+    "configuration": "mrpc",
+    "average": "binary",
+    "col_to_rename": "label",
+    "cols_to_tokenize": [
+      "sentence1",
+      "sentence2"
+    ],
+    "cols_to_remove": [
+      "idx"
+    ]
+  },
+  "device": "cpu",
+  "metrics": {
+    "metric_to_optimize": {
+      "name": "eval_loss",
+      "goal": "minimize",
+      "greater_is_better": "False"
+    },
+    "metrics_to_load": [
+      "accuracy",
+      "precision",
+      "recall",
+      "f1",
+      "mae",
+      "mse"
+    ]
+  },
+  "model_name": "BERT",
+  "model_full_name": "bert-base-uncased",
+  "project_name": "BBU-GLUE-CPU-SWEEP",
+  "provider_env": {
+    "wandb": {
+      "WANDB_ENTITY": "ba",
+      "WANDB_WATCH": "all",
+      "WANDB_LOG_MODEL": "true",
+      "WANDB_SAVE_CODE": "true",
+      "WANDB_PROJECT": "BBU-GLUE-CPU-SWEEP"
+    }
+  },
+  "save_dir": "~/App",
+  "sweep": {
+    "is_sweep": true,
+    "provider": "wandb",
+    "config": {
+      "method": "random",
+      "metric": {
+        "name": "loss"
+      },
+      "early_terminate": {
+        "type": "hyperband",
+        "s": 2,
+        "eta": 3,
+        "max_iter": 27
+      },
+      "seed": {
+        "distribution": "int_uniform",
+        "min": 51,
+        "max": 202
+      },
+      "parameters": {
+        "learning_rate": {
+          "distribution": "uniform",
+          "min": 5e-07,
+          "max": 0.005
+        },
+        "max_steps": {
+          "values": [
+            500,
+            1000,
+            1500,
+            2000,
+            2500,
+            3000,
+            3500,
+            4000,
+            4500,
+            5000
+          ]
+        },
+        "optimizer": {
+          "distribution": "categorical",
+          "values": [
+            "adamw_torch",
+            "adafactor"
+          ]
+        }
+      }
+    },
+    "train_count": 5
+  }
+}

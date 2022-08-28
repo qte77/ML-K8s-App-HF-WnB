@@ -17,7 +17,7 @@ from datasets import Metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .configure_logging import debug_on_global
+from .handle_logging import debug_on_global
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
@@ -25,7 +25,7 @@ from .load_hf_components import (
     get_model_hf,
     get_tokenizer_hf,
 )
-from .parse_configs_into_paramdict import ParamDict
+from .prepare_pipe_params import Parameters
 
 logger = getLogger(__name__)
 
@@ -42,14 +42,14 @@ class Pipeline:
     - `metrics_loaded` as `list[dict]`
     """
 
-    paramdict: ParamDict
+    paramdict: Parameters
     tokenizer: AutoTokenizer
     dataset_tokenized: DatasetDict
     model: AutoModel
     metrics_loaded: list[Metric]
 
 
-def prepare_pipeline(paramdict: ParamDict) -> Pipeline:
+def prepare_pipe_data(paramdict: Parameters) -> Pipeline:
     """
     Prepares the pipeline by loading Dataset, Tokenizer, Model and Metrics as well
     as setting parameter for the used provider in the system environment.
@@ -61,7 +61,7 @@ def prepare_pipeline(paramdict: ParamDict) -> Pipeline:
     return _get_large_components(paramdict)
 
 
-def _get_large_components(paramdict: ParamDict) -> Pipeline:
+def _get_large_components(paramdict: Parameters) -> Pipeline:
     """Loads components needed for the `Pipeline`"""
 
     dataset_plain = _get_dataset(

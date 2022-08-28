@@ -16,7 +16,7 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .configure_logging import debug_on_global
+from .handle_logging import debug_on_global
 from .load_configs import (
     get_config_content,
     get_defaults,
@@ -27,7 +27,7 @@ logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)
-class ParamDict:
+class Parameters:
     """Holds structured parameter data"""
 
     dataset: dict[str, Union[str, list]]
@@ -41,7 +41,7 @@ class ParamDict:
     sweep: dict[str, Union[str, int, bool, dict]]
 
 
-def get_param_dict() -> ParamDict:
+def get_param_dict() -> Parameters:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`.
@@ -50,7 +50,7 @@ def get_param_dict() -> ParamDict:
     """
 
     if debug_on_global:
-        logger.debug("Constructing parameter object as Type ParamDict")
+        logger.debug("Constructing parameter object as Type Parameters")
 
     # TODO alters data and behavior of other class, no FP ?
     load_defaults_into_load_configs_module()
@@ -59,7 +59,7 @@ def get_param_dict() -> ParamDict:
     task = get_config_content("task")
     task_model = hf_params["models"][task["model"]]
 
-    paramdict = ParamDict(
+    parameters = Parameters(
         save_dir=get_defaults("save_dir"),
         sweep=_parse_sweep_config(get_config_content("sweep")),
         device=str(_get_device()),
@@ -71,34 +71,34 @@ def get_param_dict() -> ParamDict:
         provider_env={},
     )
 
-    paramdict.project_name = _create_project_name(
+    parameters.project_name = _create_project_name(
         task["model"],
-        paramdict.dataset["dataset"],
-        paramdict.device,
-        paramdict.sweep["is_sweep"],
+        parameters.dataset["dataset"],
+        parameters.device,
+        parameters.sweep["is_sweep"],
     )
 
-    paramdict.metrics["metric_to_optimize"] = _parse_metric_to_optimize_config(
+    parameters.metrics["metric_to_optimize"] = _parse_metric_to_optimize_config(
         hf_params["metrics_to_optimize"], task["metric_to_optimize"]
     )
-    paramdict.metrics["metrics_to_load"] = _parse_metrics_to_load(
+    parameters.metrics["metrics_to_load"] = _parse_metrics_to_load(
         hf_params["metrics_secondary_possible"], task["metrics_to_load"]
     )
 
-    paramdict.provider_env = _get_paramdict_provider_env(
-        paramdict.sweep["provider"], paramdict.project_name
+    parameters.provider_env = _get_Parameters_provider_env(
+        parameters.sweep["provider"], parameters.project_name
     )
 
     if debug_on_global:
-        _save_dict_to_file(asdict(paramdict))
+        _save_dict_to_file(asdict(parameters))
 
-    return paramdict
+    return parameters
 
 
 # TODO attr of dataclass possible as return type?
-def _get_paramdict_provider_env(
+def _get_Parameters_provider_env(
     provider: str, project_name: str
-) -> dict[str, dict[str, str]]:  # ParamDict.provider_env:
+) -> dict[str, dict[str, str]]:  # parameters.provider_env:
     """TODO"""
 
     if provider == "wandb":
@@ -206,8 +206,8 @@ def _get_device() -> str:
             return e
 
 
-def _save_dict_to_file(object_to_save: object, save_file: str = "./paramdict.json"):
-    """Saves <paramdict>: ParamDict to [paramdict_file]: str"""
+def _save_dict_to_file(object_to_save: object, save_file: str = "./Parameters.json"):
+    """Saves <object_to_save>: object to [save_file]: str"""
 
     logger.debug(f"Saving to '{save_file}' from {object_to_save=}")
     with open(save_file, "w") as outfile:

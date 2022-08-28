@@ -5,7 +5,7 @@
 from os import linesep
 from subprocess import check_output
 
-from .configure_logging import logging_facility
+from .handle_logging import logging_facility
 
 
 # TODO import nv-smi etc

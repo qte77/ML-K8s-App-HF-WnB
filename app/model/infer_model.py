@@ -6,7 +6,7 @@
 # from torch import cuda, no_grad
 
 
-from ..utils.prepare_ml_input import Pipeline
+from ..utils.prepare_pipe_data import Pipeline
 
 # from ..utils.configure_logging import debug_on_global
 

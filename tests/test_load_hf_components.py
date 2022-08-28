@@ -10,7 +10,7 @@ from os.path import join, sep
 from datasets.metric import Metric
 from pytest import mark
 
-from app.utils.configure_logging import toggle_global_debug_state
+from app.utils.handle_logging import toggle_global_debug_state
 from app.utils.handle_paths import sanitize_path
 
 if True:

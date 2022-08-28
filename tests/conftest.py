@@ -14,7 +14,7 @@ https://docs.pytest.org/latest/monkeypatch.html
 from pytest import fixture
 from transformers import BertModel
 
-from app.utils.configure_logging import toggle_global_debug_state
+from app.utils.handle_logging import toggle_global_debug_state
 
 if True:
     toggle_global_debug_state(False)

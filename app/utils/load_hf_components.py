@@ -16,7 +16,7 @@ from datasets import Metric, load_dataset, load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .configure_logging import debug_on_global
+from .handle_logging import debug_on_global
 from .handle_paths import check_path, create_path, join_path
 
 logger = getLogger(__name__)

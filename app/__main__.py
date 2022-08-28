@@ -10,12 +10,12 @@ The state of the app is comprised of
 
 from sys import exit, path
 
-from .utils.configure_logging import (
+from .utils.get_system_info import get_system_info
+from .utils.handle_logging import (
     configure_logger,
     logging_facility,
     toggle_global_debug_state,
 )
-from .utils.get_system_info import get_system_info
 from .utils.parse_args import parse_args
 
 configure_logger()
