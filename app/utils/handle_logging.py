@@ -98,6 +98,7 @@ def _create_logger_in_root_dict(logger_name: str):
     """
     TODO Description: Logs with dynamic logger and creates logger if not present
     """
+
     try:
         getLogger(logger_name)
     except Exception as e:
@@ -113,11 +114,15 @@ def _log_by_name_and_type(logger_name: str, log_type: str, log_message: str):
     TODO Description: Logs with dynamic logger and creates logger if not present
     """
 
-    try:
-        _check_log_type_is_valid(log_type)
+    if _check_log_type_is_valid(log_type):
+
         logger = f'root.manager.loggerDict["{logger_name}"]'
         logfun = f'{logging_types[log_type]}("{log_message}")'
-        eval(f"{logger}.{logfun}")
-    except Exception as e:
-        logger_cfglog.exception(e)
-        return e
+
+        try:
+            eval(f"{logger}.{logfun}")
+        except Exception as e:
+            logger_cfglog.exception(e)
+            return e
+    else:
+        return ValueError
