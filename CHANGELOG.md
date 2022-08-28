@@ -30,6 +30,8 @@ Types of changes:
 ### Fixed
 
 - Issues with logging multi-line `EOL` and quote-escaping
+- Refactored path to `systeminfo.exe` in `utils/get_system_info()`
+  - Fixes issue with CodeFactor/Bandit rule `Starting a process with a partial executable path`
 
 [2.7.0] - 2022-08-28
 ---

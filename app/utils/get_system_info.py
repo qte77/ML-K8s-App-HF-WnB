@@ -2,7 +2,9 @@
 """Returns information regarding the system the app is running on"""
 
 
-from os import linesep
+from os import environ, linesep
+from os.path import join
+from platform import architecture, uname
 from subprocess import check_output
 
 from .handle_logging import logging_facility
@@ -12,13 +14,21 @@ from .handle_logging import logging_facility
 def get_system_info():
     """Returns information regarding the system the app is running on"""
 
-    try:
-        # FIXME codefactor malus for rel path, use abs path
-        # win sysinfo, linux uname -a etc
+    system = uname()
+    arch = architecture()
+
+    logging_facility("log", f"{system=}, {arch=}")
+
+    if system.system == "Windows":
         # TODO prettify debug output
         # .split(linesep) to output each line separate
-        sysinfo_output = check_output(["systeminfo"]).decode("utf-8").split(linesep)
-        return sysinfo_output
-    except Exception as e:
-        logging_facility("exception", e)
-        return e
+        sysinfo_path = join(
+            environ["SystemRoot"],
+            "SysNative" if arch[0] == "32bit" else "System32",
+            "systeminfo.exe",
+        )
+        try:
+            return check_output(sysinfo_path).decode("utf-8").split(linesep)
+        except Exception as e:
+            logging_facility("exception", e)
+            return e
