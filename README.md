@@ -337,7 +337,7 @@ Inspirations [↑](#app-k8s-hf-wnb)
 
 * TODO
 
-Ressources [↑](#app-k8s-hf-wnb)
+Resources [↑](#app-k8s-hf-wnb)
 ---
 
 * Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)

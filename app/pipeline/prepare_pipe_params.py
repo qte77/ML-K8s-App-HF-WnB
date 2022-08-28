@@ -38,7 +38,7 @@ class Parameters:
     sweep: dict[str, Union[str, int, bool, dict]]
 
 
-def get_param_dict() -> Parameters:
+def get_parameters() -> Parameters:
     """
     Returns parameter dict with values filled with
     `helper.load_configs.get_config_content(<config>)`.
