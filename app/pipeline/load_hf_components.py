@@ -15,8 +15,8 @@ from datasets import Metric, load_dataset, load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .handle_logging import debug_on_global, logging_facility
-from .handle_paths import check_path, create_path, join_path
+from ..utils.handle_logging import debug_on_global, logging_facility
+from ..utils.handle_paths import check_path, create_path, join_path
 
 
 def get_dataset_hf(

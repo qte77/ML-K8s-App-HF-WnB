@@ -3,11 +3,12 @@
 
 from typing import Literal
 
+from .pipeline.prepare_pipe_data import prepare_pipe_data
+from .pipeline.prepare_pipe_params import get_param_dict
+
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
 from .utils.handle_logging import debug_on_global, logging_facility
-from .utils.prepare_pipe_data import prepare_pipe_data
-from .utils.prepare_pipe_params import get_param_dict
 
 
 def main(mode: Literal["train", "infer"] = "train"):

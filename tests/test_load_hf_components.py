@@ -17,7 +17,7 @@ if True:
     toggle_global_debug_state(False)
 
 # delayed loading to set get_and_configure_logger:debug_on_global
-from app.utils.load_hf_components import (
+from app.pipeline.load_hf_components import (
     get_list_of_metrics_to_load,
     get_metric_path_or_name_to_load,
     get_model_hf,

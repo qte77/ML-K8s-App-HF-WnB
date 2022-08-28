@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Offers functions to handle sweeps"""
 # from wandb import agent, login, sweep
-# from .configure_logging import debug_on_global
+# from ..utils.configure_logging import debug_on_global
 
 # from logging import getLogger
 #

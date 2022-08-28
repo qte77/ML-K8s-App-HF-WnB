@@ -6,7 +6,7 @@
 from transformers import Trainer, TrainingArguments
 
 # from ..utils.configure_logging import debug_on_global, logging_facility
-# from ..utils.prepare_ml_input import PipelineOutput
+# from ..pipeline.prepare_ml_input import PipelineOutput
 
 
 def _create_trainer_hf(args: TrainingArguments) -> Trainer:

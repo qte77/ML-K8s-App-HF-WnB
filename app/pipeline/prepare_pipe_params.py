@@ -15,8 +15,8 @@ from typing import Union
 from torch import device
 from torch.cuda import is_available
 
-from .handle_logging import debug_on_global, logging_facility
-from .load_configs import (
+from ..utils.handle_logging import debug_on_global, logging_facility
+from ..utils.load_configs import (
     get_config_content,
     get_defaults,
     load_defaults_into_load_configs_module,

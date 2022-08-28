@@ -171,7 +171,7 @@ goto:eof
     set "msg_warning=############ Not Fully Implemented ############"
     set "msg_git_no_msg=No git message provided. Exiting without changes."
     set "msg_not_impl=############ Function Not Implemented ############"
-    set "msg_test_fail=Test(s) failed. Nothing commited."
+    set "msg_test_fail=Check(s) failed. Nothing commited."
 goto:eof
 
 :commands

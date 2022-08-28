@@ -16,8 +16,8 @@ from datasets import Metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .handle_logging import debug_on_global, logging_facility
-from .load_configs import get_keyfile_content
+from ..utils.handle_logging import debug_on_global, logging_facility
+from ..utils.load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
     get_list_of_metrics_to_load,
