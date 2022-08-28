@@ -72,10 +72,10 @@ if __name__ == "__main__":
         if sysinfoexit_on:
             exit()
 
-    # FIXME delayed import to account for logger set to be first
-    from .app import main
+    # FIXME delayed import because of global debug toggle
+    from .app import app
 
-    exit(main(mode))
+    exit(app(mode=mode))
 
 else:
 

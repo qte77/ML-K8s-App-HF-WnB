@@ -3,15 +3,14 @@
 
 from typing import Literal
 
-from .pipeline.prepare_pipe_data import prepare_pipe_data
-from .pipeline.prepare_pipe_params import get_parameters
-
 # from .model.infer_model import infer_model
 # from .model.train_model import train_model
+from .pipeline.prepare_pipe_data import prepare_pipe_data
+from .pipeline.prepare_pipe_params import get_parameters
 from .utils.handle_logging import debug_on_global, logging_facility
 
 
-def main(mode: Literal["train", "infer"] = "train"):
+def app(mode: Literal["train", "infer"] = "train"):
     """
     Create pipeline object parametrised with parameter object and execute task.
 
