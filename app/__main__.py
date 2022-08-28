@@ -10,12 +10,12 @@ The state of the app is comprised of
 
 from sys import exit, path
 
-from .utils.get_system_info import get_system_info
 from .utils.handle_logging import (
     configure_logger,
     logging_facility,
     toggle_global_debug_state,
 )
+from .utils.log_system_info import log_system_info
 from .utils.parse_args import parse_args
 
 configure_logger()
@@ -51,12 +51,10 @@ def _show_sysinfo():
     logging_facility("log", "Collecting system information")
 
     try:
-        sysinfo = get_system_info()
+        log_system_info()
     except Exception as e:
         logging_facility("exception", e)
         return e
-
-    logging_facility("log", sysinfo)
 
 
 if __name__ == "__main__":

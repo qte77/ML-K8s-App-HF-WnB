@@ -26,6 +26,7 @@ Types of changes:
 ### Changed
 
 - Refactored `utils/handle_logging.py` to separate concerns
+- Refactored `utils/log_system_info.py`, former name `get_system_info.py`
 
 ### Fixed
 
