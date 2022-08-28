@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.7.0] - 2022-08-28
+---
+
 ### Changed
 
 - Renamed `handle_logging.py`, `app/utils/prepare_pipe_data.py`, `prepare_pipe_params.py`
