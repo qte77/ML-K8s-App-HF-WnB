@@ -34,8 +34,7 @@ def _log_windows_sysinfo(architecture: str):
         "systeminfo.exe",
     )
     try:
-        sysinfo = check_output(sysinfo_path).decode("utf-8").split(linesep)
-        for line in sysinfo:
+        for line in check_output(sysinfo_path).decode("utf-8").split(linesep):
             logging_facility("log", line)
     except Exception as e:
         logging_facility("exception", e)
