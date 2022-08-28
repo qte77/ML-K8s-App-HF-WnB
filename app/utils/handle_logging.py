@@ -31,7 +31,7 @@ def toggle_global_debug_state(toggle_debug: bool = False):
 
 
 def configure_logger(config_fn: str = "logging.conf", config_path: str = "config"):
-    """Loads o logger configuration from the provided config file.
+    """Loads a logger configuration from the provided config file.
 
     The path to the config is constructed from 'root/[config_path]/[config_fn]'.
     See Python documentation for [logging](\
@@ -60,6 +60,10 @@ the [Logging Cookbook](https://docs.python.org/3/howto/logging-cookbook.html).
 def logging_facility(log_type: str, log_message: str):
     """
     TODO Description: Offers logging.
+
+    Accepts the following logging types:
+
+    log, warn, error, exception, metrics, analytics
     """
 
     if _check_log_type_is_valid(log_type):
@@ -73,9 +77,7 @@ def logging_facility(log_type: str, log_message: str):
 
 
 def _check_log_type_is_valid(log_type) -> bool:
-    """
-    TODO Description
-    """
+    # TODO docsctring
 
     log_type_is_valid = log_type in logging_types.keys()
     if not log_type_is_valid and debug_on_global:
@@ -84,9 +86,7 @@ def _check_log_type_is_valid(log_type) -> bool:
 
 
 def _get_log_caller():
-    """
-    TODO
-    """
+    # TODO docstring
 
     caller = _getframe(1).f_globals["__name__"]
     if caller not in root.manager.loggerDict.keys():

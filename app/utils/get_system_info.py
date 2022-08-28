@@ -20,5 +20,5 @@ def get_system_info():
         sysinfo_output = check_output(["systeminfo"]).decode("utf-8").split(linesep)
         return sysinfo_output
     except Exception as e:
-        logging_facility("error", e)
+        logging_facility("exception", e)
         return e
