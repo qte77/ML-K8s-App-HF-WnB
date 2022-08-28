@@ -99,7 +99,7 @@ def _get_large_components(parameters: Parameters) -> Pipeline:
     # metrics_loaded = ""
 
     return Pipeline(
-        paramdict=parameters,
+        parameters=parameters,
         tokenizer=tokenizer,
         dataset_tokenized=dataset_tokenized,
         model=model,

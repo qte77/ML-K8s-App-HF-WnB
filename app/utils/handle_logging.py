@@ -47,7 +47,7 @@ the [Logging Cookbook](https://docs.python.org/3/howto/logging-cookbook.html).
 
     if not exists(abs_path):
         if debug_on_global:
-            logger_cfglog.error("Could not find config.")
+            logger_cfglog.error(f"Could not find config in {abs_path=}")
         return FileNotFoundError
 
     try:
@@ -81,7 +81,7 @@ def _check_log_type_is_valid(log_type) -> bool:
 
     log_type_is_valid = log_type in logging_types.keys()
     if not log_type_is_valid and debug_on_global:
-        logger_cfglog.error("log_type not in logging_types.keys")
+        logger_cfglog.error(f"{log_type=} not in pre-defined logging_types")
     return log_type_is_valid
 
 
