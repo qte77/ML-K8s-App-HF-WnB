@@ -5,7 +5,6 @@ Hugging Face caches components into '~/.cache/huggingface'
 """
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
-from logging import getLogger
 
 # from os import walk
 # from os.path import join
@@ -16,10 +15,8 @@ from datasets import Metric, load_dataset, load_metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .handle_logging import debug_on_global
+from .handle_logging import debug_on_global, logging_facility
 from .handle_paths import check_path, create_path, join_path
-
-logger = getLogger(__name__)
 
 
 def get_dataset_hf(
@@ -61,22 +58,22 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
             if dir_exists
             else f"Downloading {msg_ds_full}"
         )
-        logger.debug(f"{ds_load_params=}")
-        logger.debug(msg_logger)
+        logging_facility("log", f"{ds_load_params=}")
+        logging_facility("log", msg_logger)
 
     try:
         dataset = load_dataset(**ds_load_params)
         if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving dataset to {data_dir_san=}")
+                logging_facility("log", f"Saving dataset to {data_dir_san=}")
             dataset.save_to_disk(data_dir_san)
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
     if debug_on_global:
         ds_train_slice = dataset["train"][:1]
-        logger.debug(f"{ds_train_slice=}")
+        logging_facility("log", f"{ds_train_slice=}")
 
     return dataset
 
@@ -95,7 +92,7 @@ model_doc/auto#transformers.AutoTokenizer\
     """
 
     if not model_name and not save_dir:
-        logger.error(f"{ValueError}. One arg needs to be provided.")
+        logging_facility("error", f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
     dir = f"{save_dir}/Tokenizer/{model_name}"
@@ -114,24 +111,24 @@ model_doc/auto#transformers.AutoTokenizer\
     if debug_on_global:
         msg_tok = f"tokenizer for {model_name=}"
         if dir_exists:
-            logger.debug(f"Loading local copy of {msg_tok} from {save_dir=}")
+            logging_facility("log", f"Loading local copy of {msg_tok} from {save_dir=}")
         else:
-            logger.debug(f"Downloading {msg_tok}")
+            logging_facility("log", f"Downloading {msg_tok}")
 
     try:
         tokenizer = AutoTokenizer.from_pretrained(**tokenizer_load_params)
         if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving tokenizer to {save_dir=}")
+                logging_facility("log", f"Saving tokenizer to {save_dir=}")
             tokenizer.save_pretrained(save_dir)
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
     if debug_on_global:
         tok_msg = "This is a test sentence for the loaded tokenizer."
         tok_res = tokenizer.encode(tok_msg)
-        logger.debug(f"Tokenizing '{tok_msg}': {tok_res}")
+        logging_facility("log", f"Tokenizing '{tok_msg}': {tok_res}")
 
     return tokenizer
 
@@ -145,7 +142,7 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     """
 
     if not model_full_name and not save_dir:
-        logger.error(f"{ValueError}. One arg needs to be provided.")
+        logging_facility("error", f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
     dir = f"{save_dir}/Models/{model_full_name}"
@@ -166,16 +163,16 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
             if dir_exists
             else f"Downloading {model_full_name=}"
         )
-        logger.debug(msg)
+        logging_facility("log", msg)
 
     try:
         model = AutoModel.from_pretrained(**model_load_params)
         if not dir_exists:
             if debug_on_global:
-                logger.debug(f"Saving model to {save_dir=}")
+                logging_facility("log", f"Saving model to {save_dir=}")
             model.save_pretrained(save_dir)
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
     return model
@@ -195,13 +192,15 @@ def get_list_of_metrics_to_load(
 
     for met in metrics_to_load:
         if debug_on_global:
-            logger.debug(f"Trying to load HF Metrics Builder Script for {met=}")
+            logging_facility(
+                "log", f"Trying to load HF Metrics Builder Script for {met=}"
+            )
         try:
             metric_path_or_name = get_metric_path_or_name_to_load(met, save_dir)
             metric_loaded = load_single_metric(metric_path_or_name)
             metrics_loaded.append(metric_loaded)
         except Exception as e:
-            logger.error(e)
+            logging_facility("ecxeption", e)
             pass
 
     return metrics_loaded
@@ -231,7 +230,7 @@ def get_metric_path_or_name_to_load(
     """
 
     if not metric_to_load and not save_dir:
-        logger.error(f"{ValueError}. One arg needs to be provided.")
+        logging_facility("error", f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
     dir = f"{save_dir}/Metrics/{metric_to_load}"

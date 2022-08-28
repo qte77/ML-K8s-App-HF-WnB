@@ -9,7 +9,6 @@ Components could be models, datasets, tokenizers, metrics etc.
 # e.g. load_hf_components
 
 from dataclasses import dataclass
-from logging import getLogger
 from os import environ as env
 from typing import Union
 
@@ -17,7 +16,7 @@ from datasets import Metric
 from datasets.dataset_dict import DatasetDict
 from transformers import AutoModel, AutoTokenizer
 
-from .handle_logging import debug_on_global
+from .handle_logging import debug_on_global, logging_facility
 from .load_configs import get_keyfile_content
 from .load_hf_components import (
     get_dataset_hf,
@@ -26,8 +25,6 @@ from .load_hf_components import (
     get_tokenizer_hf,
 )
 from .prepare_pipe_params import Parameters
-
-logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)  # slots only >=3.10
@@ -89,7 +86,7 @@ def _get_large_components(paramdict: Parameters) -> Pipeline:
     )
     paramdict.dataset["num_labels"] = num_labels
     if debug_on_global:
-        logger.debug(f"The number of unique labels is {num_labels}")
+        logging_facility("log", f"The number of unique labels is {num_labels}")
 
     # paramdict.dataset["num_labels"] = 2
 
@@ -165,10 +162,11 @@ def _get_sanitized_tokenized_dataset(
     """
 
     if debug_on_global:
-        logger.debug(
+        logging_facility(
+            "log",
             f"Tokenizing dataset with {len(cols_to_tokenize)} columns to tokenize\
             and \n Removing {cols_to_tokenize=} and {cols_to_remove=} from tokenized\
-            dataset"
+            dataset",
         )
 
     try:
@@ -180,10 +178,10 @@ def _get_sanitized_tokenized_dataset(
         )
         if debug_on_global:
             ds_tokenized_train_slice = ds_tokenized["train"][0]
-            logger.debug(f"{ds_tokenized_train_slice=}")
+            logging_facility("log", f"{ds_tokenized_train_slice=}")
         return ds_tokenized
     except Exception as e:
-        logger.error(e)
+        logging_facility("excepetion", e)
         return e
 
 
@@ -212,12 +210,11 @@ def _set_provider_env(provider: str, provider_env: dict) -> None:
         for k, v in provider_env[provider].items():
             env[k] = v
         if debug_on_global:
-            logger.debug(f"Environment set for {provider_label}")
+            logging_facility("log", f"Environment set for {provider_label}")
             for s in env:
                 if f"{provider_label}_" in s:
-                    logger.debug(f"{s}=***") if "API_KEY" in s else logger.debug(
-                        f"{s}={env[s]}"
-                    )
+                    msg = f"{s}=***" if "API_KEY" in s else f"{s}={env[s]}"
+                    logging_facility("log", msg)
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e

@@ -14,6 +14,8 @@ from os.path import (
 )
 from typing import Union
 
+from .handle_logging import logging_facility
+
 
 def sanitize_path(path_to_sanitize: str = "~") -> Union[dict[str, str], Exception]:
     """
@@ -26,6 +28,7 @@ def sanitize_path(path_to_sanitize: str = "~") -> Union[dict[str, str], Exceptio
         pth_lst = [dirname(pth)] + list(splitext(basename(pth)))
         return {k: v for (k, v) in zip(["dir", "base", "ext"], pth_lst)}
     except Exception as e:
+        logging_facility("exception", e)
         return e
 
 
@@ -35,6 +38,7 @@ def check_path(path_to_check: str) -> bool:
     try:
         return exists(join_path(path_to_check))
     except Exception as e:
+        logging_facility("exception", e)
         return e
 
 
@@ -44,8 +48,10 @@ def create_path(dir_to_create: str):
     try:
         makedirs(join_path(dir_to_create))
     except OSError:
+        logging_facility("exception", OSError)
         pass
     except Exception as e:
+        logging_facility("exception", e)
         return e
 
 

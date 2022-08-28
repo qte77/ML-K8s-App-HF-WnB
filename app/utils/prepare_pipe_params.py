@@ -9,21 +9,18 @@
 
 from dataclasses import asdict, dataclass
 from json import dump
-from logging import getLogger
 from os import environ as env
 from typing import Union
 
 from torch import device
 from torch.cuda import is_available
 
-from .handle_logging import debug_on_global
+from .handle_logging import debug_on_global, logging_facility
 from .load_configs import (
     get_config_content,
     get_defaults,
     load_defaults_into_load_configs_module,
 )
-
-logger = getLogger(__name__)
 
 
 @dataclass(repr=False, eq=False)
@@ -50,7 +47,7 @@ def get_param_dict() -> Parameters:
     """
 
     if debug_on_global:
-        logger.debug("Constructing parameter object as Type Parameters")
+        logging_facility("log", "Constructing parameter object as Type Parameters")
 
     # TODO alters data and behavior of other class, no FP ?
     load_defaults_into_load_configs_module()
@@ -108,7 +105,7 @@ def _get_Parameters_provider_env(
         return provider_env
     else:
         if debug_on_global:
-            logger.debug(f"Env for '{provider=}' not implemented")
+            logging_facility("log", f"Env for '{provider=}' not implemented")
         return NotImplementedError
 
 
@@ -118,7 +115,7 @@ def _parse_dataset_config(datasets: dict, dataset: str) -> dict:
     try:
         return datasets[dataset.lower()]
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
 
@@ -138,7 +135,7 @@ def _parse_metric_to_optimize_config(
         ]
         return metricsobj
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
 
@@ -165,7 +162,7 @@ def _parse_metrics_to_load(
     try:
         return [met for met in metrics_to_load if met in metrics_secondary_possible]
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
 
@@ -175,7 +172,7 @@ def _create_model_full_name(models: dict, model: str) -> str:
     try:
         return models.get(model.lower(), ["Invalid model", ""])["full_name"]
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
 
@@ -188,7 +185,7 @@ def _create_project_name(
     try:
         return f"{model}-{dataset_name}-{device}{suffix}".upper()
     except Exception as e:
-        logger.error(e)
+        logging_facility("exception", e)
         return e
 
 
@@ -202,13 +199,13 @@ def _get_device() -> str:
         try:
             return device("cuda" if is_available() else "cpu")
         except Exception as e:
-            logger.error(e)
+            logging_facility("exception", e)
             return e
 
 
 def _save_dict_to_file(object_to_save: object, save_file: str = "./Parameters.json"):
     """Saves <object_to_save>: object to [save_file]: str"""
 
-    logger.debug(f"Saving to '{save_file}' from {object_to_save=}")
+    logging_facility("log", f"Saving to '{save_file}' from {object_to_save=}")
     with open(save_file, "w") as outfile:
         dump(object_to_save, outfile, indent=2)
