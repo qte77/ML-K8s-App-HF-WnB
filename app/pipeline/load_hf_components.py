@@ -40,10 +40,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
     dir_exists = check_path(dir)
     data_dir_san = join_path(dir) if dir_exists else ""
 
-    if not dir_exists:
-        create_path(dir)
-
-    # TODO load from local dir
+    # FIXME load from local dir with data_dir or data_files ?
     ds_load_params = {
         "path": dataset_name,  # data_dir_san if dir_exists else dataset_name,
         "name": configuration,  # "" if dir_exists else configuration,
@@ -58,6 +55,7 @@ https://huggingface.co/docs/datasets/loading#local-and-remote-files\
         if not dir_exists:
             if debug_on_global:
                 logging_facility("log", f"Saving dataset to {data_dir_san=}")
+            create_path(dir)
             dataset.save_to_disk(data_dir_san)
     except Exception as e:
         logging_facility("exception", e)
@@ -91,9 +89,6 @@ model_doc/auto#transformers.AutoTokenizer\
     dir_exists = check_path(dir)
     save_dir = join_path(dir) if dir_exists else ""
 
-    if not dir_exists:
-        create_path(dir)
-
     tokenizer_load_params = {
         "pretrained_model_name_or_path": save_dir if dir_exists else model_name,
         "truncation": True,
@@ -108,6 +103,7 @@ model_doc/auto#transformers.AutoTokenizer\
         if not dir_exists:
             if debug_on_global:
                 logging_facility("log", f"Saving tokenizer to {save_dir=}")
+            create_path(dir)
             tokenizer.save_pretrained(save_dir)
     except Exception as e:
         logging_facility("exception", e)
@@ -135,9 +131,6 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
     dir_exists = check_path(dir)
     save_dir = join_path(dir) if dir_exists else ""
 
-    if not dir_exists:
-        create_path(dir)
-
     model_load_params = {
         "pretrained_model_name_or_path": save_dir if dir_exists else model_full_name,
         "num_labels": num_labels,
@@ -151,6 +144,8 @@ def get_model_hf(model_full_name: str, num_labels: int, save_dir: str = None) ->
         if not dir_exists:
             if debug_on_global:
                 logging_facility("log", f"Saving model to {save_dir=}")
+            # FIXME action if path creation not successful
+            create_path(dir)
             model.save_pretrained(save_dir)
     except Exception as e:
         logging_facility("exception", e)
@@ -180,8 +175,8 @@ def get_list_of_metrics_to_load(
                 "log", f"Trying to load HF Metrics Builder Script for {met=}"
             )
         try:
-            metric_path_or_name = get_metric_path_or_name_to_load(met, save_dir)
-            metric_loaded = load_single_metric(metric_path_or_name)
+            metric_path_or_name = _get_metric_path_or_name_to_load(met, save_dir)
+            metric_loaded = _load_single_metric(metric_path_or_name)
             metrics_loaded.append(metric_loaded)
         except Exception as e:
             logging_facility("ecxeption", e)
@@ -190,7 +185,7 @@ def get_list_of_metrics_to_load(
     return metrics_loaded
 
 
-def load_single_metric(path: str) -> Union[Metric, Exception]:
+def _load_single_metric(path: str) -> Union[Metric, Exception]:
     """Loads a single Metric Builder Script from Hugging Face or local path"""
 
     try:
@@ -200,7 +195,7 @@ def load_single_metric(path: str) -> Union[Metric, Exception]:
 
 
 # FIXME more generic save_dir, maybe in  defaults.yml?
-def get_metric_path_or_name_to_load(
+def _get_metric_path_or_name_to_load(
     metric_to_load: str, save_dir: str
 ) -> Union[str, Exception, ValueError]:
     """
@@ -226,7 +221,7 @@ def get_metric_path_or_name_to_load(
 
 
 # TODO
-def save_metric_to_local_path():
+def _save_metric_to_local_path():
     """TODO"""
 
     # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
@@ -243,7 +238,7 @@ def save_metric_to_local_path():
 
 
 # TODO
-def load_metric_from_local_path():
+def _load_metric_from_local_path():
     """TODO"""
 
     # if path_exists:

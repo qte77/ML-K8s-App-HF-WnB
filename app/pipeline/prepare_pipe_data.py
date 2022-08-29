@@ -36,7 +36,7 @@ class Pipeline:
     - `tokenizer` as `AutoTokenizer`
     - `dataset_tokenized` as `DatasetDict`
     - `model` as `AutoModel`
-    - `metrics_loaded` as `list[dict]`
+    - `metrics_loaded` as `list[Metric]`
     """
 
     parameters: Parameters
@@ -55,11 +55,19 @@ def prepare_pipe_data(parameters: Parameters) -> Pipeline:
     """
 
     _set_provider_env(parameters.sweep["provider"], parameters.provider_env)
+
     return _get_large_components(parameters)
 
 
 def _get_large_components(parameters: Parameters) -> Pipeline:
-    """Loads components needed for the `Pipeline`"""
+    """
+    Loads components needed for the dataclass `Pipeline`.
+
+    * Tokenized dataset
+    * Tokenizer
+    * Model
+    * List of metrics
+    """
 
     dataset_plain = _get_dataset(
         parameters.dataset["dataset"],
@@ -115,6 +123,7 @@ def _get_dataset(
 
     To date only from Hugging Face.
     """
+
     return get_dataset_hf(name, configuration, save_dir)
 
 
@@ -124,6 +133,7 @@ def _get_tokenizer(model_full_name: str, save_dir: str = None) -> AutoTokenizer:
 
     To date only from Hugging Face.
     """
+
     return get_tokenizer_hf(model_full_name, save_dir)
 
 
@@ -135,6 +145,7 @@ def _get_metrics_to_load_objects(
 
     To date only from Hugging Face.
     """
+
     return get_list_of_metrics_to_load(metrics_to_load, save_dir)
 
 
@@ -159,6 +170,7 @@ def _get_sanitized_tokenized_dataset(
     Returns the sanitized tokenized dataset stripped of columns not needed.
 
     TODO save a local copy of the tokenized dataset to avoid overhead
+    May not be useful inside container
     """
 
     if debug_on_global:
@@ -169,19 +181,20 @@ def _get_sanitized_tokenized_dataset(
             logging_facility("log", msg)
 
     try:
-        # TODO save local copy of tokenized dataset
         ds_tokenized = (
             _get_raw_tokenized_dataset(dataset_plain, tokenizer, cols_to_tokenize)
             .remove_columns(cols_to_tokenize)
             .remove_columns(cols_to_remove)
         )
-        if debug_on_global:
-            ds_tokenized_train_slice = ds_tokenized["train"][0]
-            logging_facility("log", f"{ds_tokenized_train_slice=}")
-        return ds_tokenized
     except Exception as e:
         logging_facility("excepetion", e)
         return e
+
+    if debug_on_global:
+        ds_tokenized_train_slice = ds_tokenized["train"][0]
+        logging_facility("log", f"{ds_tokenized_train_slice=}")
+
+    return ds_tokenized
 
 
 def _get_raw_tokenized_dataset(
@@ -198,7 +211,11 @@ def _get_raw_tokenized_dataset(
 
 
 def _set_provider_env(provider: str, provider_env: dict) -> None:
-    """Set the environment parameters for the sweep provider including API keys"""
+    """
+    Sets the environment parameters for the sweep provider including API keys.
+
+    Sets all environment variables in upper case.
+    """
 
     provider_label = provider.upper()
 
@@ -208,12 +225,13 @@ def _set_provider_env(provider: str, provider_env: dict) -> None:
         ]
         for k, v in provider_env[provider].items():
             env[k] = v
-        if debug_on_global:
-            logging_facility("log", f"Environment set for {provider_label}")
-            for s in env:
-                if f"{provider_label}_" in s:
-                    msg = f"{s}=***" if "API_KEY" in s else f"{s}={env[s]}"
-                    logging_facility("log", msg)
     except Exception as e:
         logging_facility("exception", e)
         return e
+
+    if debug_on_global:
+        logging_facility("log", f"Environment set for {provider_label}")
+        for s in env:
+            if f"{provider_label}_" in s:
+                msg = f"{s}=***" if "API_KEY" in s else f"{s}={env[s]}"
+                logging_facility("log", msg)

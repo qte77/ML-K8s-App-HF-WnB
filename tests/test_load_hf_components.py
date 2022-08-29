@@ -18,10 +18,10 @@ if True:
 
 # delayed loading to set get_and_configure_logger:debug_on_global
 from app.pipeline.load_hf_components import (
+    _get_metric_path_or_name_to_load,
+    _load_single_metric,
     get_list_of_metrics_to_load,
-    get_metric_path_or_name_to_load,
     get_model_hf,
-    load_single_metric,
 )
 
 logger = getLogger(__name__)
@@ -46,16 +46,16 @@ def test_get_model_hf(
 # 2) if internet: move metric from local cache to save_dir
 # 3) return list[Metric]
 @mark.usefixtures("metrics_to_test_for")
-def test_load_single_metric(metrics_to_test_for):
+def test__load_single_metric(metrics_to_test_for):
     """Expects a single valid Metric-object"""
 
-    metric_loaded = load_single_metric(metrics_to_test_for)
+    metric_loaded = _load_single_metric(metrics_to_test_for)
 
     assert isinstance(metric_loaded, Metric)
 
 
 @mark.usefixtures("metrics_to_test_for", "save_dir_fixture")
-def test_get_metric_path_or_name_to_load(metrics_to_test_for, save_dir_fixture):
+def test__get_metric_path_or_name_to_load(metrics_to_test_for, save_dir_fixture):
     """Expects a valid path to a Metric Builder Script"""
 
     # TODO test for actual builder script, not only path
@@ -63,7 +63,7 @@ def test_get_metric_path_or_name_to_load(metrics_to_test_for, save_dir_fixture):
     save_dir = join(dir["dir"], dir["base"])
     expected_dir = f"{save_dir}{sep}Metrics{sep}{metrics_to_test_for}"
 
-    returned_dir = get_metric_path_or_name_to_load(
+    returned_dir = _get_metric_path_or_name_to_load(
         metrics_to_test_for, save_dir_fixture
     )
 

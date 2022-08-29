@@ -361,6 +361,8 @@ Inspirations [↑](#app-k8s-hf-wnb)
 * Dave Farley
   * [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
   * [Test Driven Development vs Behavior Driven Development](https://www.youtube.com/watch?v=Bq_oz7nCNUA)
+* Ian Cooper
+  * [🚀 TDD, Where Did It All Go Wrong (Ian Cooper)](https://www.youtube.com/watch?v=EZ05e7EMOLM)
 * [Using Cirrus CLI instead of Makefiles for gRPC code generation](https://medium.com/cirruslabs/using-cirrus-cli-instead-of-makefiles-for-generating-grpc-87b949a67449)
 
 Resources [↑](#app-k8s-hf-wnb)

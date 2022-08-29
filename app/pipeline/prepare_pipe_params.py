@@ -87,7 +87,7 @@ def get_parameters() -> Parameters:
     )
 
     if debug_on_global:
-        _save_dict_to_file(asdict(parameters))
+        _save_object_to_file(asdict(parameters))
 
     return parameters
 
@@ -166,16 +166,6 @@ def _parse_metrics_to_load(
         return e
 
 
-def _create_model_full_name(models: dict, model: str) -> str:
-    """Loads the full name of the model"""
-
-    try:
-        return models.get(model.lower(), ["Invalid model", ""])["full_name"]
-    except Exception as e:
-        logging_facility("exception", e)
-        return e
-
-
 def _create_project_name(
     model: str, dataset_name: str, device: str, is_sweep: bool
 ) -> Union[str, Exception]:
@@ -203,7 +193,7 @@ def _get_device() -> str:
             return e
 
 
-def _save_dict_to_file(object_to_save: object, save_file: str = "./Parameters.json"):
+def _save_object_to_file(object_to_save: object, save_file: str = "./Parameters.json"):
     """Saves <object_to_save>: object to [save_file]: str"""
 
     logging_facility("log", f"Saving to '{save_file}' from {object_to_save=}")
