@@ -110,10 +110,17 @@ Purpose [↑](#app-k8s-hf-wnb)
 Paradigms [↑](#app-k8s-hf-wnb)
 ---
 
-* TDD
+* TDD/BDD
 * Mostly functional
-* Time-to-value
+* Time-to-value, time-to-market
 * Light-weight
+* Code should (Dave Farley)
+  * Work
+  * Be modular
+  * Be cohesive
+  * Be appropriatly coupled
+  * Be separated by concerns
+  * Hide/abstract information
 
 App Structure [↑](#app-k8s-hf-wnb)
 ---
@@ -249,6 +256,10 @@ TODO [↑](#app-k8s-hf-wnb)
 * [x] Get WandB sweep config
   * Implemented and functional
   * May be extended to other providers, but for MVP sufficient
+* [ ] Save models, datasets, tokenizer and metrics in local folder other than cache
+* [ ] Define the core of the app
+  * [ ] `train`
+  * [ ] `infer`
 
 ### Coding
 
@@ -281,12 +292,16 @@ TODO [↑](#app-k8s-hf-wnb)
     * Low priority right now, design choice for a later stage
   * It is a code smell because it does not provide behavior but only a structure
     * Designed to hold data, may be comparable to `struct`and `enum`
+* [x] Have a look at [PyTest](http://pytest.org/)
+  * Explored in repo `TDD-Playground`
+* [x] Line-continuation inside docstrings
+* [ ] Incorporate test objects
+  * Fake, Mock, Stub
 * [ ] Refactor logging according to Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
   * [ ] Domain Probing 'A Domain Probe[...] enables us to add observability to domain logic while still talking in the language of the domain'
-  * [ ] Logging into functions and module
-  * [ ] `logger`, `metrics`, `analytics`
+  * [x] Decouple logging into dedicated functions and module
+  * [x] Define logging types, e.g. `log`, `metrics`, `analytics`
   * [ ] Testing the logging and observability
-* [ ] Line-continuation inside docstrings
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `pydantic` build for parsing and checking types at runtime
   * If the app uses data it produced itself, it may not be suitable
@@ -297,10 +312,6 @@ TODO [↑](#app-k8s-hf-wnb)
   * Difference between Abstraction vs Decoupling
   * Difference between Cohesion and Coupling
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
-* [ ] Adopt TDD as described by Dave Farley [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
-  * Red: Write test
-  * Green: Write code passing test
-  * Blue Refactor code and test
 
 ### Dependency tracking and app sourcing
 
@@ -328,17 +339,31 @@ TODO [↑](#app-k8s-hf-wnb)
     * Get fast feedback
     * Raise confidence in codebase
     * Always keep codebase in releasable state
-* [x] Have a look at [PyTest](http://pytest.org/)
-  * Explored in repo `TDD-Playground`
+* [ ] Adopt TDD/BDD as described by Dave Farley [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw) and [TDD vs BDD](https://www.youtube.com/watch?v=Bq_oz7nCNUA)
+  * Goals
+    * Think of specification first, then test
+    * Confirm behavior instead of testing the code
+  * Structure
+    * Specification (Test Suite) ==> Test (Szenario) ==> "Given, When, Then"
+  * Sequence
+    * Red: Write test ==> Green: Write code passing test ==> Blue Refactor code and test
+    * Test: Arrange ==> Act ==> Assert ==> Clean
+* [ ] Move from `Makefile` to [Cirrus CLI](https://github.com/cirruslabs/cirrus-cli)
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
 
 Inspirations [↑](#app-k8s-hf-wnb)
 ---
 
-* TODO
+* Martin Fowler
+  * [Software Architecture Guide](https://martinfowler.com/architecture/)
+  * [Agile Software Guide](https://martinfowler.com/agile.html)
+  * [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
+* Dave Farley
+  * [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
+  * [Test Driven Development vs Behavior Driven Development](https://www.youtube.com/watch?v=Bq_oz7nCNUA)
+* [Using Cirrus CLI instead of Makefiles for gRPC code generation](https://medium.com/cirruslabs/using-cirrus-cli-instead-of-makefiles-for-generating-grpc-87b949a67449)
 
 Resources [↑](#app-k8s-hf-wnb)
 ---
 
-* Martin Fowler [Domain-Oriented Observability](https://martinfowler.com/articles/domain-oriented-observability.html)
-* Dave Farley [TDD Is The Best Design Technique](https://www.youtube.com/watch?v=ln4WnxX-wrw)
+* TODO
