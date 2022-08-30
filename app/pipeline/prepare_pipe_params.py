@@ -7,7 +7,7 @@
 # TODO dataclass and FP ?
 # TODO decouple hard coded paths from functions
 
-from dataclasses import asdict, dataclass
+
 from json import dump
 from os import environ as env
 from typing import Union
@@ -21,21 +21,40 @@ from ..utils.load_configs import (
     get_defaults,
     load_defaults_into_load_configs_module,
 )
+from ..utils.toggle_features import pydantic_on_global
 
+if pydantic_on_global:
+    from pydantic import BaseModel
 
-@dataclass(repr=False, eq=False)
-class Parameters:
-    """Holds structured parameter data"""
+    class Parameters(BaseModel):
+        """Holds structured parameter data"""
 
-    dataset: dict[str, Union[str, list]]
-    device: str
-    metrics: dict[str, Union[dict[str, str], list]]
-    model_name: str
-    model_full_name: str
-    project_name: str
-    provider_env: dict[str, dict[str, str]]
-    save_dir: str
-    sweep: dict[str, Union[str, int, bool, dict]]
+        dataset: dict[str, Union[str, list]]
+        device: str
+        metrics: dict[str, Union[dict[str, str], list]]
+        model_name: str
+        model_full_name: str
+        project_name: str
+        provider_env: dict[str, dict[str, str]]
+        save_dir: str
+        sweep: dict[str, Union[str, int, bool, dict]]
+
+else:
+    from dataclasses import asdict, dataclass
+
+    @dataclass(repr=False, eq=False)
+    class Parameters:
+        """Holds structured parameter data"""
+
+        dataset: dict[str, Union[str, list]]
+        device: str
+        metrics: dict[str, Union[dict[str, str], list]]
+        model_name: str
+        model_full_name: str
+        project_name: str
+        provider_env: dict[str, dict[str, str]]
+        save_dir: str
+        sweep: dict[str, Union[str, int, bool, dict]]
 
 
 def get_parameters() -> Parameters:

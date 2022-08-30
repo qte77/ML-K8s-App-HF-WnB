@@ -18,7 +18,9 @@ from .utils.handle_logging import (
 from .utils.log_system_info import log_system_info
 from .utils.parse_args import parse_args
 
-configure_logger()
+if True:
+    toggle_pydantic: bool = False
+    configure_logger()
 
 
 def _log_basic_info():
@@ -69,12 +71,18 @@ if __name__ == "__main__":
 
     if debug_on:
         _log_basic_info()
+
     _toggle_global_debug(debug_on)
 
     if sysinfo_on or sysinfoexit_on:
         _show_sysinfo()
         if sysinfoexit_on:
             exit()
+
+    # FIXME delayed import because of global debug toggle
+    from .utils.toggle_features import toggle_global_pydantic
+
+    toggle_global_pydantic(toggle_pydantic)
 
     # FIXME delayed import because of global debug toggle
     from .app import app

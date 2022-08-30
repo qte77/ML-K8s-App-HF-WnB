@@ -22,6 +22,8 @@ Types of changes:
 
 - Hadolint for docker images to pre-commit
   - Commented out because warnings abort pre-commit
+- Type enforcing at runtime with `pydantic`
+  - Test with feature toggles/flags to replace `dataclasses` and `mypy`
 
 ### Changed
 
