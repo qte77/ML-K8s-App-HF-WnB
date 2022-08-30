@@ -26,9 +26,15 @@ def _log_basic_info():
     TODO
     """
 
-    logging_facility("log", "Configuring app")
-    logging_facility("log", f"{path[0]=}, {__package__=}")
-    logging_facility("log", f"{mode=}, {debug_on=}, {sysinfo_on=}, {sysinfoexit_on=}")
+    [
+        logging_facility("log", msg)
+        for msg in [
+            "Configuring app",
+            f"{path[0]=}",
+            f"{__package__=}",
+            f"{mode=}, {debug_on=}, {sysinfo_on=}, {sysinfoexit_on=}",
+        ]
+    ]
 
 
 def _toggle_global_debug(debug_on: bool):
