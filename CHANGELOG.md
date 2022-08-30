@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[2.8.0] - 2022-08-30
+---
+
 ### Added
 
 - Hadolint for docker images to pre-commit
