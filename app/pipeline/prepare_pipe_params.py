@@ -10,7 +10,7 @@
 
 from json import dump
 from os import environ as env
-from typing import Union
+from typing import Optional, Union
 
 from torch import device
 from torch.cuda import is_available
@@ -21,10 +21,12 @@ from ..utils.load_configs import (
     get_defaults,
     load_defaults_into_load_configs_module,
 )
-from ..utils.toggle_features import pydantic_on_global
+from ..utils.toggle_features import toggle_pydantic_on_global
 
-if pydantic_on_global:
-    from pydantic import BaseModel
+if toggle_pydantic_on_global:
+    from pydantic import BaseModel, validator
+
+    # from pydantic.dataclasses import dataclass
 
     class Parameters(BaseModel):
         """Holds structured parameter data"""
@@ -37,10 +39,24 @@ if pydantic_on_global:
         project_name: str
         provider_env: dict[str, dict[str, str]]
         save_dir: str
-        sweep: dict[str, Union[str, int, bool, dict]]
+        sweep: Optional[dict[str, Union[str, int, bool, dict]]]
+
+        @validator("device")
+        @classmethod
+        def validate_device(cls, device):
+            """This validator is a simple dummy case"""
+
+            devices = ["cpu", "cuda", "tpu"]
+
+            logging_facility("log", device)
+
+            if device not in devices:
+                raise ValueError("Unknown device")
+            else:
+                return device
 
 else:
-    from dataclasses import asdict, dataclass
+    from dataclasses import dataclass
 
     @dataclass(repr=False, eq=False)
     class Parameters:
@@ -54,7 +70,7 @@ else:
         project_name: str
         provider_env: dict[str, dict[str, str]]
         save_dir: str
-        sweep: dict[str, Union[str, int, bool, dict]]
+        sweep: Optional[dict[str, Union[str, int, bool, dict]]]
 
 
 def get_parameters() -> Parameters:
@@ -106,7 +122,7 @@ def get_parameters() -> Parameters:
     )
 
     if debug_on_global:
-        _save_object_to_file(asdict(parameters))
+        _save_object_to_file(parameters.__dict__)  # asdict(parameters))
 
     return parameters
 

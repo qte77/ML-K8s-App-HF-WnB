@@ -267,7 +267,7 @@ TODO [↑](#app-k8s-hf-wnb)
   * May be problematic with function returns
 * [x] Type hinting in function calls
   * Implemented to improve readability
-  * May be extended with `typing`, `dataclasses` or `pydantic`
+  * May be extended with [`typing`](https://docs.python.org/3/library/typing.html), [`dataclasses`](https://docs.python.org/3/library/dataclasses.html), [`pydantic`](https://github.com/pydantic/pydantic) or [`Typer`](https://github.com/tiangolo/typer)
 * [x] Read multiple yml inside one file inside config loader
   * Abondoned, adds unnecessary complexity, use separate yml
 * [x] Expand into [typing — Support for type hints](https://docs.python.org/3/library/typing.html)
@@ -301,11 +301,14 @@ TODO [↑](#app-k8s-hf-wnb)
   * [ ] Domain Probing 'A Domain Probe[...] enables us to add observability to domain logic while still talking in the language of the domain'
   * [x] Decouple logging into dedicated functions and module
   * [x] Define logging types, e.g. `log`, `metrics`, `analytics`
+* [x] Explore [feature toggles](https://www.martinfowler.com/articles/feature-toggles.html)
   * [ ] Testing the logging and observability
 * [ ] Test [`pydantic`](https://pydantic-docs.helpmanual.io/) for type checking
   * `pydantic` build for parsing and checking types at runtime
-  * If the app uses data it produced itself, it may not be suitable
-  * `typing` and `dataclasses` only annotate for hinting
+  * If the app uses data it produced only by itself, it may not be suitable because of speed loss
+  * Use `pydantic.BaseModel` or `pydantic.dataclasses.dataclass`
+  * Read in and validate mode at the same time
+  * Try to unpack yaml into pydantic w/o customized parsing before
 * [ ] Use `hydra` to parametrize the app
   * Hydra supports importing of custom `dataclasses.dataclass`
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
@@ -348,6 +351,7 @@ TODO [↑](#app-k8s-hf-wnb)
   * Sequence
     * Red: Write test ==> Green: Write code passing test ==> Blue Refactor code and test
     * Test: Arrange ==> Act ==> Assert ==> Clean
+  * Frameworks Gherkin and Cucumber
 * [ ] Move from `Makefile` to [Cirrus CLI](https://github.com/cirruslabs/cirrus-cli)
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
 
