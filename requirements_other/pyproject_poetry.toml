@@ -1,3 +1,60 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+version = "2.8.0"
+name = "App-K8s-HF-WnB"
+description = "End-to-end K8s app with Hugging Face and Weights&Biases"
+license = "BSD 3-Clause"
+authors = ["qte77 <qte77>"]
+readme = "README.md"
+repository = "https://github.com/qte77/App-K8s-HF-WnB"
+documentation = "https://github.com/qte77/App-K8s-HF-WnB/docs"
+keywords= ["ML", "Docker", "Kubernetes", "Hugging Face", "Weights&Biases"]
+
+[tool.poetry.urls]
+"Issues" = "https://github.com/qte77/App-K8s-HF-WnB/issues"
+"Personal website" = "https://qte77.github.io"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+datasets = "==2.3.*"
+numpy = "==1.21.*"
+protobuf = "==3.20.*"
+pyyaml = "==6.0.*"
+scipy = "*"
+sklearn = "*"
+torch = "==1.11.*"
+transformers = "==4.19.*"
+wandb = "==0.12.*"
+omegaconf = "*"
+pydantic = "*"
+# https://download.pytorch.org/whl/cu113/torch-1.11.0%2Bcu113-cp38-cp38-linux_x86_64.whl
+# git+https://github.com/huggingface/transformers
+
+[tool.poetry.dev-dependencies]
+black = "*"
+"blacken-docs" = "*"
+bump2version = "*"
+coverage = "*"
+flake8 = "*"
+interrogate = "*"
+isort = "*"
+mypy = "*"
+"pre-commit" = "*"
+pyupgrade = "*"
+pytest = "*"
+tuna = "*"
+# ipykernel = "^6.13.0"
+# jupyterlab = "^3.4.2"
+# pdoc = "*"
+# pipenv = "*"
+# "pytest-cov" = "*"
+# sphinx = "*"
+# tox = "*"
+# watchdog = "==2.1.9"
+
 [tool.isort]
 profile = "black"
 src_paths = ["app", "tests"]

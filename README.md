@@ -283,6 +283,7 @@ TODO [↑](#app-k8s-hf-wnb)
   * Env `APP_DEBUG_IS_ON` checked by modules and written to `global debug_on_global`
 * [x] Use `omegaconf` to load configs instead of own helper implementation
   * This package manages loading of configs from json or yaml
+  * Offers type checking at load-time with [Structured configs](https://omegaconf.readthedocs.io/en/2.2_branch/structured_config.html#simple-types)
 * [x] Align to [PEP 257 – Docstring Conventions](https://peps.python.org/pep-0257/)
   * Multi-line docstrings
 * [x] Try [`argparse`](https://docs.python.org/3/library/argparse.html)
@@ -309,6 +310,7 @@ TODO [↑](#app-k8s-hf-wnb)
   * Use `pydantic.BaseModel` or `pydantic.dataclasses.dataclass`
   * Read in and validate mode at the same time
   * Try to unpack yaml into pydantic w/o customized parsing before
+  * `BaseSettings`could be useful to combine files and env
 * [ ] Use `hydra` to parametrize the app
   * Hydra supports importing of custom `dataclasses.dataclass`
 * [ ] Decouple concerns into separate containers, e.g. avoid big container because of `torch`
@@ -316,15 +318,17 @@ TODO [↑](#app-k8s-hf-wnb)
   * Difference between Cohesion and Coupling
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
 
-### Dependency tracking and app sourcing
+### Dependency tracking and packaging
 
 * [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to `requirements.txt`
   * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed'
 * [x] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
   * Used to pool information for build, package, tools etc into one file
   * Some tools like `flake8` do not support this approach
-* [ ] Provide package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py`
-  * Required for `tox`
+* Create a package
+  * Required for `tox` and `pdoc`
+  * [ ] Experiment package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py` and [`hatchling`](https://hatch.pypa.io/latest/) or [`setuptools`](https://setuptools.pypa.io/en/latest/)
+  * [ ] Experiment with [`poetry`](https://python-poetry.org/docs/)
 
 ### Project management
 

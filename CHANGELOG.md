@@ -27,6 +27,7 @@ Types of changes:
   - Commented out because warnings abort pre-commit
 - Type enforcing at runtime with `pydantic`
   - Test with feature toggles/flags to replace `dataclasses` and `mypy`
+- Feature toggle for `poetry` instead of `pipenv` inside `make.bat`
 
 ### Changed
 
