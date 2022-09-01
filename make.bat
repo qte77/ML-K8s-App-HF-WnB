@@ -4,19 +4,19 @@ setlocal EnableDelayedExpansion EnableExtensions
 set LF=^
 
 
-set "prep=errorcodes!LF!messages!LF!commands"
+set "prep=errorcodes!LF!commands!LF!messages"
 set options=install update editable wheel expreq  cleanup test
 set options=%options% check commit push bump log importtime create
+
 set TOGGLE_MARK=ON
-if _%1_ == _%TOGGLE_MARK%_ (
-    set TOGGLE_POETRY=ON
+echo _%1_ | find /i "_%TOGGLE_MARK%_" && (
+    set TOGGLE_POETRY=%TOGGLE_MARK%
     set arg_cmd=%2
     set arg_subcmd=%3
-) else (
+) || (
     set arg_cmd=%1
     set arg_subcmd=%2
 )
-
 
 for /f %%p in ("!prep!") do call:%%p
 @REM not defined skips the first command, using echo as first
@@ -29,8 +29,8 @@ echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
         echo %msg_warning%
         echo.
     )
-    echo This file for Windows CMD replaces the Makefile for make
-    echo Python needs to be callable and available labels for %%1 are
+    echo This file for Windows CMD replaces the Makefile for make.
+    echo It uses Pipenv by default but TOGGLE_POETRY is available.
     echo.
     echo dev %TAB% install %TAB% Installs packages from Pipfile into venv
     echo %TAB% update %TAB% Updates and cleans Pipenv and pre-commit
@@ -46,8 +46,9 @@ echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
     echo scm %TAB% commit %TAB% Mandatory %%2=msg, use with "msg" for whitespaces
     echo %TAB% push   %TAB% Adds, commits and pushes if checks and tests passed
     echo %TAB% bump   %TAB% Bumps the version at %%2="part"
-    echo %TAB% log    %TAB% Shows oneline git log
-    echo doc %TAB% create %TAB% Creates docu from docstrings
+    echo %TAB% log    %TAB% Shows one-line git log
+    echo docs %TAB% docu   %TAB% Creates docu from /docs
+    echo %TAB% docstr %TAB% Creates docu from docstrings
     echo misc %TAB% importtime %TAB% Invokes Python import time and tuna
     echo.
 endlocal
@@ -61,54 +62,55 @@ exit /b %err_help_called%
 exit /b %errorlevel%
 
 :install
-    poetry install --no-root
-    %cmd_run% pre-commit install
-	%cmd_run% mypy --install-types --non-interactive
+    %deps_install%
 goto:eof
 
 :editable
 	echo %msg_not_impl%
-    @REM pipenv install --dev -e .
-	@REM %cmd_run% pre-commit install
-	@REM %cmd_run% mypy --install-types --non-interactive
+	@REM %deps_isntall%
+    @REM call:extras
+:extras
+    %deps_run% pre-commit install
+	%deps_run% mypy --install-types --non-interactive
 goto:eof
 
-:wheel
+:build
 	echo %msg_not_impl%
-    @REM %cmd_run% pip wheel . -w wheel
+    @REM pipenv pip wheel . -w wheel
+    @REM poetry build
 goto:eof
 
 :update
-	pipenv lock && pipenv clean && pipenv sync
-	%cmd_run% pre-commit autoupdate
+    %deps_update%
+	%deps_run% pre-commit autoupdate
 goto:eof
 
 :test
 	rem https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-    %cmd_run% coverage run -m pytest
-    %cmd_run% coverage report
+    %deps_run% coverage run -m pytest
+    %deps_run% coverage report
 goto:eof
 
 :check:
     echo hadolint && hadolint docker\Dockerfile
-    echo isort && %cmd_run% isort .
-    echo black && %cmd_run% black .
-    echo flake8 && %cmd_run% flake8
-    echo interrogate && %cmd_run% interrogate
+    echo isort && %deps_run% isort .
+    echo black && %deps_run% black .
+    echo flake8 && %deps_run% flake8
+    echo interrogate && %deps_run% interrogate
     echo mypy will be skipped
-    @REM echo mypy && %cmd_run% mypy .
+    @REM echo mypy && %deps_run% mypy .
     setlocal
     set skip=mypy,interrogate
     @REM not defined skips the first command, using echo as first
     if not defined %skip% echo set skip=Nothing >nul 2>&1
     echo pre-commit: %skip% will be skipped
-	%cmd_run% pre-commit run --all-files
+	%deps_run% pre-commit run --all-files
     endlocal
 goto:eof
 
 :commit
 	git add .
-	@REM %cmd_run% pre-commit run --show-diff-on-failure
+	@REM %deps_run% pre-commit run --show-diff-on-failure
     if _%1_ == __ (
         echo %msg_git_no_msg%
         endlocal
@@ -118,7 +120,7 @@ goto:eof
         set skip=mypy,interrogate
         call:test
         if ERRORLEVEL 0 (
-            %cmd_run% git commit -m %1 || echo "%msg_checks_fail%"
+            %deps_run% git commit -m %1 || echo "%msg_checks_fail%"
         ) else (
             echo Error in pipeline. Nothing commited.
         )
@@ -137,7 +139,7 @@ goto:eof
 
 :bump
     if not _%1_ == __ (
-        %cmd_run% bump2version %1
+        %deps_run% bump2version %1
     ) else (
         echo Parameter for 'part' is empty. Exiting.
         exit /b %err_b2v_part_empty%
@@ -156,13 +158,13 @@ goto:eof
     set "tm=" && set tm=%time::=-% && set tm=%tm:~0,8%
     set "ln=%outdir%\%dt%_%tm%_importtime.log"
     if not exist "%outdir%" mkdir "%outdir%"
-    %cmd_run% python -X importtime -m app 2>"%ln%"
-    %cmd_run% tuna "%ln%"
+    %deps_run% python -X importtime -m app 2>"%ln%"
+    %deps_run% tuna "%ln%"
 goto:eof
 
 :create
 	echo %msg_not_impl%
-    @REM %cmd_run% python -m pandoc write README.md
+    @REM %deps_run% python -m pandoc write README.md
     @REM docs/header-includes.yaml the_annotated_transformer.md \
     @REM --katex=/usr/local/lib/node_modules/katex/dist/ \
     @REM --output=docs/index.html --to=html5 \
@@ -199,25 +201,31 @@ goto:eof
     set err_git_pre_failed=-99
 goto:eof
 
+:commands
+    if _%TOGGLE_POETRY%_ == _%TOGGLE_MARK%_ (
+        set "depsmgr=poetry"
+        set "deps_install=--no-root"
+        set deps_editable=
+        set "deps_build=poetry build"
+        set "deps_update=poetry update --remove-untracked"
+    ) else (
+        set "depsmgr=pipenv"
+        set deps_install=
+        set deps_editable=--dev -e .
+        set "deps_build=pipenv pip wheel . -w wheel"
+        set "deps_update=pipenv lock && pipenv clean && pipenv sync"
+    )
+    set "deps_install=%depsmgr% install %deps_install%"
+    set "deps_run=%depsmgr% run"
+    @REM "set deps_sh=%depsmgr% shell"
+goto:eof
+
 :messages
+    set "TAB=	"
     set "msg_warning=############ Not Fully Implemented ############"
     set "msg_git_no_msg=No git message provided. Exiting without changes."
     set "msg_not_impl=############ Function Not Implemented ############"
     set "msg_checks_fail=Check(s) failed. Nothing commited."
-    if _%TOGGLE_POETRY%_ == _ON_ (
-    	set "runtime=poetry"
-    ) else (
-        set "runtime=pipenv"
-    )
-    set "run_start=Starting %arg_cmd%, runtime: %runtime%"
+    set "run_start=Starting %arg_cmd%, runtime: %depsmgr%"
     set "run_end=End %arg_cmd%"
-goto:eof
-
-:commands
-    if _%TOGGLE_POETRY%_ == _ON_ (
-        set cmd_run=poetry run
-    ) else (
-        set cmd_run=pipenv run
-    )
-    set "TAB=	"
 goto:eof
