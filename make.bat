@@ -7,10 +7,11 @@ set LF=^
 set "prep=errorcodes!LF!messages!LF!commands"
 set options=install update editable wheel expreq  cleanup test
 set options=%options% check commit push bump log importtime create
-if _%1_ == _ON_ (
+set TOGGLE_MARK=ON
+if _%1_ == _%TOGGLE_MARK%_ (
     set TOGGLE_POETRY=ON
     set arg_cmd=%2
-    set arg_sub=%3
+    set arg_subcmd=%3
 ) else (
     set arg_cmd=%1
     set arg_subcmd=%2
@@ -35,8 +36,9 @@ echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
     echo %TAB% update %TAB% Updates and cleans Pipenv and pre-commit
     echo %TAB% editable %TAB% Installs editable dev [--dev -e .]
     echo %TAB% wheel  %TAB% Builds wheel into ./wheel
-    if _%TOGGLE_POETRY%_ == _ON_ (
-    	echo %TAB% expreq %TAB% Export requirements from poetry
+    echo %TAB% TOGGLE_POETRY %TAB% [%%1=%TOGGLE_MARK%], other args moved right by one
+    if _%TOGGLE_POETRY%_ == _%TOGGLE_MARK%_ (
+    	echo %TAB% POETRY_EXPREQ %TAB% Export reqs from poetry to requirements.txt and Pipfile
     )
     echo %TAB% cleanup %TAB% Deletes the pipenv
     echo qual %TAB% test   %TAB% Runs pytest and coverage report
@@ -47,7 +49,6 @@ echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
     echo %TAB% log    %TAB% Shows oneline git log
     echo doc %TAB% create %TAB% Creates docu from docstrings
     echo misc %TAB% importtime %TAB% Invokes Python import time and tuna
-    echo %TAB% TOGGLE_POETRY %TAB% [%%1=ON], other args then moved right by one
     echo.
 endlocal
 exit /b %err_help_called%
