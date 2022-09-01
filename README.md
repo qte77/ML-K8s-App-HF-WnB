@@ -39,7 +39,7 @@ TOC
 Usage [↑](#app-k8s-hf-wnb)
 ---
 
-If inside the venv
+If inside `pipenv` or `poetry` venv
 
 ```sh
 python -m app
@@ -48,7 +48,7 @@ python -m app
 or if outside
 
 ```sh
-pipenv run python -m app
+<pipenv|poetry> run python -m app
 ```
 
 Install [↑](#app-k8s-hf-wnb)
@@ -56,16 +56,13 @@ Install [↑](#app-k8s-hf-wnb)
 
 ### Python
 
-From an environment with available `make`
+From an environment with available `make` and available `pipenv` or `poetry`
 
 ```sh
-make setup_local_dev
-```
-
-or from an environment with available `pipenv`
-
-```sh
-python -m pipenv install --dev -e .
+# pipenv default
+make install
+# poetry toggle
+make ON install
 ```
 
 or with `conda`
@@ -76,10 +73,7 @@ $envname = 'App-K8s-HF-WnB'
 conda create -ym -n $envname pipenv
 conda activate $envname
 # install from Pipfile and create new venv
-python -m pipenv install --dev
-# run command inside pipenv venv
-python -m pipenv run python --version
-python -m pipenv run pip list
+make install # ON install
 ```
 
 or with `conda-forge`
@@ -240,7 +234,7 @@ App Details [↑](#app-k8s-hf-wnb)
 The import performance of the app can be measured with `python -X importtime -m app` and visualized with [tuna](https://github.com/nschloe/tuna). From root this flow can be invoked by:
 
 ```sh
-make local_import_perf
+make importtime
 ```
 
 An example how the visualized import time could look like
