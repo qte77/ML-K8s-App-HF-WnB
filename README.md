@@ -56,24 +56,24 @@ Install [↑](#app-k8s-hf-wnb)
 
 ### Python
 
-From an environment with available `make` and available `pipenv` or `poetry`
+From a venv with available `pipenv` (default) or `poetry` (toggled)
 
 ```sh
-# pipenv default
-make install
-# poetry toggle
-make ON install
+poetry_toggle="" # "poetry"
+make $poetry_toggle install
 ```
 
 or with `conda`
 
 ```sh
-$envname = 'App-K8s-HF-WnB'
+envname='App-K8s-HF-WnB'
+poetry_toggle="" # "poetry"
 # create new conda venv with pipenv installed
-conda create -ym -n $envname pipenv
+if [ $poetry_toggle -eq "poetry" ]; then rt="poetry"; else rt="pipenv"; fi
+conda create -ym -n $envname $rt
 conda activate $envname
 # install from Pipfile and create new venv
-make install # ON install
+make $poetry_toggle install
 ```
 
 or with `conda-forge`

@@ -1,26 +1,30 @@
 @echo off
 rem For Windows to replace Makefile
 setlocal EnableDelayedExpansion EnableExtensions
+set reqs_path=reqs
 set LF=^
 
 
 set "prep=errorcodes!LF!commands!LF!messages"
-set options=install update editable wheel expreq  cleanup test
+set options=install update editable wheel reqs cleanup test
 set options=%options% check commit push bump log importtime create
+set "TAB=	"
 
-set TOGGLE_MARK=ON
-echo _%1_ | find /i "_%TOGGLE_MARK%_" && (
-    set TOGGLE_POETRY=%TOGGLE_MARK%
+set "DEPSMGR_DEFAULT=poetry"
+set "DEPSMGR_ALT=pipenv"
+echo _%1_ | find /i "_%DEPSMGR_ALT%_" >nul && (
+    set DEPSMGR_TOGGLE=%DEPSMGR_ALT%
     set arg_cmd=%2
     set arg_subcmd=%3
 ) || (
+    set DEPSMGR_TOGGLE=%DEPSMGR_DEFAULT%
     set arg_cmd=%1
     set arg_subcmd=%2
 )
 
-for /f %%p in ("!prep!") do call:%%p
 @REM not defined skips the first command, using echo as first
 if not defined %arg_cmd% echo goto:help >nul 2>&1
+for /f %%p in ("!prep!") do call:%%p
 echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
 
 :help
@@ -30,16 +34,13 @@ echo %options% | findstr /i "\<%arg_cmd%\>" >nul && goto:run
         echo.
     )
     echo This file for Windows CMD replaces the Makefile for make.
-    echo It uses Pipenv by default but TOGGLE_POETRY is available.
+    echo It uses %DEPSMGR_DEFAULT% by default but %DEPSMGR_ALT% is available as toggle.
     echo.
     echo dev %TAB% install %TAB% Installs packages from Pipfile into venv
     echo %TAB% update %TAB% Updates and cleans Pipenv and pre-commit
-    echo %TAB% editable %TAB% Installs editable dev [--dev -e .]
+    echo %TAB% editable %TAB% Installs editable dev
     echo %TAB% wheel  %TAB% Builds wheel into ./wheel
-    echo %TAB% TOGGLE_POETRY %TAB% [%%1=%TOGGLE_MARK%], other args moved right by one
-    if _%TOGGLE_POETRY%_ == _%TOGGLE_MARK%_ (
-    	echo %TAB% POETRY_EXPREQ %TAB% Export reqs from poetry to requirements.txt and Pipfile
-    )
+    echo %TAB% %DEPSMGR_ALT% %TAB% Optional as %%1, other args moved right by one
     echo %TAB% cleanup %TAB% Deletes the pipenv
     echo qual %TAB% test   %TAB% Runs pytest and coverage report
     echo %TAB% check  %TAB% Runs static tests against codebase
@@ -63,12 +64,15 @@ exit /b %errorlevel%
 
 :install
     %deps_install%
+    call:extras
 goto:eof
 
 :editable
 	echo %msg_not_impl%
-	@REM %deps_isntall%
+	@REM %deps_editable%
     @REM call:extras
+goto:eof
+
 :extras
     %deps_run% pre-commit install
 	%deps_run% mypy --install-types --non-interactive
@@ -146,8 +150,6 @@ goto:eof
 	)
 goto:eof
 
-:req
-
 :log
     git log --oneline
 goto:eof
@@ -175,7 +177,7 @@ goto:eof
     @REM --resource-path=/home/srush/Projects/annotated-transformer/ \
     @REM --indented-code-classes=nohighlight
 
-@REM TOGGLE_POETRY poetry export req
+@REM DEPSMGR_TOGGLE poetry export req
 :expreq
     setlocal
     set req=requirements.txt
@@ -202,26 +204,26 @@ goto:eof
 goto:eof
 
 :commands
-    if _%TOGGLE_POETRY%_ == _%TOGGLE_MARK%_ (
-        set "depsmgr=poetry"
+    if _%DEPSMGR_TOGGLE%_ == _%DEPSMGR_DEFAULT%_ (
+        set "depsmgr=%DEPSMGR_DEFAULT%"
         set "deps_install=--no-root"
         set deps_editable=
         set "deps_build=poetry build"
         set "deps_update=poetry update --remove-untracked"
     ) else (
-        set "depsmgr=pipenv"
-        set deps_install=
+        set "depsmgr=%DEPSMGR_ALT%"
+        set "deps_install=-r reqs\Pipfile"
         set deps_editable=--dev -e .
         set "deps_build=pipenv pip wheel . -w wheel"
         set "deps_update=pipenv lock && pipenv clean && pipenv sync"
     )
     set "deps_install=%depsmgr% install %deps_install%"
+    set "deps_editable=%depsmgr% install %deps_editable%"
     set "deps_run=%depsmgr% run"
     @REM "set deps_sh=%depsmgr% shell"
 goto:eof
 
 :messages
-    set "TAB=	"
     set "msg_warning=############ Not Fully Implemented ############"
     set "msg_git_no_msg=No git message provided. Exiting without changes."
     set "msg_not_impl=############ Function Not Implemented ############"
