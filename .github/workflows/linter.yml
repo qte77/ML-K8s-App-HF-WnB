@@ -1,35 +1,36 @@
 ---
 # https://github.com/github/super-linter
 ## Super Linter GitHub Actions ##
-name: lint
+name: "lint"
 on:
   # push:
   #    branches: [main]
   #    # branches-ignore: [master]
   # pull_request:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 0 * * 0"
   workflow_dispatch:
 jobs:
   build:
-    name: Lint Code Base
-    runs-on: ubuntu-latest
+    name: "Lint Code Base"
+    runs-on: "ubuntu-latest"
     steps:
 
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: "Checkout Code"
+        uses: "actions/checkout@v3"
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
+        # Full git history is needed to get a proper list of changed files
+        # within `super-linter`
           fetch-depth: 0
-      - name: Lint Code Base
-      # slim image, removes rust, dotenv, armttk, pwsh, c#
-      # https://github.com/github/super-linter#slim-image
-        uses: github/super-linter/slim@v4
+      - name: "Lint Code Base"
+        # slim image, removes rust, dotenv, armttk, pwsh, c#
+        # https://github.com/github/super-linter#slim-image
+        uses: "github/super-linter/slim@v4"
         env:
           VALIDATE_ALL_CODEBASE: false
-          FILTER_REGEX_EXCLUDE: (\.github\/.)|(CHANGELOG\.md)
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILTER_REGEX_EXCLUDE: '(\.github\/.)|(CHANGELOG\.md)'
+          DEFAULT_BRANCH: "main"
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           # HTML_URL: ${{ github.event.repository.html_url }}
           # PYTHON_BLACK_CONFIG_FILE:
           #   ${{ github.event.repository.html_url }}/pyproject.toml
@@ -38,9 +39,9 @@ jobs:
           # PYTHON_ISORT_CONFIG_FILE:
           #   ${${{ github.event.repository.html_url }}}/pyproject.toml
 
-      - name: Print info
+      - name: "Print info"
         env:
-          HTML_URL: ${{ github.event.repository.html_url }}
+          HTML_URL: "${{ github.event.repository.html_url }}"
         run: |
           echo "#### HTML_URL ####"
           echo "${HTML_URL}"

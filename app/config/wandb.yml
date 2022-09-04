@@ -1,6 +1,6 @@
 ---
-WANDB_ENTITY: 'ba'
-WANDB_WATCH: 'all'
-WANDB_LOG_MODEL: 'true'
-WANDB_SAVE_CODE: 'true'
+WANDB_ENTITY: "ba"
+WANDB_WATCH: "all"
+WANDB_LOG_MODEL: "true"
+WANDB_SAVE_CODE: "true"
 ...

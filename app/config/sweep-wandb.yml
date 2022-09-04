@@ -1,33 +1,35 @@
 ---
-#https://docs.wandb.ai/guides/sweeps/quickstart#2-sweep-config
-#structure of the sweep
-#program: train.py
-method: 'random' #grid, bayes
+# https://docs.wandb.ai/guides/sweeps/quickstart#2-sweep-config
+# structure of the sweep
+# program: train.py
+# methods: random, grid, bayes
+method: "random"
 metric:
-  #optimize multiple metrics
-  #https://docs.wandb.ai/guides/sweeps/faq#optimizing-multiple-metrics
-  #accuracy: maximize, eval_loss: minimize
-  name: loss
+  # optimize multiple metrics
+  # https://docs.wandb.ai/guides/sweeps/faq#optimizing-multiple-metrics
+  # accuracy: maximize, eval_loss: minimize
+  name: "loss"
 early_terminate:
-  type: hyperband
+  type: "hyperband"
   s: 2
   eta: 3
   max_iter: 27
 seed:
-  distribution: int_uniform
+  distribution: "int_uniform"
   min: 51
   max: 202
-#sweep over following model hyperparameters
+# sweep over following model hyperparameters
 parameters:
   learning_rate:
-    distribution: uniform
+    distribution: "uniform"
     min: 5e-7
     max: 5e-3
   max_steps:
-    values: [500,1000,1500,2000,2500,3000,3500,4000,4500,5000] #list(range(1500,5000,500))
+    # list(range(1500, 5000, 500))
+    values: [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
   optimizer:
-    #https://huggingface.co/docs/transformers/main_classes/optimizer_schedules
-    distribution: categorical
-    #adamw_hf deprecated, torch.AdamW not found
-    values: ['adamw_torch','adafactor']
+    # https://huggingface.co/docs/transformers/main_classes/optimizer_schedules
+    distribution: "categorical"
+    # adamw_hf deprecated, torch.AdamW not found
+    values: ["adamw_torch", "adafactor"]
 ...

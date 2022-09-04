@@ -1,61 +1,61 @@
 ---
 datasets:
   yahoo:
-    dataset: yahoo_answers_topics
-    configuration: ''
-    average: micro
-    col_to_rename: topic
+    dataset: "yahoo_answers_topics"
+    configuration: ""
+    average: "micro"
+    col_to_rename: "topic"
     cols_to_tokenize:
-    - question_title
+      - "question_title"
     cols_to_remove:
-    - id
-    - question_content
-    - best_answer
+      - "id"
+      - "question_content"
+      - "best_answer"
   mrpc:
-    dataset: glue
-    configuration: mrpc
-    average: binary
-    col_to_rename: label
+    dataset: "glue"
+    configuration: "mrpc"
+    average: "binary"
+    col_to_rename: "label"
     cols_to_tokenize:
-    - sentence1
-    - sentence2
+      - "sentence1"
+      - "sentence2"
     cols_to_remove:
-    - idx
+      - "idx"
   mnli:
-    dataset: glue
-    configuration: mnli
-    average: binary
-    col_to_rename: label
+    dataset: "glue"
+    configuration: "mnli"
+    average: "binary"
+    col_to_rename: "label"
     cols_to_tokenize:
-    - premise
-    - hypothesis
+      - "premise"
+      - "hypothesis"
     cols_to_remove:
-    - idx
+      - "idx"
 models:
   dbbu:
-    name: BERT
-    full_name: distilbert-base-uncased
+    name: "BERT"
+    full_name: "distilbert-base-uncased"
   bbu:
-    name: BERT
-    full_name: bert-base-uncased
+    name: "BERT"
+    full_name: "bert-base-uncased"
   lbu:
-    name: LONGFORMER
-    full_name: allenai/longformer-base-4096
+    name: "LONGFORMER"
+    full_name: "allenai/longformer-base-4096"
 metrics_to_optimize:
   accuracy:
-    goal: maximize
-    greater_is_better: 'True'
+    goal: "maximize"
+    greater_is_better: true
   loss:
-    goal: minimize
-    greater_is_better: 'False'
+    goal: "minimize"
+    greater_is_better: false
   eval_loss:
-    goal: minimize
-    greater_is_better: 'False'
+    goal: "minimize"
+    greater_is_better: false
 metrics_secondary_possible:
-  - 'accuracy'
-  - 'precision'
-  - 'recall'
-  - 'f1'
-  - 'mae'
-  - 'mse'
+    - "accuracy"
+    - "precision"
+    - "recall"
+    - "f1"
+    - "mae"
+    - "mse"
 ...
