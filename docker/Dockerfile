@@ -3,7 +3,7 @@
 # ARG BASEIMAGE_USECASE=
 
 # FIXME --platform=x86_64 ${BASEIMAGE}
-FROM docker.io/library/python:3.8-slim as baseimage
+FROM docker.io/library/python:3.9-slim as baseimage
 
 LABEL site="https://qte77.github.io"
 LABEL author="qte77"
@@ -15,7 +15,7 @@ ENV PYTHONUNBUFFERED=1
 
 RUN set -xe \
   && python -m ensurepip --upgrade \
-  && pip install --no-cache-dir --upgrade setuptools wheel
+  && pip install --no-cache-dir --upgrade setuptools==61.2.* wheel==0.37.*
 RUN rm -rf /var/cache/apt/* /tmp/* \
   /usr/lib/python*/ensurepip
 
@@ -44,9 +44,9 @@ COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
   "${HOME}/${WANDB_KEYFILE}"
 COPY --chown=${USER}:${USER} ${FILES_IN} ${FILES_OUT}
 
-RUN set -xe \
-  && pip install --no-cache-dir --user \
-    -r "${FILES_OUT}/requirements.txt"
+# RUN set -xe \
+#   && pip install --no-cache-dir --user \
+#     -r "${FILES_OUT}/requirements.txt"
 
 RUN chmod +x ${APP}
 ENTRYPOINT ${APP}
