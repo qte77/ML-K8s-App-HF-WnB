@@ -5,6 +5,7 @@ App-K8s-HF-WnB
 [![CodeQL](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml)
 [![Lint Code Base](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml)
 [![Links (Fail Fast)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml)
+[![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/qte77/App-K8s-HF-WnB?logo=Cirrus-ci)](https://cirrus-ci.com/github/gte77/App-K8s-HF-WnB)
 [![wakatime](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB.svg)](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB)
 
 This project aims to create an end-to-end ML app as a functional MVP.
