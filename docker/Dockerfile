@@ -49,7 +49,7 @@ COPY --chown=${USER}:${USER} ${FILES_IN} ${FILES_OUT}
 #     -r "${FILES_OUT}/requirements.txt"
 
 RUN chmod +x ${APP}
-ENTRYPOINT ${APP}
+ENTRYPOINT ["${APP}"]
 
 # TODO FastAPI etc.
 # CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", "uvicorn.workers.UvicornWorker", "app.py:app"]
