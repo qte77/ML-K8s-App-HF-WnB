@@ -1,8 +1,5 @@
 #!/usr/bin/env python
-# parametrized fixtures with metafunc
-# https://medium.com/opsops/deepdive-into-pytest-parametrization-cb21665c05b9
-# https://pytest.org/en/7.1.x/example/parametrize.html#deferring-the-setup-of-parametrized-resources
-"""Test load_hf_components"""
+""""Test functionality of load_hf_components"""
 
 from logging import getLogger
 from os.path import join, sep
@@ -17,41 +14,12 @@ if True:
     toggle_global_debug_state(False)
 
 # delayed loading to set get_and_configure_logger:debug_on_global
-from app.pipeline.load_hf_components import (
+from app.pipeline.load_hf_components import (  # _load_single_metric,
     _get_metric_path_or_name_to_load,
-    _load_single_metric,
     get_list_of_metrics_to_load,
-    get_model_hf,
 )
 
 logger = getLogger(__name__)
-
-
-@mark.usefixtures(
-    "model_full_names", "num_labels", "subclasses_expected", "save_dir_fixture"
-)
-def test_get_model_hf(
-    model_full_names, num_labels, subclasses_expected, save_dir_fixture
-):
-    """Expects models of specific subclasses"""
-
-    model = get_model_hf(model_full_names, num_labels, save_dir_fixture)
-
-    assert isinstance(model, subclasses_expected)
-
-
-# Objectives metrics loading
-# 1) load single metric (local or internet) with load_metric(path)
-#   if not exists: from internet
-# 2) if internet: move metric from local cache to save_dir
-# 3) return list[Metric]
-@mark.usefixtures("metrics_to_test_for")
-def test__load_single_metric(metrics_to_test_for):
-    """Expects a single valid Metric-object"""
-
-    metric_loaded = _load_single_metric(metrics_to_test_for)
-
-    assert isinstance(metric_loaded, Metric)
 
 
 @mark.usefixtures("metrics_to_test_for", "save_dir_fixture")
