@@ -59,7 +59,7 @@ repos:
     rev: "v1.12.1"
     hooks:
       - id: "blacken-docs"
-        # additional_dependencies: [black==latest]
+    # additional_dependencies: [black==latest]
 
   - repo: "https://github.com/pycqa/flake8"
     rev: "5.0.4"
@@ -90,13 +90,13 @@ repos:
       - id: "pyupgrade"
         args: ["--py37-plus"]
 
-  # https://github.com/hadolint/hadolint/blob/master/docs/INTEGRATION.md
-  # binary
-  # - repo: https://github.com/hadolint/hadolint
-  #   rev: v2.10.0
-  #   hooks:
-  #     - id: hadolint
-  # docker
-  #   hooks:
-  #     - id: hadolint-docker
+    # https://github.com/hadolint/hadolint/blob/master/docs/INTEGRATION.md
+    # binary
+    # - repo: https://github.com/hadolint/hadolint
+    #   rev: v2.10.0
+    #   hooks:
+    #     - id: hadolint
+    # docker
+    #   hooks:
+    #     - id: hadolint-docker
 ...

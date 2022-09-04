@@ -52,10 +52,10 @@ metrics_to_optimize:
     goal: "minimize"
     greater_is_better: false
 metrics_secondary_possible:
-    - "accuracy"
-    - "precision"
-    - "recall"
-    - "f1"
-    - "mae"
-    - "mse"
+  - "accuracy"
+  - "precision"
+  - "recall"
+  - "f1"
+  - "mae"
+  - "mse"
 ...
