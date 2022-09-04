@@ -157,7 +157,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ defaults.yml
 │  │  ├─ huggingface.yml
 │  │  ├─ logging.conf
-│  │  ├─ paramobj.dummy.json
+│  │  ├─ parameters.dummy.json
 │  │  ├─ sweep-wandb.yml
 │  │  ├─ sweep.yml
 │  │  ├─ task.yml
@@ -227,7 +227,7 @@ App Details [↑](#app-k8s-hf-wnb)
 
 * App accepts only `.yml` as config right now
 * [`config/wandb.key.dummy.yml`](./app/config/wandb.key.dummy.yml) showcases a keyfile to be used with the provider Weights&Biases (wandb)
-* [`config/paramobj.dummy.json`](./app/config/paramobj.dummy.json) presents an example of the data model the pipeline uses
+* [`config/parameters.dummy.json`](./app/config/parameters.dummy.json) presents an example of the data model the pipeline uses
 
 ### Import performance
 
