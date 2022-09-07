@@ -1,5 +1,12 @@
 ---
-# reference: https://cirrus-ci.org/guide/writing-tasks/
+# https://cirrus-ci.org/guide/writing-tasks/
+# https://cirrus-ci.org/examples/#linting
+# https://github.com/cirruslabs/cirrus-ci-docs/
+#   blob/master/docs/examples.md#python
+# https://cirrus-ci.org/guide/tips-and-tricks/
+#   #sharing-configuration-between-tasks
+# https://gitlab.com/pipeline-components
+
 container:
   cpu: 1
   memory: "2G"
@@ -7,29 +14,70 @@ container:
 lint_markdown_task:
   name: "Lint Markdown"
   container:
-    image: "docker.io/library/node:latest"
+    image: "docker.io/library/node:current-alpine"
   install_script: "npm install -g markdownlint-cli"
   lint_script: "markdownlint *.md docs/*.md"
 
 lint_yaml_task:
   name: "Lint YAML"
   container:
-    image: "docker.io/library/alpine:latest"
+    image: "docker.io/library/alpine:3.16.2"
   install_script: "apk add --no-cache yamllint"
   lint_script: "yamllint ."
+
+lint_python_task:
+  name: "Lint Python"
+  container:
+    image: "docker.io/alpine/flake8:5.0.4"
+  flake8_script: "flake8"
+
+format_python_task:
+  name: "Format Python"
+  container:
+    image: "docker.io/pipelinecomponents/black:0.14.1"
+  black_script: "black ."
 
 lint_containerfile_task:
   name: "Lint Containerfile"
   container:
     image: "docker.io/hadolint/hadolint:latest-alpine"
-  test_script: "hadolint docker/Dockerfile"
+  test_script: "hadolint container/Dockerfile"
 
 scan_containerfile_task:
   name: "Scan Containerfile"
   container:
-    image: "docker.io/aquasec/trivy:0.22.0"
+    image: "docker.io/aquasec/trivy:0.31.3"
   scan_script: "trivy config
-                --severity CRITICAL
-                --exit-code 1
-                docker/"
+    --severity CRITICAL
+    --exit-code 1
+    container/"
+
+pytest_task:
+  name: "pytest"
+  container:
+    cpu: 2
+    memory: "4G"
+    image: "docker.io/library/python:3.9-slim"
+  environment:
+    PIP_CACHE_FOLDER: "${HOME}/.cache/pip"
+    REQS_DEV_FILE: "./reqs/dev-requirements.txt"
+  # pip_cache:
+  #   folder: "$PIP_CACHE_FOLDER"
+  #   fingerprint_script:
+  #     - "echo $PYTHON_VERSION"
+  #     - "cat $REQS_DEV_FILE"
+  #   populate_script:
+  #     - "if [ ! -d $PIP_CACHE_FOLDER ];
+  #         then mkdir -p $PIP_CACHE_FOLDER;
+  #       fi"
+  #     - "python -m ensurepip"
+  #     - "python -m pip install --upgrade pip"
+  #     - "pip3 install -r $REQS_DEV_FILE"
+  on_failure:
+    failure_script:
+      - "date"
+  pip_script: "pip install -r $REQS_DEV_FILE"
+  pytest_script:
+    - "python -m pytest"
+    # - "python -m coverage -m python -m pytest"
 ...
