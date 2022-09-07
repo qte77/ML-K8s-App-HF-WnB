@@ -252,7 +252,6 @@ TODO [↑](#app-k8s-hf-wnb)
   * Implemented and functional
   * May be extended to other providers, but for MVP sufficient
 * [ ] Save models, datasets, tokenizer and metrics in local folder other than cache
-  * Postpone to progress
 * [ ] Define the core of the app
   * [ ] `train`
   * [ ] `infer`
