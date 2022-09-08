@@ -30,6 +30,13 @@ format_python_task:
     image: "docker.io/pipelinecomponents/black:0.14.1"
   script: "black ."
 
+sort_python_task:
+  name: "Sort Python"
+  container:
+    image: "docker.io/library/python:3.9-alpine"
+  install_script: "pip install isort"
+  script: "isort ."
+
 lint_containerfile_task:
   name: "Lint Containerfile"
   container:
@@ -44,4 +51,23 @@ scan_containerfile_task:
                 --severity CRITICAL
                 --exit-code 1
                 docker/"
+
+# pytest_task:
+#   name: "Test App"
+#   container:
+#     image: "docker.io/library/python:3.9-slim"
+#   env:
+#     PIP_CACHE: "${HOME}/.cache/pip"
+#     REQS_FILE: "./reqs/dev-requirements.txt"
+#   pip_cache:
+#     folder: "${PIP_CACHE}"
+#     # reupload_on_changes: false # since there is a fingerprint script
+#     fingerprint_script:
+#       - "echo ${CIRRUS_OS}"
+#       - "python --version"
+#       - "cat ${REQS_FILE}"
+#     populate_script:
+#       - ""
+#   test_script:
+#       - ""
 ...
