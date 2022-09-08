@@ -1,5 +1,6 @@
 ---
-# reference: https://cirrus-ci.org/guide/writing-tasks/
+# https://cirrus-ci.org/guide/writing-tasks/
+# https://cirrus-ci.org/examples/
 
 container:
   cpu: 1
@@ -41,7 +42,7 @@ lint_containerfile_task:
   name: "Lint Containerfile"
   container:
     image: "docker.io/hadolint/hadolint:latest-alpine"
-  test_script: "hadolint container/Dockerfile"
+  test_script: "hadolint docker/Dockerfile"
 
 scan_containerfile_task:
   name: "Scan Containerfile"
@@ -50,24 +51,25 @@ scan_containerfile_task:
   scan_script: "trivy config
                 --severity CRITICAL
                 --exit-code 1
-                container/"
+                docker/"
 
-# pytest_task:
-#   name: "Test App"
-#   container:
-#     image: "docker.io/library/python:3.9-slim"
-#   env:
-#     PIP_CACHE: "${HOME}/.cache/pip"
-#     REQS_FILE: "./reqs/dev-requirements.txt"
-#   pip_cache:
-#     folder: "${PIP_CACHE}"
-#     # reupload_on_changes: false # since there is a fingerprint script
-#     fingerprint_script:
-#       - "echo ${CIRRUS_OS}"
-#       - "python --version"
-#       - "cat ${REQS_FILE}"
-#     populate_script:
-#       - ""
-#   test_script:
-#       - ""
+pytest_task:
+  name: "Test App"
+  container:
+    image: "docker.io/library/python:3.9-slim"
+  env:
+    PIP_CACHE: "${HOME}/.cache/pip"
+    REQS_FILE: "./reqs/dev-requirements.txt"
+  pip_cache:
+    folder: "${PIP_CACHE}"
+    # reupload_on_changes: "false" # since there is a fingerprint script
+    # fingerprint_script:
+    #   - "echo ${CIRRUS_OS}"
+    #   - "python --version"
+    #   # - "cat ${REQS_FILE}"
+    populate_script:
+      - "python3 -m pip install -r ${REQS_FILE}"
+  test_script:
+    # - "coverage run python3 -m pytest"
+    - "python3 -m pytest"
 ...
