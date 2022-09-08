@@ -1,12 +1,14 @@
 App-K8s-HF-WnB
 ===
 
+[![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/qte77/App-K8s-HF-WnB?logo=Cirrus-ci)](https://cirrus-ci.com/github/gte77/App-K8s-HF-WnB)
 [![CodeFactor](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB/badge)](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB)
+[![Links (Fail Fast)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml)
+[![wakatime](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB.svg)](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB)
+<!--
 [![CodeQL](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/codeql.yml)
 [![Lint Code Base](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/linter.yml)
-[![Links (Fail Fast)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml)
-[![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/qte77/App-K8s-HF-WnB?logo=Cirrus-ci)](https://cirrus-ci.com/github/gte77/App-K8s-HF-WnB)
-[![wakatime](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB.svg)](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB)
+--->
 
 This project aims to create an end-to-end ML app as a functional MVP.
 The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components.
