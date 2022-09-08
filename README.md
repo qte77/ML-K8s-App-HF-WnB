@@ -42,7 +42,7 @@ TOC
 Usage [↑](#app-k8s-hf-wnb)
 ---
 
-If inside `pipenv` or `poetry` venv
+If inside `poetry` venv
 
 ```sh
 python -m app
@@ -51,7 +51,7 @@ python -m app
 or if outside
 
 ```sh
-<pipenv|poetry> run python -m app
+poetry run python -m app
 ```
 
 Install [↑](#app-k8s-hf-wnb)
@@ -59,33 +59,29 @@ Install [↑](#app-k8s-hf-wnb)
 
 ### Python
 
-From a venv with available `pipenv` (default) or `poetry` (toggled)
+From a venv with available `poetry`
 
 ```sh
-poetry_toggle="" # "poetry"
-make $poetry_toggle install
+make install
 ```
 
 or with `conda`
 
 ```sh
 envname='App-K8s-HF-WnB'
-poetry_toggle="" # "poetry"
-# create new conda venv with pipenv installed
-if [ $poetry_toggle -eq "poetry" ]; then rt="poetry"; else rt="pipenv"; fi
-conda create -ym -n $envname $rt
+conda create -ym -n $envname poetry
 conda activate $envname
-# install from Pipfile and create new venv
-make $poetry_toggle install
+make install
 ```
-
+<!--
 or with `conda-forge`
 
 ```sh
 conda install -c conda-forge pipfile
 ```
+-->
 
-### Docker
+### Container
 
 * TODO <!-- `make build` -->
 
@@ -128,18 +124,19 @@ App Structure [↑](#app-k8s-hf-wnb)
 /
 ├─ app/
 │  ├─ config/
-│  ├─ helper/
-│  ├─ model/
+│  ├─ payload/
+│  ├─ pipeline/
+│  ├─ utils/
 │  └─ app.py
+├─ assets/
+├─ container/
 ├─ kubernetes/
 │  ├─ base/
 │  └─ overlay/
 ├─ tests/
 ├─ CHANGELOG.md
-├─ Dockerfile
 ├─ make.bat
 ├─ Makefile
-├─ Pipfile
 ├─ pyproject.toml
 └─ README.md
 </pre>
@@ -151,9 +148,7 @@ App Structure [↑](#app-k8s-hf-wnb)
 /
 ├─ .github/
 │  ├─ workflows/
-│  │  ├─ codeql.yml
 │  │  ├─ links-fail-fast.yml
-│  │  └─ linter.yml
 │  └─ dependabot.yml
 ├─ app/
 │  ├─ config/
@@ -166,19 +161,22 @@ App Structure [↑](#app-k8s-hf-wnb)
 │  │  ├─ task.yml
 │  │  ├─ wandb.key.dummy.yml
 │  │  └─ wandb.yml
-│  ├─ model/
+│  ├─ payload/
+│  │  ├─ handle_hf.py
+│  │  ├─ handle_sweep.py
 │  │  ├─ infer_model.py
 │  │  └─ train_model.py
-│  ├─ utils/
-│  │  ├─ check_and_sanitize_path.py
-│  │  ├─ configure_logging.py
-│  │  ├─ get_and_configure_system_info.py
-│  │  ├─ load_configs.py
+│  ├─ pipeline/
 │  │  ├─ load_hf_components.py
+│  │  ├─ prepare_pipe_data.py
+│  │  └─ prepare_pipe_params.py
+│  ├─ utils/
+│  │  ├─ handle_logging.py
+│  │  ├─ handle_paths.py
+│  │  ├─ load_configs.py
+│  │  ├─ log_system_info.py
 │  │  ├─ parse_args.py
-│  │  ├─ parse_configs_into_paramdict.py
-│  │  ├─ prepare_ml_input.py
-│  │  └─ prepare_sweep.py
+│  │  └─ toggle_features.py
 │  ├─ __main__.py
 │  ├─ __version__.py
 │  ├─ _version.py
@@ -187,6 +185,8 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ assets
 │  ├─ tuna_importtime_dark.PNG
 │  └─ tuna_importtime_light.PNG
+├─ container/
+│  └─ Dockerfile.PNG
 ├─ kubernetes/
 │  ├─ base/
 │  │  ├─ deployment.yml
@@ -203,8 +203,13 @@ App Structure [↑](#app-k8s-hf-wnb)
 │        ├─ kustomization.yml
 │        └─ namespace.yml
 ├─ tests/
-│  └─ test_load_hf_components.py
+│  ├─ behavior/
+│  │  ├─ test_load_hf_components_behavior.py
+│  │  └─ test_train_model_behavior.py
+│  └─ functionality/
+│  │  └─ test_load_hf_components_functionality.py
 ├─ .bumpversion.cfg
+├─ .cirrus.yml
 ├─ .coveragerc
 ├─ .flake8
 ├─ .gitattributes
@@ -212,16 +217,13 @@ App Structure [↑](#app-k8s-hf-wnb)
 ├─ .gitmessage
 ├─ .markdownlint.yml
 ├─ .pre-commit-config.yaml
+├─ .yamllint.yml
 ├─ CHANGELOG.md
-├─ Dockerfile
 ├─ LICENSE
 ├─ make.bat
 ├─ Makefile
-├─ Pipfile
-├─ Pipfile.lock
 ├─ pyproject.toml
-├─ README.md
-└─ setup.py
+└─ README.md
 </pre>
 </details>
 
@@ -314,18 +316,25 @@ TODO [↑](#app-k8s-hf-wnb)
   * Difference between Abstraction vs Decoupling
   * Difference between Cohesion and Coupling
 * [ ] Implement basic API, e.g. with [gunicorn](https://github.com/benoitc/gunicorn) or [FastAPI](https://github.com/tiangolo/fastapi)
+* [ ] Use [distroless containers](https://github.com/GoogleContainerTools/distroless)
+  * Reduce signal to noise ration of scanners
+  * Reduce size
 
 ### Dependency tracking and packaging
 
 * [x] Explore use of [pipenv with Pipfile & Pipfile.lock](https://pipenv.pypa.io/en/latest/basics/) as a [proposed replacement](https://github.com/pypa/pipfile#the-concept) to `requirements.txt`
+  * Auto-creation of venv
   * `pipenv install -e` for [editable mode](https://pipenv.pypa.io/en/latest/basics/#a-note-about-vcs-dependencies), i.e. 'dependency resolution can be performed with an up to date copy of the repository each time it is performed'
+* [x] Use `Poetry` as replacement for `pipenv`
+  * Auto-creation of venv
+  * Build-tool for packaging
 * [x] Experiment with [`pyproject.toml`](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to build app wheel
   * Used to pool information for build, package, tools etc into one file
   * Some tools like `flake8` do not support this approach
 * Create a package
   * Required for `tox` and `pdoc`
-  * [ ] Experiment package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py` and [`hatchling`](https://hatch.pypa.io/latest/) or [`setuptools`](https://setuptools.pypa.io/en/latest/)
-  * [ ] Experiment with [`poetry`](https://python-poetry.org/docs/)
+  * [x] Experiment package as [single source app version](https://packaging.python.org/guides/single-sourcing-package-version/) with `setup.py` and [`hatchling`](https://hatch.pypa.io/latest/) or [`setuptools`](https://setuptools.pypa.io/en/latest/)
+  * [x] Experiment with [`poetry`](https://python-poetry.org/docs/)
 
 ### Project management
 
@@ -353,7 +362,8 @@ TODO [↑](#app-k8s-hf-wnb)
     * Red: Write test ==> Green: Write code passing test ==> Blue Refactor code and test
     * Test: Arrange ==> Act ==> Assert ==> Clean
   * Frameworks Gherkin and Cucumber
-* [ ] Move from `Makefile` to [Cirrus CLI](https://github.com/cirruslabs/cirrus-cli)
+* [x] Move from `Makefile` to [Cirrus CLI](https://github.com/cirruslabs/cirrus-cli)
+  * Use `--dirty` for write-backs to files instead of `rsync` instance, e.g. for `isort`
 * [ ] Implement pydoc-action to auto-generate into gh-pages /docs, e.g. [Sphinx Build Action](https://github.com/marketplace/actions/sphinx-build) for [Sphinx](https://www.sphinx-doc.org/en/master/usage/quickstart.html)
 
 Inspirations [↑](#app-k8s-hf-wnb)

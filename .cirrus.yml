@@ -41,7 +41,7 @@ lint_containerfile_task:
   name: "Lint Containerfile"
   container:
     image: "docker.io/hadolint/hadolint:latest-alpine"
-  test_script: "hadolint docker/Dockerfile"
+  test_script: "hadolint container/Dockerfile"
 
 scan_containerfile_task:
   name: "Scan Containerfile"
@@ -50,7 +50,7 @@ scan_containerfile_task:
   scan_script: "trivy config
                 --severity CRITICAL
                 --exit-code 1
-                docker/"
+                container/"
 
 # pytest_task:
 #   name: "Test App"
