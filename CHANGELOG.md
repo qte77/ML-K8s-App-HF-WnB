@@ -21,6 +21,17 @@ Types of changes:
 [3.0.0] - 2022-09-08
 ---
 
+### Changed
+
+- Moved requirements into separate files for docker layers
+- `Dockerfile`
+  - Import separate requirement files
+  - Use multi-stage build from base python-slim
+
+### Removed
+
+- `.pre-commit-config.yaml`, pre-commit not used anymore, replaced by cirrus `--dirty`
+
 [2.8.0] - 2022-08-30
 ---
 
