@@ -59,7 +59,7 @@ pytest_task:
     image: "docker.io/library/python:3.9-slim"
   env:
     PIP_CACHE: "${HOME}/.cache/pip"
-    REQS_PATH: "./reqs"
+    REQS_PATH: "./requirements"
   pip_cache:
     folder: "${PIP_CACHE}"
     # reupload_on_changes: "false" # since there is a fingerprint script
