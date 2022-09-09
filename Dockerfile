@@ -11,7 +11,7 @@ ARG WANDB_KEYFILE=".wandb/wandb.key"
 # ARG WANDB_KEY="<token>"
 
 EXPOSE 8080
-RUN useradd -m ${USER}
+RUN set -xe && useradd -m ${USER}
 USER ${USER}
 
 ENV PYTHONDONTWRITEBYTECODE=1
