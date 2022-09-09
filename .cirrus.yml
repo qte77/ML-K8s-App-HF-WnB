@@ -73,14 +73,10 @@ pytest_task:
     populate_script:
       # - "python3 -m pip install -r ${REQS_FILE}"
       - "python3 -m pip install --no-cache-dir --user
-          -r ${REQS_PATH}/app-reqs.txt"
-      - "python3 -m pip install --no-cache-dir --user
-          -r ${REQS_PATH}/test-reqs.txt"
-      - "python3 -m pip install --no-cache-dir --user
-          -r ${REQS_PATH}/mlds-reqs.txt"
-      - "python3 -m pip install --no-cache-dir --user
-          -r ${REQS_PATH}/hf-reqs.txt"
-      - "python3 -m pip install --no-cache-dir --user
+          -r ${REQS_PATH}/app-reqs.txt
+          -r ${REQS_PATH}/test-reqs.txt
+          -r ${REQS_PATH}/mlds-reqs.txt
+          -r ${REQS_PATH}/hf-reqs.txt
           -r ${REQS_PATH}/torch-reqs.txt"
   test_script:
     # - "coverage run python3 -m pytest"

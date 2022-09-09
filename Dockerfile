@@ -6,7 +6,7 @@ LABEL author="qte77"
 ARG USER="user"
 ARG APP_ROOT="./app"
 ARG APP_EP="${APP_ROOT}/app.py"
-ARG REQS="./reqs"
+ARG REQS_ROOT="./reqs"
 ARG WANDB_KEYFILE=".wandb/wandb.key"
 # ARG WANDB_KEY="<token>"
 
@@ -19,7 +19,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH="${APP}:/home/user/.local/bin:${PATH}"
 # ENV WANDB_KEY=${WANDB_KEY}
 
-COPY --chown=${USER}:${USER} ${REQS} ${REQS}
+COPY --chown=${USER}:${USER} ${REQS_ROOT} ${REQS_ROOT}
 COPY --chown=${USER}:${USER} ${APP_ROOT} ${APP_ROOT}
 # COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
 #   "${HOME}/${WANDB_KEYFILE}"
@@ -27,16 +27,16 @@ COPY --chown=${USER}:${USER} ${APP_ROOT} ${APP_ROOT}
 # several RUN to produce separate pip layers
 RUN set -xe && \
     pip install --no-cache-dir --user \
-        -r "${REQS}/app-reqs.txt"
+        -r "${REQS_ROOT}/app-reqs.txt"
 RUN set -xe && \
     pip install --no-cache-dir --user \
-        -r "${REQS}/mlds-reqs.txt"
+        -r "${REQS_ROOT}/mlds-reqs.txt"
 RUN set -xe && \
     pip install --no-cache-dir --user \
-        -r "${REQS}/hf-reqs.txt"
+        -r "${REQS_ROOT}/hf-reqs.txt"
 RUN set -xe && \
     pip install --no-cache-dir --user \
-        -r "${REQS}/torch-reqs.txt"
+        -r "${REQS_ROOT}/torch-reqs.txt"
 
 ENTRYPOINT [ "/bin/sh" ]
 
