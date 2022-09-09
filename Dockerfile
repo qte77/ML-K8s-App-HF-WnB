@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.9-slim as baseimage
+FROM docker.io/library/python:3.9-slim
 
 LABEL site="https://qte77.github.io"
 LABEL author="qte77"
@@ -24,6 +24,7 @@ COPY --chown=${USER}:${USER} ${APP} ${APP}
 # COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
 #   "${HOME}/${WANDB_KEYFILE}"
 
+# several RUN to produce separate pip layers
 RUN set -xe && \
     pip install --no-cache-dir --user \
         -r "${REQS}/app-reqs.txt"
@@ -43,4 +44,5 @@ ENTRYPOINT [ "/bin/sh" ]
 # ENTRYPOINT ["${APP_EP}"]
 
 # TODO FastAPI etc.
-# CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", "uvicorn.workers.UvicornWorker", "app.py:app"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", \
+#     "uvicorn.workers.UvicornWorker", "app.py:app"]

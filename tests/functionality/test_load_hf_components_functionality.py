@@ -2,7 +2,7 @@
 """"Test functionality of load_hf_components"""
 
 from logging import getLogger
-from os.path import join, sep
+from os.path import join
 
 from datasets.metric import Metric
 from pytest import mark
@@ -29,7 +29,7 @@ def test__get_metric_path_or_name_to_load(metrics_to_test_for, save_dir_fixture)
     # TODO test for actual builder script, not only path
     dir = sanitize_path(save_dir_fixture)
     save_dir = join(dir["dir"], dir["base"])
-    expected_dir = f"{save_dir}{sep}Metrics{sep}{metrics_to_test_for}"
+    expected_dir = join(save_dir, "Metrics", metrics_to_test_for)
 
     returned_dir = _get_metric_path_or_name_to_load(
         metrics_to_test_for, save_dir_fixture

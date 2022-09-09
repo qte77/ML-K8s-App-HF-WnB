@@ -14,7 +14,10 @@ Parameters.json
 .vscode/
 .idea/
 
-# pytest
+# check
+.pre-commit-config.yaml
+
+# test
 .pytest_cache/
 
 # linter, formatter
@@ -29,6 +32,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+Pipfile
 # exclude .lock to avoid os specifics
 poetry.lock
 pipfile.lock

@@ -18,9 +18,6 @@ Types of changes:
 [Unreleased]
 ---
 
-[3.0.0] - 2022-09-08
----
-
 ### Changed
 
 - Moved requirements into separate files for docker layers
@@ -32,17 +29,23 @@ Types of changes:
 
 - `.pre-commit-config.yaml`, pre-commit not used anymore, replaced by cirrus `--dirty`
 
+[3.0.0] - 2022-09-08
+---
+
+### Added
+
+- Functional `.cirrus.yml` for cirrusci server and CLI
+- Hadolint for docker images to pre-commit
+  - Commented out because warnings abort pre-commit
+
 [2.8.0] - 2022-08-30
 ---
 
 ### Added
 
-- Hadolint for docker images to pre-commit
-  - Commented out because warnings abort pre-commit
 - Type enforcing at runtime with `pydantic`
   - Test with feature toggles/flags to replace `dataclasses` and `mypy`
 - Feature toggle for `poetry` instead of `pipenv` inside `make.bat`
-- Functional `.cirrus.yml` for cirrusci server and CLI
 
 ### Changed
 
