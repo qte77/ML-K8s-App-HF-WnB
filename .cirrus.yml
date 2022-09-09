@@ -54,9 +54,12 @@ scan_containerfile_task:
                 Dockerfile"
 
 pytest_task:
-  name: "Test App"
+  name:
+    "Test App"
   container:
     image: "docker.io/library/python:3.9-slim"
+  only_if:
+    "$CIRRUS_ENVIRONMENT != 'CLI'"
   env:
     PIP_CACHE: "${HOME}/.cache/pip"
     REQS_PATH: "./requirements"

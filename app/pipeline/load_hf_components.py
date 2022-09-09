@@ -5,10 +5,10 @@ Hugging Face caches components into '~/.cache/huggingface'
 """
 # TODO decorator for get_dataset_hf and get_tokenizer_hf
 
-
 # from os import walk
-# from os.path import join
 # from shutil import copyfile
+
+from os.path import join
 from typing import Any, Union
 
 from datasets import Metric, load_dataset, load_metric
@@ -212,7 +212,9 @@ def _get_metric_path_or_name_to_load(
         logging_facility("error", f"{ValueError}. One arg needs to be provided.")
         return ValueError
 
-    dir = f"{save_dir}/Metrics/{metric_to_load}"
+    dir = join(save_dir, "Metrics", metric_to_load)
+
+    print(f"{check_path(dir)=}")
 
     try:
         return join_path(dir) if check_path(dir) else metric_to_load
