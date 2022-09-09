@@ -59,7 +59,7 @@ pytest_task:
     image: "docker.io/library/python:3.9-slim"
   env:
     PIP_CACHE: "${HOME}/.cache/pip"
-    REQS_PATH: "./requirements"
+    REQS_PATH: "./reqs"
   pip_cache:
     folder: "${PIP_CACHE}"
     # reupload_on_changes: "false" # since there is a fingerprint script
@@ -71,6 +71,8 @@ pytest_task:
       # - "python3 -m pip install -r ${REQS_FILE}"
       - "python3 -m pip install --no-cache-dir --user
           -r ${REQS_PATH}/app-reqs.txt"
+      - "python3 -m pip install --no-cache-dir --user
+          -r ${REQS_PATH}/test-reqs.txt"
       - "python3 -m pip install --no-cache-dir --user
           -r ${REQS_PATH}/mlds-reqs.txt"
       - "python3 -m pip install --no-cache-dir --user

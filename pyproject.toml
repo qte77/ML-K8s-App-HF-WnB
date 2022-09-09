@@ -11,7 +11,7 @@ authors = ["qte77 <qte77>"]
 readme = "README.md"
 repository = "https://github.com/qte77/App-K8s-HF-WnB"
 documentation = "https://github.com/qte77/App-K8s-HF-WnB/docs"
-keywords= ["ML", "Hugging Face", "Weights&Biases", "Docker", "Kubernetes"]
+keywords= ["ML", "Docker", "Kubernetes", "Hugging Face", "Weights&Biases"]
 
 [tool.poetry.urls]
 "Issues" = "https://github.com/qte77/App-K8s-HF-WnB/issues"
@@ -41,19 +41,17 @@ coverage = "*"
 flake8 = "*"
 interrogate = "*"
 isort = "*"
-mypy = "*"
-"pre-commit" = "*"
 pyupgrade = "*"
 pytest = "*"
 tuna = "*"
-# ipykernel = "6.13.0"
-# jupyterlab = "3.4.2"
+# mypy = "*"
 # pdoc = "*"
 # pipenv = "*"
+# "pre-commit" = "*"
 # "pytest-cov" = "*"
 # sphinx = "*"
 # tox = "*"
-# watchdog = "==2.1.9"
+# watchdog = "==2.1.*"
 
 [tool.isort]
 profile = "black"
@@ -97,7 +95,7 @@ warn_unreachable = true
 warn_return_any = true
 
 # [[tool.mypy.overrides]]
-# module = "mypy-pytest"
+# module = 'mypy-pytest'
 # ignore_missing_imports = true
 
 # src: https://github.com/aio-libs/aiohttp
