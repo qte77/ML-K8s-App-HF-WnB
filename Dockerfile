@@ -4,8 +4,8 @@ LABEL site="https://qte77.github.io"
 LABEL author="qte77"
 
 ARG USER="user"
-ARG APP="./app"
-ARG APP_EP="${APP_FILES}/app.py"
+ARG APP_ROOT="./app"
+ARG APP_EP="${APP_ROOT}/app.py"
 ARG REQS="./reqs"
 ARG WANDB_KEYFILE=".wandb/wandb.key"
 # ARG WANDB_KEY="<token>"
@@ -20,7 +20,7 @@ ENV PATH="${APP}:/home/user/.local/bin:${PATH}"
 # ENV WANDB_KEY=${WANDB_KEY}
 
 COPY --chown=${USER}:${USER} ${REQS} ${REQS}
-COPY --chown=${USER}:${USER} ${APP} ${APP}
+COPY --chown=${USER}:${USER} ${APP_ROOT} ${APP_ROOT}
 # COPY --chown=${USER}:${USER} ${WANDB_KEYFILE} \
 #   "${HOME}/${WANDB_KEYFILE}"
 
