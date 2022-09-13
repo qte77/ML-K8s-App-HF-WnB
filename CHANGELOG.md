@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[3.1.0] - 2022-09-13
+---
+
 ### Changed
 
 - Moved requirements into separate files for docker layers

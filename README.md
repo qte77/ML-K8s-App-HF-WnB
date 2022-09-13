@@ -4,7 +4,7 @@ App-K8s-HF-WnB
 [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/qte77/App-K8s-HF-WnB?logo=Cirrus-ci)](https://cirrus-ci.com/github/gte77/App-K8s-HF-WnB)
 [![CodeFactor](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB/badge)](https://www.codefactor.io/repository/github/qte77/App-K8s-HF-WnB)
 [![Links (Fail Fast)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml/badge.svg)](https://github.com/qte77/App-K8s-HF-WnB/actions/workflows/links-fail-fast.yml)
-![version](https://img.shields.io/badge/version-3.0.0-blue)
+![version](https://img.shields.io/badge/version-3.1.0-blue)
 ![semver](https://img.shields.io/badge/semver-2.0.0-blue)
 [![wakatime](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB.svg)](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB)
 
