@@ -7,7 +7,7 @@ ARG USER="user"
 ARG APP_ROOT="./app"
 ARG APP_EP="${APP_ROOT}/app.py"
 ARG REQS_ROOT="./reqs"
-ARG WANDB_KEYFILE=".wandb/wandb.key"
+# ARG WANDB_KEYFILE=".wandb/wandb.key"
 # ARG WANDB_KEY="<token>"
 
 EXPOSE 8080
@@ -42,7 +42,3 @@ ENTRYPOINT [ "/bin/sh" ]
 
 # RUN chmod +x ${APP_EP}
 # ENTRYPOINT ["${APP_EP}"]
-
-# TODO FastAPI etc.
-# CMD ["gunicorn", "--bind", "0.0.0.0:8080", "-k", \
-#     "uvicorn.workers.UvicornWorker", "app.py:app"]
