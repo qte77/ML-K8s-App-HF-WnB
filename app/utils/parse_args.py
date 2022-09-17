@@ -4,6 +4,8 @@
 from argparse import ArgumentParser
 from typing import Union
 
+from ..app import AppModes
+
 
 def parse_args() -> dict[str, Union[str, bool]]:
     """
@@ -15,15 +17,14 @@ def parse_args() -> dict[str, Union[str, bool]]:
     """
 
     desc = "Create pipeline object parametrised with parameter object and execute task."
-    modes = ["train", "infer"]
 
     parser = ArgumentParser(prog="app", description=desc)
     parser.add_argument(
         "-m",
         "--mode",
         type=str,
-        default=modes[0],
-        choices=modes,
+        default=AppModes.train,
+        choices=AppModes,
         help="change app mode",
     )
     parser.add_argument(

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Entrypoint for the app"""
 
-from typing import Literal
+from enum import Enum
 
 # from .payload.infer_model import infer_model
 # from .payload.train_model import train_model
@@ -10,7 +10,14 @@ from .pipeline.prepare_pipe_params import get_parameters
 from .utils.handle_logging import debug_on_global, logging_facility
 
 
-def app(mode: Literal["train", "infer"] = "train"):
+class AppModes(Enum):
+    """Enum for possible modes the app can run in"""
+
+    train = "train"
+    infer = "infer"
+
+
+def app(mode: AppModes = AppModes.train):
     """
     Create pipeline object parametrised with parameter object and execute task.
 
@@ -20,7 +27,7 @@ def app(mode: Literal["train", "infer"] = "train"):
     - The task performed depends on the input of the
 
     Expects
-    - `mode` as `Literal["train", "infer"]`
+    - `mode` as `AppMode`
     """
 
     if debug_on_global:
