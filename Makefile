@@ -2,23 +2,20 @@
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 # https://makefiletutorial.com/
 
-.PHONY: all apply check commit check_message push log bump help
+.PHONY: apply bump check commit full log help commit_msg_check bump_part_check
 .DEFAULT_GOAL := help
 
-all_run		= apply commit bump push
-all_help	= "Run '${all_run}': make all"
-check_help	= Check files: make check
-apply_help	= Apply checks to files: make apply
-cmt_usage	= 'make commit msg="<message>"'
+full_help	= full: Run apply, git add, bump and push
+check_help	= check: Check files and do not apply
+apply_help	= apply: Check files and apply the results
+cmt_usage	= 'commit msg="<message>"'
 cmt_empty	= Commit message has to be provided. Usage: $(cmt_usage)
-cmt_help	= Check and commit without staged files: $(cmt_usage)
-part_exp	= major|minor|patch
-part_usage	= 'make bump part=<${part_exp}>'
-part_empty	= Version part has to be provied. Usage: ${part_usage}
-part_help	= Bump the app version: $(part_usage)
-push_help	= Check and push without commit: make push
-
-all: commit_msg_check ${all_run}
+cmt_help	= $(cmt_usage): Check and commit without staged files
+bump_exp	= major|minor|patch
+bump_usage	= bump part=<${bump_exp}>
+bump_empty	= Version part has to be provided. Usage: ${bump_usage}
+bump_help	= $(bump_usage): Bump the app version
+log_help	= log: Show git log oneline
 
 apply:
 	cirrus run --dirty
@@ -32,27 +29,29 @@ check:
 commit: commit_msg_check check
 	git commit -m "$(firstword $${msg})"
 
+full: commit_msg_check
+	apply
+	git add .
+	bump
+	git push
+
 log:
 	git log --oneline
 
-push: check
-	git push
-
 help:
-	@echo ${all_help}
+	@echo ${full_help}
 	echo ${check_help}
 	echo ${apply_help}
 	echo ${cmt_help}
-	echo ${push_help}
-	echo ${part_help}
+	echo ${bump_help}
 
 commit_msg_check:
 	@[ "$${msg}" ] || ( echo ${cmt_empty}; exit 1 )
 
 .ONESHELL:
 bump_part_check:
-	@if [ ! $(findstring _${part}_,_$(subst |,_,${part_exp})_) ]
+	@if [ ! $(findstring _${part}_,_$(subst |,_,${bump_exp})_) ]
 	then
-		echo ${part_empty}
+		echo ${bump_empty}
 		exit 1
 	fi
