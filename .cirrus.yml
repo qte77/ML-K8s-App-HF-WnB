@@ -7,45 +7,52 @@ container:
   memory: "2G"
 
 lint_markdown_task:
-  name: "Lint Markdown"
+  name: "Lint Markdown (markdownlint)"
   container:
     image: "docker.io/library/node:alpine3.16"
   install_script: "npm install -g markdownlint-cli"
   lint_script: "markdownlint *.md docs/*.md"
 
 lint_yaml_task:
-  name: "Lint YAML"
+  name: "Lint YAML (yamllint)"
   container:
     image: "docker.io/pipelinecomponents/yamllint:0.20.6"
   script: "yamllint ."
 
 lint_python_task:
-  name: "Lint Python"
+  name: "Lint Python (flake8)"
   container:
     image: "docker.io/alpine/flake8:5.0.4"
   lint_script: "flake8"
 
 format_python_task:
-  name: "Format Python"
+  name: "Format Python (black)"
   container:
     image: "docker.io/pipelinecomponents/black:0.14.1"
   script: "black ."
 
 sort_python_task:
-  name: "Sort Python"
+  name: "Sort Python (isort)"
   container:
     image: "docker.io/library/python:3.9-alpine"
   install_script: "pip install isort"
   script: "isort ."
 
+# type_python_task:
+#   name: "Type Python (mypy)"
+#   container:
+#     image: "docker.io/library/python:3.9-alpine"
+#   install_script: "pip install mypy"
+#   script: "mypy ."
+
 lint_containerfile_task:
-  name: "Lint Containerfile"
+  name: "Lint Containerfile (hadolint)"
   container:
     image: "docker.io/hadolint/hadolint:latest-alpine"
   test_script: "hadolint Dockerfile"
 
 scan_containerfile_task:
-  name: "Scan Containerfile"
+  name: "Scan Containerfile (trivy)"
   container:
     image: "docker.io/aquasec/trivy:0.31.3"
   scan_script: "trivy config

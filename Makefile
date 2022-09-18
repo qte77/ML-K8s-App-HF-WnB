@@ -1,86 +1,58 @@
-HASH != git rev-parse --short HEAD
-IMG_BASE := ml-baseimage:$(HASH)
-IMG_USECASE := ml-usecase:$(HASH)
-IMG_USECASE_LOCAL := localhost:5000/$(IMG_USECASE)
-DOCKERFILE := ./Dockerfile
-APP_PATH := ./app
-APP_MAIN := $(APP_PATH)/app.py
-APP_PIPFILE := $(APP_PATH)/Pipfile
-KUBE := ./kubernetes/overlays
-KUBE_PROD := $(KUBE)/prod
-KUBE_TEST := $(KUBE)/test
+# https://www.gnu.org/software/make/manual/make.html
+# https://www.gnu.org/software/make/manual/html_node/One-Shell.html
+# https://makefiletutorial.com/
 
-# local_install_dev:
-# pipenv run pre-commit install
-# pipenv run mypy --install-types --non-interactive
+.PHONY: all apply check commit check_message push log bump help
+.DEFAULT_GOAL := help
 
-# local_update_dev:
-# pipenv run pre-commit autoupdate
+all_run		= apply commit bump push
+all_help	= "Run '${all_run}': make all"
+check_help	= Check files: make check
+apply_help	= Apply checks to files: make apply
+cmt_usage	= 'make commit msg="<message>"'
+cmt_empty	= Commit message has to be provided. Usage: $(cmt_usage)
+cmt_help	= Check and commit without staged files: $(cmt_usage)
+part_exp	= major|minor|patch
+part_usage	= 'make bump part=<${part_exp}>'
+part_empty	= Version part has to be provied. Usage: ${part_usage}
+part_help	= Bump the app version: $(part_usage)
+push_help	= Check and push without commit: make push
 
-# local_test:
-# https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+all: commit_msg_check ${all_run}
 
-# local_commit:
-# git add .
-# pipenv run pre-commit run --show-diff-on-failure
-# git commit -m ""
-# bump2version <part>
+apply:
+	cirrus run --dirty
 
-# create_docs: nb_to_md
-# 	pandoc docs/header-includes.yaml the_annotated_transformer.md \
-# 		--katex=/usr/local/lib/node_modules/katex/dist/ \
-# 		--output=docs/index.html --to=html5 \
-# 		--css=docs/github.min.css \
-# 		--css=docs/tufte.css \
-# 		--no-highlight --self-contained \
-# 		--metadata pagetitle="The Annotated Transformer" \
-# 		--resource-path=/home/srush/Projects/annotated-transformer/ \
-# 		--indented-code-classes=nohighlight
+bump: bump_part_check commit
+	bumpversion ${part}
 
-# docs: ## generate Sphinx HTML documentation, including API docs
-# 	rm -f docs/pytest_workshop.rst
-# 	rm -f docs/modules.rst
-# 	sphinx-apidoc -o docs/ pytest_workshop
-# 	$(MAKE) -C docs clean
-# 	$(MAKE) -C docs html
-# 	$(BROWSER) docs/_build/html/index.html
+check:
+	cirrus run
 
-python: $(APP_PIPFILE)
-	echo Installing Pipfile
-	/usr/bin/env python3 -m ensurepip
-	/usr/bin/env python3 -m pip install --upgrade pip setuptools pipenv
-	/usr/bin/env python3 -m pipenv install $(APP_PATH)
-	echo Starting app
-	/usr/bin/env python $(APP_MAIN)
+commit: commit_msg_check check
+	git commit -m "$(firstword $${msg})"
 
-build: $(DOCKERFILE)
-	podman build --target baseimage -t $(IMG_BASE) .
-	podman build --target usecase -t $(IMG_USECASE) .
+log:
+	git log --oneline
 
-get-reg:
-	podman container run -dt -p 5000:5000 --name registry \
-		--volume registry:/var/lib/registry:Z docker.io/library/registry:2
+push: check
+	git push
 
-serve:
-	build
-	get-reg
-	podman image tag $(IMG_USECASE) $(IMG_USECASE_LOCAL)
-	podman image push $(IMG_USECASE_LOCAL) --tls-verify=false
-	#podman image search localhost:5000/ --tls-verify=false
-	#podman image rm $(IMG_USECASE) $(IMG_USECASE_LOCAL)
+help:
+	@echo ${all_help}
+	echo ${check_help}
+	echo ${apply_help}
+	echo ${cmt_help}
+	echo ${push_help}
+	echo ${part_help}
 
-k8s-prod: $(KUBE_PROD)
-	serve
-	kubectl apply -k $(KUBE_PROD)
+commit_msg_check:
+	@[ "$${msg}" ] || ( echo ${cmt_empty}; exit 1 )
 
-k8s-test: $(KUBE_TEST)
-	podman-serve
-	kubectl apply -k $(KUBE_TEST)
-
-.PHONY: help
-
-help: README.md
-	@$(cat $^)
-
-%: README.md
-	help
+.ONESHELL:
+bump_part_check:
+	@if [ ! $(findstring _${part}_,_$(subst |,_,${part_exp})_) ]
+	then
+		echo ${part_empty}
+		exit 1
+	fi
