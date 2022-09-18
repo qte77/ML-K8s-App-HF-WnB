@@ -15,6 +15,7 @@ bump_exp	= major|minor|patch
 bump_usage	= bump part=\"<${bump_exp}>\"
 bump_error	= "Version part has to be provided. Usage: ${bump_usage}"
 bump_help	= "$(bump_usage)\n\tCommit and bump the app version"
+push_help	= "push\tCheck and push staged files"
 git_all_run = $(MAKE) apply && git add . && $(MAKE) bump && git push
 git_all_hlp	= "git_all ${cmt_usage} ${bump_usage}\n\tRun \"${git_all_run}\""
 
@@ -31,15 +32,19 @@ commit: commit_msg_check check
 	git commit -m "$(firstword $${msg})"
 
 git_all: commit_msg_check bump_part_check
-	@${git_all_run}
+	${git_all_run}
 
 log:
 	git log --oneline
+
+push: commit_msg_check check
+	git push
 
 help:
 	@echo -e ${check_help}
 	echo -e ${apply_help}
 	echo -e ${cmt_help}
+	echo -e ${push_help}
 	echo -e ${bump_help}
 	echo -e ${git_all_hlp}
 	echo -e ${log_help}
