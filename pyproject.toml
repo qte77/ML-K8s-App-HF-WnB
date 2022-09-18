@@ -37,7 +37,7 @@ pydantic = "*"
 black = "*"
 "blacken-docs" = "*"
 bump2version = "*"
-coverage = "*"
+coverage = {extras = ["toml"], version = "*"}
 flake8 = "*"
 interrogate = "*"
 isort = "*"
@@ -62,6 +62,22 @@ line_length = 88
 src_paths = ["app", "tests"]
 target-version = ["py37", "py38", "py39", "py310"]
 
+# https://pypi.org/project/interrogate/
+[tool.interrogate]
+fail-under = 95
+exclude = ["setup.py", "docs", "build", "tests"]
+# ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
+# possible values: 0 (minimal output), 1 (-v), 2 (-vv)
+verbose = 0
+
+# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
+# https://mypy.readthedocs.io/en/stable/config_file.html#example-pyproject-toml
+[tool.mypy]
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_unreachable = true
+warn_return_any = true
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-rfEX -svv --color=yes --code-highlight=yes --doctest-modules"
@@ -78,18 +94,10 @@ log_date_format = "%Y-%m-%d %H:%M:%S"
 #    "slow: mark a test that takes a long time to run.",
 # ]
 
-# https://pypi.org/project/interrogate/
-[tool.interrogate]
-fail-under = 95
-exclude = ["setup.py", "docs", "build", "tests"]
-# ignore-regex = ["^get$", "^mock_.*", ".*BaseClass.*"]
-# possible values: 0 (minimal output), 1 (-v), 2 (-vv)
-verbose = 0
+# https://coverage.readthedocs.io/en/coverage-5.5/config.html
+[tool.coverage.run]
+source = "app"
+omit = "*/__main__.py"
 
-# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
-# https://mypy.readthedocs.io/en/stable/config_file.html#example-pyproject-toml
-[tool.mypy]
-warn_unused_configs = true
-warn_unused_ignores = true
-warn_unreachable = true
-warn_return_any = true
+[tool.coverage.report]
+show_missing = true

@@ -18,6 +18,18 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- Functional `Makefile`
+- `.cirrus.yml` tasks
+  - `Mypy` (typing)
+  - `Interrogate` (docstrings)
+  - `blacken-docs` (python in docs)
+
+### Changed
+
+- Moved `.coveragerc` into `pyproject.toml`
+
 [3.1.0] - 2022-09-13
 ---
 

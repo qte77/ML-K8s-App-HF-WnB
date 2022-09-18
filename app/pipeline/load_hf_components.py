@@ -224,7 +224,9 @@ def _get_metric_path_or_name_to_load(
 
 # TODO
 def _save_metric_to_local_path():
-    """TODO"""
+    """
+    TODO
+    """
 
     # metrics_cache_dir = "~/.cache/huggingface/modules/datasets_modules/metrics"
 
@@ -241,7 +243,9 @@ def _save_metric_to_local_path():
 
 # TODO
 def _load_metric_from_local_path():
-    """TODO"""
+    """
+    TODO
+    """
 
     # if path_exists:
     #             # FIXME catch empty Metrics folder
@@ -258,7 +262,9 @@ def _log_hf_start_get_dataset(
     data_dir_san: str,
     dir_exists,
 ):
-    # TODO docstring
+    """
+    TODO
+    """
 
     msg_config = f"{configuration=} from " if configuration else ""
     msg_ds_full = f"{msg_config}{dataset_name=}"
@@ -271,7 +277,9 @@ def _log_hf_start_get_dataset(
 
 
 def _log_hf_end_get_dataset(dict_to_log: dict, log_ds_split: str):
-    # TODO docstrings
+    """
+    TODO
+    """
 
     logging_facility(
         "log", f"Content of first key of tokenized datasets {log_ds_split} split"
@@ -281,7 +289,9 @@ def _log_hf_end_get_dataset(dict_to_log: dict, log_ds_split: str):
 
 
 def _log_hf_start_get_tokenizer(model_name: str, save_dir: str, dir_exists: bool):
-    # TODO docstrings
+    """
+    TODO
+    """
 
     msg_tok = f"tokenizer for {model_name=}"
     msg = (
@@ -293,7 +303,9 @@ def _log_hf_start_get_tokenizer(model_name: str, save_dir: str, dir_exists: bool
 
 
 def _log_hf_end_get_tokenizer(tokenizer: Any):
-    # TODO docstrings
+    """
+    TODO
+    """
 
     tok_msg = "This is a test sentence for the loaded tokenizer."
     tok_res = tokenizer.encode(tok_msg)
@@ -301,7 +313,9 @@ def _log_hf_end_get_tokenizer(tokenizer: Any):
 
 
 def _log_hf_start_get_model(model_full_name: str, save_dir: str, dir_exists: bool):
-    # TODO docstrings
+    """
+    TODO
+    """
 
     msg = (
         f"Loading local copy of {model_full_name=} from {save_dir=}"
@@ -312,6 +326,8 @@ def _log_hf_start_get_model(model_full_name: str, save_dir: str, dir_exists: boo
 
 
 def _log_hf_end_get_model(model_architectures: list[str]):
-    # TODO docstrings
+    """
+    TODO
+    """
 
     [logging_facility("log", f"{mod_arch=}") for mod_arch in model_architectures]

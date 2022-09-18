@@ -24,7 +24,9 @@ def log_system_info():
 
 
 def _log_windows_sysinfo(architecture: str):
-    # TODO docstring
+    """
+    TODO
+    """
 
     # TODO prettify debug output
     # .split(linesep) to output each line separate

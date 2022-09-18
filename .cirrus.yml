@@ -38,6 +38,20 @@ sort_python_task:
   install_script: "pip install isort"
   script: "isort ."
 
+check_python_docstring_task:
+  name: "Check Python docstrings (interrogate)"
+  container:
+    image: "docker.io/library/python:3.9-alpine"
+  install_script: "pip install interrogate"
+  script: "interrogate -v"
+
+# format_python_in_doc_task:
+#   name: "Format Python in doc (blacken-docs)"
+#   container:
+#     image: "docker.io/library/python:3.9-alpine"
+#   install_script: "pip install blacken-docs"
+#   script: "blacken-docs"
+
 # type_python_task:
 #   name: "Type Python (mypy)"
 #   container:

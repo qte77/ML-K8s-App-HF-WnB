@@ -77,7 +77,9 @@ def logging_facility(log_type: str, log_message: str):
 
 
 def _check_log_type_is_valid(log_type) -> bool:
-    # TODO docsctring
+    """
+    TODO
+    """
 
     log_type_is_valid = log_type in logging_types.keys()
     if not log_type_is_valid and debug_on_global:
@@ -86,7 +88,9 @@ def _check_log_type_is_valid(log_type) -> bool:
 
 
 def _get_log_caller():
-    # TODO docstring
+    """
+    TODO
+    """
 
     # getframe of parent 2 because called by function
     caller = _getframe(2).f_globals["__name__"]
