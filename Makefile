@@ -16,7 +16,7 @@ bump_usage	= bump part=\"<${bump_exp}>\"
 bump_error	= "Version part has to be provided. Usage: ${bump_usage}"
 bump_help	= "$(bump_usage)\n\tCommit and bump the app version"
 push_help	= "push\tCheck and push staged files"
-git_all_run = $(MAKE) apply && git add . && $(MAKE) bump && git push
+git_all_run	= $(MAKE) apply && git add . && $(MAKE) bump && git push
 git_all_hlp	= "git_all ${cmt_usage} ${bump_usage}\n\tRun \"${git_all_run}\""
 
 apply:
