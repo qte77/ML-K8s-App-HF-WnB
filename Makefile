@@ -2,7 +2,7 @@
 # https://www.gnu.org/software/make/manual/html_node/One-Shell.html
 # https://makefiletutorial.com/
 
-.PHONY: apply bump check commit full log help commit_msg_check bump_part_check
+.PHONY: apply bump check commit git_all log push help commit_msg_check bump_part_check
 .DEFAULT_GOAL := help
 
 check_help	= "check\tCheck files and do not apply"
