@@ -18,6 +18,9 @@ Types of changes:
 [Unreleased]
 ---
 
+[3.2.0] - 2022-09-18
+---
+
 ### Added
 
 - Functional `Makefile`
