@@ -31,8 +31,8 @@ format_python_task:
     image: "docker.io/pipelinecomponents/black:0.14.1"
   script: "black ."
 
-sort_python_task:
-  name: "Sort Python (isort)"
+sort_python_deps_task:
+  name: "Sort Python Deps (isort)"
   container:
     image: "docker.io/library/python:3.9-alpine"
   install_script: "pip install isort"
