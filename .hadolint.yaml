@@ -1,0 +1,8 @@
+---
+# https://github.com/hadolint/hadolint#configure
+# https://github.com/hadolint/hadolint#rules
+
+# Info: Multiple consecutive RUN instructions.
+# Consider consolidation.
+ignored: [DL3059]
+...
