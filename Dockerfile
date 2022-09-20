@@ -6,7 +6,7 @@ LABEL author="qte77"
 ARG USER="user"
 ARG APP_ROOT="./app"
 ARG APP_EP="${APP_ROOT}/app.py"
-ARG REQS_ROOT="./reqs"
+ARG REQS_ROOT="./requirements"
 # ARG WANDB_KEYFILE=".wandb/wandb.key"
 # ARG WANDB_KEY="<token>"
 
@@ -25,18 +25,11 @@ COPY --chown=${USER}:${USER} ${APP_ROOT} ${APP_ROOT}
 #   "${HOME}/${WANDB_KEYFILE}"
 
 # several RUN to produce separate pip layers
-RUN set -xe && \
-    pip install --no-cache-dir --user \
-        -r "${REQS_ROOT}/app-reqs.txt"
-RUN set -xe && \
-    pip install --no-cache-dir --user \
-        -r "${REQS_ROOT}/mlds-reqs.txt"
-RUN set -xe && \
-    pip install --no-cache-dir --user \
-        -r "${REQS_ROOT}/hf-reqs.txt"
-RUN set -xe && \
-    pip install --no-cache-dir --user \
-        -r "${REQS_ROOT}/torch-reqs.txt"
+ARG INSTALL="set -xe && pip install --no-cache-dir --user -r"
+RUN ${INSTALL} "${REQS_ROOT}/app-reqs.txt"
+RUN ${INSTALL} "${REQS_ROOT}/mlds-reqs.txt"
+RUN ${INSTALL} "${REQS_ROOT}/hf-reqs.txt"
+RUN ${INSTALL} "${REQS_ROOT}/torch-reqs.txt"
 
 ENTRYPOINT [ "/bin/sh" ]
 

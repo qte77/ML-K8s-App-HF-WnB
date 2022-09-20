@@ -18,6 +18,10 @@ Types of changes:
 [Unreleased]
 ---
 
+### Added
+
+- `.hadolint.yaml` for ignoring DL3059
+
 [3.2.0] - 2022-09-18
 ---
 
