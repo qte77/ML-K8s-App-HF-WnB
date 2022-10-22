@@ -7,6 +7,7 @@ App-K8s-HF-WnB
 ![version](https://img.shields.io/badge/version-3.2.0-blue)
 ![semver](https://img.shields.io/badge/semver-2.0.0-blue)
 [![wakatime](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB.svg)](https://wakatime.com/badge/github/qte77/App-K8s-HF-WnB)
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/qte77/App-K8s-HF-WnB)
 
 This project aims to create an end-to-end ML app as a functional MVP.
 The app itself uses Hugging Face (HF) and Weights&amp;Biases (WandB) to reduce initial complexity. The ML modules used should be interchangeable without interrupting the pipeline. The app can be deployed into a Python venv, a Docker image and Kubernetes to showcase the separation of concerns of the different pipeline components.

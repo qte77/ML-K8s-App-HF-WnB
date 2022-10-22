@@ -28,6 +28,7 @@ Types of changes:
   - `Mypy` (typing)
   - `Interrogate` (docstrings)
   - `blacken-docs` (python in docs)
+- VS Code badge to `README.md`
 
 ### Changed
 
